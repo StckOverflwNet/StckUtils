@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.5.20"
 }
 
-group = "org.example"
+group = "de.stckoverflw"
 version = "1.0.0"
 
 repositories {
