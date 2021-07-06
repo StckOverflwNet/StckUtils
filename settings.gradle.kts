@@ -1,2 +1,2 @@
-rootProject.name = "kspigot-gradle-template"
+rootProject.name = "stckutils"
 
