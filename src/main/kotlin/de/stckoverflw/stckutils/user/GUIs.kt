@@ -118,8 +118,8 @@ fun challengesGUI() = kSpigotGUI(GUIType.FOUR_BY_NINE) {
 
         val items = ArrayList<ItemStack>()
 
-        GameChangeManager.gameChanges.forEach { (change, _) ->
-            items.add(generateItemForChange(change))
+        ChallengeManager.challenges.forEach { (challenge, _) ->
+            items.add(generateItemForChallenge(challenge))
         }
 
         compound.addContent(items)
