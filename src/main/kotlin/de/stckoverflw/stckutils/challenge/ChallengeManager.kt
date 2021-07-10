@@ -1,4 +1,5 @@
 package de.stckoverflw.stckutils.challenge
+import de.stckoverflw.stckutils.challenge.impl.InventoryDamageClear
 import de.stckoverflw.stckutils.gamechange.GameChange
 import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import net.axay.kspigot.event.unregister
@@ -10,7 +11,7 @@ object ChallengeManager {
     val challenges = HashMap<Challenge, Boolean>()
 
     operator fun invoke() {
-
+        challenges[InventoryDamageClear] = false
     }
 
     fun registerChallengeListeners() {
