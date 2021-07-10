@@ -1,8 +1,14 @@
-name: ExamplePlugin
+name: StckUtils
 api-version: 1.17
 authors:
-  - You
-main: org.example.exampleplugin.ExamplePlugin
-version: 1.0.0
+  - StckOverflw
+main: de.stckoverflw.stckutils.StckUtilsPlugin
+version: 0.0.1
 libraries:
   - "net.axay:kspigot:1.17.2"
+
+commands:
+  timer:
+    description: Start stop and reset the Timer
+  settings:
+    description: Opens the Settings GUI
