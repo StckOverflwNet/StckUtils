@@ -7,6 +7,8 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 
 object SingleUse : Challenge() {
@@ -25,17 +27,24 @@ object SingleUse : Challenge() {
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         if (event.currentItem != null) {
-            try {
-                val itemStack = event.currentItem!!
-                val itemMeta = itemStack.itemMeta ?: return
-                if (itemMeta is Damageable) {
-                    (itemMeta as Damageable).damage = itemStack.type.maxDurability - 1
-                }
-                itemStack.itemMeta = itemMeta
-                event.currentItem = itemStack
-            } catch (ignored: ClassCastException) {
-                ignored.printStackTrace()
+            setOneDurability(event.currentItem!!)
+        }
+    }
+
+    @EventHandler
+    fun onInventoryClose(event: InventoryCloseEvent) {
+        event.player.inventory.contents.forEach {
+            if (it != null) {
+                setOneDurability(it)
             }
         }
+    }
+
+    private fun setOneDurability(itemStack: ItemStack) {
+        val itemMeta = itemStack.itemMeta ?: return
+        if (itemMeta is Damageable) {
+            (itemMeta as Damageable).damage = itemStack.type.maxDurability - 1
+        }
+        itemStack.itemMeta = itemMeta
     }
 }
