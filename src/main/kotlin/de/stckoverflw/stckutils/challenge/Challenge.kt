@@ -1,17 +1,13 @@
 package de.stckoverflw.stckutils.challenge
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.gamechange.GameChange
-import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.timer.Timer
-import net.axay.kspigot.gui.ForEveryInventory
 import net.axay.kspigot.gui.ForInventoryThreeByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.event.Listener
 
 abstract class Challenge : Listener {

@@ -9,12 +9,10 @@ import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.gamechange.GameChange
 import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.gamechange.active
-import de.stckoverflw.stckutils.gamechange.impl.DeathCounter
 import de.stckoverflw.stckutils.goal.Goal
 import de.stckoverflw.stckutils.goal.GoalManager
 import de.stckoverflw.stckutils.timer.Timer
 import net.axay.kspigot.chat.KColors
-import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.*
 import net.kyori.adventure.text.Component

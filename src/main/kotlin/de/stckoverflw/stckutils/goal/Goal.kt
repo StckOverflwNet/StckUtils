@@ -2,7 +2,6 @@ package de.stckoverflw.stckutils.goal
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.timer.Timer
-import net.axay.kspigot.extensions.onlinePlayers
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor

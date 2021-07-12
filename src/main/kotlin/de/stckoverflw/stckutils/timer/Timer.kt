@@ -1,17 +1,14 @@
-@file:Suppress("Unresolved_Reference")
 package de.stckoverflw.stckutils.timer
 
 import de.stckoverflw.stckutils.challenge.ChallengeManager
 import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.goal.GoalManager
-import de.stckoverflw.stckutils.localization.Messages
 import de.stckoverflw.stckutils.user.settingsItem
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack
 import java.util.*
-import kotlin.collections.HashMap
 
 object Timer {
 

@@ -7,9 +7,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.inventory.meta.ItemMeta
 
 object SingleUse : Challenge() {
     override val id: String = "single-use"
@@ -31,7 +29,6 @@ object SingleUse : Challenge() {
                 val itemStack = event.currentItem!!
                 val itemMeta = itemStack.itemMeta ?: return
                 if (itemMeta is Damageable) {
-                    val damage = (itemMeta as Damageable).damage
                     (itemMeta as Damageable).damage = itemStack.type.maxDurability - 1
                 }
                 itemStack.itemMeta = itemMeta

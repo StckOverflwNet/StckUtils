@@ -1,8 +1,6 @@
 package de.stckoverflw.stckutils.challenge
 import de.stckoverflw.stckutils.challenge.impl.InventoryDamageClear
 import de.stckoverflw.stckutils.challenge.impl.SingleUse
-import de.stckoverflw.stckutils.gamechange.GameChange
-import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance

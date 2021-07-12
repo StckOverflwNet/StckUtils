@@ -4,7 +4,6 @@ import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

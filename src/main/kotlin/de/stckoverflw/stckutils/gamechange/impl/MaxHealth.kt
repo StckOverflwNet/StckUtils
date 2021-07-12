@@ -6,8 +6,6 @@ import de.stckoverflw.stckutils.gamechange.active
 import de.stckoverflw.stckutils.user.changesGUI
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItem
-import de.stckoverflw.stckutils.user.settingsGUI
-import net.axay.kspigot.extensions.bukkit.heal
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
