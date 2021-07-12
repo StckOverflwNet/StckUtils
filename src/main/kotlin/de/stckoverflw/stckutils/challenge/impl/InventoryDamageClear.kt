@@ -5,6 +5,7 @@ import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryThreeByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
@@ -22,7 +23,7 @@ object InventoryDamageClear : Challenge() {
 
     override fun configurationGUI(): GUI<ForInventoryThreeByNine>? = null
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun onDamage(event: EntityDamageEvent) {
         if (event.entity is Player) {
             onlinePlayers.forEach {

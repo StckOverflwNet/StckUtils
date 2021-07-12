@@ -4,6 +4,8 @@ import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.challenge.Challenge
 import de.stckoverflw.stckutils.challenge.ChallengeManager
 import de.stckoverflw.stckutils.challenge.active
+import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.gamechange.GameChange
 import de.stckoverflw.stckutils.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.gamechange.active
@@ -11,6 +13,8 @@ import de.stckoverflw.stckutils.gamechange.impl.DeathCounter
 import de.stckoverflw.stckutils.goal.Goal
 import de.stckoverflw.stckutils.goal.GoalManager
 import de.stckoverflw.stckutils.timer.Timer
+import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.*
 import net.kyori.adventure.text.Component
@@ -50,6 +54,20 @@ fun settingsGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NI
             }
         }) {
             it.player.openGUI(changesGUI())
+        }
+
+        button(Slots.RowTwoSlotSix, itemStack(Material.GRASS_BLOCK) {
+            meta {
+                name = "${KColors.ROSYBROWN}World Reset"
+                addLore {
+                    + "${KColors.ROSYBROWN}World Reset§7, reset the world"
+                    + "§7in game"
+                    + " "
+                    + "§7Click to open the Challenge Inventory"
+                }
+            }
+        }) {
+            it.player.openGUI(resetGUI())
         }
         button(Slots.RowTwoSlotEight, itemStack(Material.CLOCK) {
             meta {
@@ -291,6 +309,36 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
     }
 }
 
+/**
+ * The Method to generate a new Instance of the Timer GUI
+ */
+fun resetGUI() = kSpigotGUI(GUIType.THREE_BY_NINE) {
+    title = "§cReset"
+    page(1) {
+        placeholder(Slots.RowOneSlotOne rectTo Slots.RowThreeSlotNine, placeHolderItem)
+        button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
+
+        button(Slots.RowTwoSlotThree, generateVillageSpawnItem()) {
+            Config.resetSettings.villageSpawn = !Config.resetSettings.villageSpawn
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateVillageSpawnItem())
+        }
+
+        button(Slots.RowTwoSlotSeven, itemStack(Material.BARRIER) {
+            meta {
+                name = "§cReset World"
+                addLore {
+                    + " "
+                    + "§7Click to §creset §7the World"
+                    + "§7All Progress will be gone and"
+                    + "§7the Timer will start at 0"
+                }
+            }
+        }) {
+            it.player.resetWorlds()
+        }
+    }
+}
+
 private fun generateItemForChange(change: GameChange) = itemStack(change.material) {
         meta {
             name = change.name
@@ -360,6 +408,23 @@ private fun generateTimerItem() = itemStack(Material.CLOCK) {
             + "§7Shift Left-click to higher §c10m"
             + "§7Right-click to lower §c1m"
             + "§7Shift Right-click to lower §c10m"
+        }
+    }
+}
+private fun generateVillageSpawnItem() = itemStack(Material.VILLAGER_SPAWN_EGG) {
+    meta {
+        name = "${KColors.SANDYBROWN}Village Spawn"
+        addLore {
+            + " "
+            if (Config.resetSettings.villageSpawn) {
+                + "§7Currently §aactivated"
+                + " "
+                +"§7Click to §cdeactivate"
+            } else {
+                + "§7Currently §cdeactivated"
+                + " "
+                +"§7Click to §aactivate"
+            }
         }
     }
 }

@@ -1,0 +1,8 @@
+# This is the Config for resetting the World
+
+# Set this to true when the world should restart at the next start
+shouldReset: false
+
+# Set this to true when the spawn point should be set
+# to the nearest Village automatically
+villageSpawn: false
