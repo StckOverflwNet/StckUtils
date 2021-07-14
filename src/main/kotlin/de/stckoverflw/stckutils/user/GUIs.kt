@@ -234,7 +234,7 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
             button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
         }
         if (!Timer.running) {
-            button(Slots.RowTwoSlotTwo, itemStack(Material.GREEN_DYE) {
+            button(Slots.RowTwoSlotThree, itemStack(Material.GREEN_DYE) {
                 meta {
                     name = "§aStart the Timer"
                     addLore {
@@ -263,25 +263,13 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
             }
         }
 
-        button(Slots.RowTwoSlotFive, itemStack(Material.CLOCK) {
-
-        }) {
+        button(Slots.RowTwoSlotFive, generateTimerItem()) {
             it.bukkitEvent.isCancelled = true
             if (it.bukkitEvent.isLeftClick) {
-                if (it.bukkitEvent.isShiftClick) {
-                    Timer.time += 600
-                } else {
-                    Timer.time += 60
-                }
+                Timer.time += 60
             } else if (it.bukkitEvent.isRightClick) {
-                if (it.bukkitEvent.isShiftClick) {
-                    if (Timer.time >= 600) {
-                        Timer.time -= 600
-                    }
-                } else {
-                    if (Timer.time >= 60) {
-                        Timer.time -= 60
-                    }
+                if (Timer.time >= 60) {
+                    Timer.time -= 60
                 }
             }
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateTimerItem())
@@ -400,12 +388,14 @@ private fun generateTimerItem() = itemStack(Material.CLOCK) {
         name = "§6Change Timer Time"
         addLore {
             + " "
-            + "§7Current Time: $Timer"
+            if (Timer.time > 0) {
+                + "§7Current Time: $Timer"
+            } else {
+                +"§7Current Time: §c0m"
+            }
             + " "
             + "§7Left-click to higher §c1m"
-            + "§7Shift Left-click to higher §c10m"
             + "§7Right-click to lower §c1m"
-            + "§7Shift Right-click to lower §c10m"
         }
     }
 }
