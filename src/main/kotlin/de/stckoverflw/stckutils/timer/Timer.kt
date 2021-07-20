@@ -89,6 +89,7 @@ object Timer {
         return if (!running) {
             false
         } else {
+            ChallengeManager.unregisterChallengeListeners()
             running = !running
             Bukkit.getOnlinePlayers().forEach {
                 inventorys[it.uniqueId] = it.inventory.contents

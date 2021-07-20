@@ -1,6 +1,8 @@
 package de.stckoverflw.stckutils.challenge
+import de.stckoverflw.stckutils.challenge.impl.GamerChallenge
 import de.stckoverflw.stckutils.challenge.impl.InventoryDamageClear
 import de.stckoverflw.stckutils.challenge.impl.SingleUse
+import de.stckoverflw.stckutils.timer.Timer
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -12,6 +14,7 @@ object ChallengeManager {
     operator fun invoke() {
         challenges[InventoryDamageClear] = false
         challenges[SingleUse] = false
+        challenges[GamerChallenge] = false
     }
 
     fun registerChallengeListeners() {
@@ -22,6 +25,12 @@ object ChallengeManager {
                     pluginManager.registerEvents(challenge, KSpigotMainInstance)
                 }
             }
+        }
+    }
+
+    fun unregisterChallengeListeners() {
+        challenges.forEach { (challenge, _) ->
+            challenge.unregister()
         }
     }
 

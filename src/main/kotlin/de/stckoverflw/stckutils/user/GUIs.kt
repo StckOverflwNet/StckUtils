@@ -114,6 +114,9 @@ fun challengesGUI() = kSpigotGUI(GUIType.FOUR_BY_NINE) {
                 val player = clickEvent.player
                 val challenge = ChallengeManager.getChallenge(element.itemMeta.localName)
                 if (challenge != null) {
+                    if (Timer.running) {
+                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                    }
                     clickEvent.bukkitEvent.isCancelled = true
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         challenge.active = !challenge.active
