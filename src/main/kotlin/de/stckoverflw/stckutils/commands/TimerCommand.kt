@@ -2,7 +2,7 @@ package de.stckoverflw.stckutils.commands
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.timer.Timer
-import de.stckoverflw.stckutils.user.timerGUI
+import de.stckoverflw.stckutils.user.settingsGUI
 import net.axay.kspigot.gui.openGUI
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -32,7 +32,7 @@ class TimerCommand : CommandExecutor, TabCompleter {
                 }
             } else {
                 if (sender is Player) {
-                    sender.openGUI(timerGUI(false))
+                    sender.openGUI(settingsGUI(), 5)
                 } else {
                     sender.sendMessage(StckUtilsPlugin.prefix + "§cYou can't open a GUI since you are not a Player")
                 }

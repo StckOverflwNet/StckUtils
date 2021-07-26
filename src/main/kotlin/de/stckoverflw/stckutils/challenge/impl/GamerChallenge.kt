@@ -5,6 +5,7 @@ import de.stckoverflw.stckutils.timer.Timer
 import net.axay.kspigot.extensions.bukkit.kill
 import net.axay.kspigot.extensions.geometry.minus
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.ForInventoryThreeByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.runnables.task
@@ -28,7 +29,7 @@ object GamerChallenge : Challenge() {
     )
     override val usesEvents: Boolean = false
 
-    override fun configurationGUI(): GUI<ForInventoryThreeByNine>? = null
+    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 
     private val respawned = HashMap<UUID, Boolean>()
 

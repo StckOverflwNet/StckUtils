@@ -1,6 +1,6 @@
 package de.stckoverflw.stckutils.gamechange
 
-import net.axay.kspigot.gui.ForInventoryThreeByNine
+import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.Listener
@@ -33,7 +33,7 @@ abstract class GameChange : Listener {
     /**
      * The GUI for changing settings for that challenge
      */
-    abstract fun configurationGUI(): GUI<ForInventoryThreeByNine>?
+    abstract fun configurationGUI(): GUI<ForInventoryFiveByNine>?
 
     /**
      * Says if the Game Change is activated by default

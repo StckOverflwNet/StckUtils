@@ -3,9 +3,10 @@ package de.stckoverflw.stckutils.gamechange.impl
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.gamechange.GameChange
 import de.stckoverflw.stckutils.gamechange.active
-import de.stckoverflw.stckutils.user.changesGUI
 import de.stckoverflw.stckutils.user.goBackItem
-import de.stckoverflw.stckutils.user.placeHolderItem
+import de.stckoverflw.stckutils.user.placeHolderItemGray
+import de.stckoverflw.stckutils.user.placeHolderItemWhite
+import de.stckoverflw.stckutils.user.settingsGUI
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
@@ -29,12 +30,19 @@ object DeathCounter : GameChange() {
     override val material: Material = Material.WITHER_SKELETON_SKULL
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NINE) {
+    override fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+        title = name
+        defaultPage
         page(1) {
-            placeholder(Slots.RowOneSlotOne rectTo Slots.RowThreeSlotNine, placeHolderItem)
-            button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(changesGUI()) }
+            // Placeholders at the Border of the Inventory
+            placeholder(Slots.Border, placeHolderItemGray)
+            // Placeholders in the Middle field of the Inventory
+            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
-            button(Slots.RowTwoSlotFive, deathItem()) {
+            // Go back Item
+            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 3) }
+
+            button(Slots.RowThreeSlotFive, deathItem()) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     deaths++

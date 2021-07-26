@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.challenge.impl
 
 import de.stckoverflw.stckutils.challenge.Challenge
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.ForInventoryThreeByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
@@ -20,7 +21,7 @@ object InventoryDamageClear : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryThreeByNine>? = null
+    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler(ignoreCancelled = true)
     fun onDamage(event: EntityDamageEvent) {

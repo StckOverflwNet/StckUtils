@@ -14,21 +14,30 @@ import de.stckoverflw.stckutils.goal.GoalManager
 import de.stckoverflw.stckutils.timer.Timer
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.*
-import net.axay.kspigot.items.*
+import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.itemStack
+import net.axay.kspigot.items.meta
+import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
 
 /**
  * The Method to generate a new Instance of the Settings GUI
  */
-fun settingsGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NINE) {
+fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
     title = "§9Settings"
-    defaultPage = 0
-    page(0) {
-        placeholder(Slots.RowOneSlotOne rectTo Slots.RowThreeSlotNine, placeHolderItem)
-        button(Slots.RowTwoSlotTwo, itemStack(Material.DRAGON_HEAD) {
+    defaultPage = 1
+
+    // Default Settings Page
+    page(1) {
+        // Placeholders at the Border of the Inventory
+        placeholder(Slots.Border, placeHolderItemGray)
+        // Placeholders in the Middle field of the Inventory
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+
+        // Item for opening the Challenges Page
+        pageChanger(Slots.RowThreeSlotThree, itemStack(Material.DRAGON_HEAD) {
             meta {
                 name = "§6Challenges"
                 addLore {
@@ -37,10 +46,10 @@ fun settingsGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NI
                     + "§7Click to open the Challenge Inventory"
                 }
             }
-        }) {
-            it.player.openGUI(challengesGUI())
-        }
-        button(Slots.RowTwoSlotThree, itemStack(Material.FILLED_MAP) {
+        }, 2, null, null)
+
+        // Item for opening the GameChanges Page
+        pageChanger(Slots.RowThreeSlotFive, itemStack(Material.FILLED_MAP) {
             meta {
                 name = "§cGame Changes"
                 addLore {
@@ -50,37 +59,10 @@ fun settingsGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NI
                     + "§7Click to open the Challenge Inventory"
                 }
             }
-        }) {
-            it.player.openGUI(changesGUI())
-        }
+        }, 3, null, null)
 
-        button(Slots.RowTwoSlotSix, itemStack(Material.GRASS_BLOCK) {
-            meta {
-                name = "${KColors.ROSYBROWN}World Reset"
-                addLore {
-                    + "${KColors.ROSYBROWN}World Reset§7, reset the world"
-                    + "§7in game"
-                    + " "
-                    + "§7Click to open the Challenge Inventory"
-                }
-            }
-        }) {
-            it.player.openGUI(resetGUI())
-        }
-        button(Slots.RowTwoSlotEight, itemStack(Material.CLOCK) {
-            meta {
-                name = "§eTimer"
-                addLore {
-                    + "§eTimer§7, a simple Timer that counts"
-                    + "§7upwards in seconds, minutes and hours"
-                    + " "
-                    + "§7Click to open the Timer Inventory"
-                }
-            }
-        }) {
-            it.player.openGUI(timerGUI(true))
-        }
-        button(Slots.RowTwoSlotSeven, itemStack(Material.DIAMOND) {
+        // Item for opening the Goals Page
+        pageChanger(Slots.RowThreeSlotSeven, itemStack(Material.DIAMOND) {
             meta {
                 name = "§bGoals"
                 addLore {
@@ -91,153 +73,194 @@ fun settingsGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NI
                     + "§7Click to open the Goal Inventory"
                 }
             }
-        }) {
-            it.player.openGUI(goalsGUI())
-        }
-    }
-}
+        }, 4, null, null)
 
-/**
- * The Method to generate a new Instance of the Challenges GUI
- */
-fun challengesGUI() = kSpigotGUI(GUIType.FOUR_BY_NINE) {
-    title = "§6Challenges"
-    page(1) {
-        placeholder(Slots.BorderPaddingThree, placeHolderItem)
-        button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
-        val compound = createRectCompound<ItemStack>(
-            Slots.RowTwoSlotTwo, Slots.RowThreeSlotEight,
+        // Item for opening the Page with More settings
+        pageChanger(Slots.RowOneSlotFive, itemStack(Material.COMPARATOR) {
+            meta {
+                name = "§cMore Settings"
+                addLore {
+                    + "§7Click to see §cmore settings§7, like Settings"
+                    + "§7for the §eTimer §7or ${KColors.ROSYBROWN}World Reset"
+                }
+            }
+        }, 0, null, null)
+    }
+
+    // More settings Page
+    page(0) {
+        // Transitions
+        this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
+
+        // Placeholders at the Border of the Inventory
+        placeholder(Slots.Border, placeHolderItemGray)
+        // Placeholders in the Middle field of the Inventory
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+
+        // Go back Item
+        pageChanger(Slots.RowFiveSlotFive, goBackItem, 1, null, null)
+
+        // Item for opening the World reset Settings Page
+        pageChanger(Slots.RowThreeSlotFour, itemStack(Material.GRASS_BLOCK) {
+            meta {
+                name = "${KColors.ROSYBROWN}World Reset"
+                addLore {
+                    + "${KColors.ROSYBROWN}World Reset§7, reset the world"
+                    + "§7in game"
+                    + " "
+                    + "§7Click to open the Challenge Inventory"
+                }
+            }
+        }, -2, null, null)
+
+        // Item for opening the Timer Settings Page
+        pageChanger(Slots.RowThreeSlotSix, itemStack(Material.CLOCK) {
+            meta {
+                name = "§eTimer"
+                addLore {
+                    + "§eTimer§7, a simple Timer that counts"
+                    + "§7upwards in seconds, minutes and hours"
+                    + " "
+                    + "§7Click to open the Timer Inventory"
+                }
+            }
+        }, -1, null, null)
+    }
+
+    // Challenges Page
+    page(2) {
+        // Transitions
+        this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
+
+        // Placeholders at the left Border
+        placeholder(Slots.Border, placeHolderItemGray)
+
+        // Go back Item
+        pageChanger(Slots.RowThreeSlotOne, goBackItem, 1, null, null)
+
+        // Compound for displaying the Challenges
+        val compound = createRectCompound<Challenge>(
+            Slots.RowOneSlotTwo, Slots.RowFiveSlotNine,
             iconGenerator = {
-                it
+                generateItemForChallenge(it)
             },
-            onClick = { clickEvent, element ->
+            onClick = { clickEvent, challenge ->
                 val player = clickEvent.player
-                val challenge = ChallengeManager.getChallenge(element.itemMeta.localName)
-                if (challenge != null) {
-                    if (Timer.running) {
-                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
-                    }
-                    clickEvent.bukkitEvent.isCancelled = true
-                    if (clickEvent.bukkitEvent.isLeftClick) {
-                        challenge.active = !challenge.active
-                        clickEvent.bukkitEvent.clickedInventory!!.setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge))
-                    } else if (clickEvent.bukkitEvent.isRightClick) {
-                        val configGUI = challenge.configurationGUI()
-                        if (configGUI != null) {
-                            if (challenge.active) {
-                                player.openGUI(configGUI)
-                            } else {
-                                player.sendMessage(StckUtilsPlugin.prefix + "§cYou need to activate the Challenge before you can configure it")
-                            }
+                if (Timer.running) {
+                    player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                }
+                clickEvent.bukkitEvent.isCancelled = true
+                if (clickEvent.bukkitEvent.isLeftClick) {
+                    challenge.active = !challenge.active
+                    clickEvent.bukkitEvent.clickedInventory!!.setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge))
+                } else if (clickEvent.bukkitEvent.isRightClick) {
+                    val configGUI = challenge.configurationGUI()
+                    if (configGUI != null) {
+                        if (challenge.active) {
+                            player.openGUI(configGUI)
+                        } else {
+                            player.sendMessage(StckUtilsPlugin.prefix + "§cYou need to activate the Challenge before you can configure it")
                         }
                     }
                 }
             }
         )
 
-        val items = ArrayList<ItemStack>()
-
-        ChallengeManager.challenges.forEach { (challenge, _) ->
-            items.add(generateItemForChallenge(challenge))
-        }
-
-        compound.addContent(items)
+        compound.addContent(ChallengeManager.challenges.keys)
     }
-}
 
-/**
- * The Method to generate a new Instance of the Game Changes GUI
- */
-fun changesGUI() = kSpigotGUI(GUIType.FOUR_BY_NINE) {
-    title = "§cGame Changes"
-    page(1) {
-        placeholder(Slots.BorderPaddingThree, placeHolderItem)
-        button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
+    // GameChange Page
+    page(3) {
+        // Transitions
+        this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
-        val compound = createRectCompound<ItemStack>(
-            Slots.RowTwoSlotTwo, Slots.RowThreeSlotEight,
+        // Placeholders at the left Border
+        placeholder(Slots.Border, placeHolderItemGray)
+
+        // Go back Item
+        pageChanger(Slots.RowThreeSlotOne, goBackItem, 1, null, null)
+
+        // Compound for displaying the GameChanges
+        val compound = createRectCompound<GameChange>(
+            Slots.RowOneSlotTwo, Slots.RowFiveSlotNine,
             iconGenerator = {
-                it
+                generateItemForChange(it)
             },
-            onClick = { clickEvent, element ->
+            onClick = { clickEvent, change ->
                 val player = clickEvent.player
-                val change = GameChangeManager.getGameChange(element.itemMeta.localName)
-                if (change != null) {
-                    clickEvent.bukkitEvent.isCancelled = true
-                    if (clickEvent.bukkitEvent.isLeftClick) {
-                        change.active = !change.active
-                        change.run()
-                        clickEvent.bukkitEvent.clickedInventory!!.setItem(clickEvent.bukkitEvent.slot, generateItemForChange(change))
-                    } else if (clickEvent.bukkitEvent.isRightClick) {
-                        val configGUI = change.configurationGUI()
-                        if (configGUI != null) {
-                            if (change.active) {
-                                player.openGUI(configGUI)
-                            } else {
-                                player.sendMessage(StckUtilsPlugin.prefix + "§cYou need to activate the Game change before you can configure it")
-                            }
+                clickEvent.bukkitEvent.isCancelled = true
+                if (clickEvent.bukkitEvent.isLeftClick) {
+                    change.active = !change.active
+                    change.run()
+                    clickEvent.bukkitEvent.clickedInventory!!.setItem(clickEvent.bukkitEvent.slot, generateItemForChange(change))
+                } else if (clickEvent.bukkitEvent.isRightClick) {
+                    val configGUI = change.configurationGUI()
+                    if (configGUI != null) {
+                        if (change.active) {
+                            player.openGUI(configGUI)
+                        } else {
+                            player.sendMessage(StckUtilsPlugin.prefix + "§cYou need to activate the Game change before you can configure it")
                         }
                     }
                 }
             }
         )
 
-        val items = ArrayList<ItemStack>()
-
-        GameChangeManager.gameChanges.forEach { (change, _) ->
-            items.add(generateItemForChange(change))
-        }
-
-        compound.addContent(items)
+        compound.addContent(GameChangeManager.gameChanges.keys)
     }
-}
 
-/**
- * The Method to generate a new Instance of the Goals GUI
- */
-fun goalsGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NINE) {
-    title = "§bGoals"
-    page(1) {
-        placeholder(Slots.BorderPaddingThree, placeHolderItem)
-        button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
+    // Goals Page
+    page(4) {
+        // Transitions
+        this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
-        val compound = createRectCompound<ItemStack>(
-            Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
+        // Placeholder at the left Border
+        placeholder(Slots.Border, placeHolderItemGray)
+
+        // Go back Item
+        pageChanger(Slots.RowThreeSlotOne, goBackItem, 1, null, null)
+
+        // Compound for the Goals
+        val compound = createRectCompound<Goal>(
+            Slots.RowOneSlotTwo, Slots.RowFiveSlotNine,
             iconGenerator = {
-                it
+                generateItemForGoal(it)
             },
-            onClick = { clickEvent, element ->
-                val goal = GoalManager.getGoal(element.itemMeta.localName)
-                if (goal != null) {
-                    clickEvent.bukkitEvent.isCancelled = true
+            onClick = { clickEvent, goal ->
+                clickEvent.bukkitEvent.isCancelled = true
+                if (GoalManager.activeGoal != goal) {
                     GoalManager.activeGoal = goal
-                    clickEvent.player.openGUI(goalsGUI())
+                } else {
+                    GoalManager.activeGoal = null
                 }
+                clickEvent.guiInstance.reloadCurrentPage()
             }
         )
 
-        val items = ArrayList<ItemStack>()
-
-        GoalManager.goals.forEach {
-            items.add(generateItemForGoal(it))
-        }
-
-        compound.addContent(items)
+        compound.addContent(GoalManager.goals)
     }
-}
 
-/**
- * The Method to generate a new Instance of the Timer GUI
- */
-fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
-    title = "§eTimer"
-    page(1) {
-        placeholder(Slots.RowOneSlotOne rectTo Slots.RowThreeSlotNine, placeHolderItem)
-        if (showGoBackItem) {
-            button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
-        }
+    // Settings Page for the Timer
+    page(-1) {
+
+        // Transitions
+        this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
+
+        // Placeholders
+        placeholder(Slots.Border, placeHolderItemGray)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+
+        // go back Item
+        pageChanger(Slots.RowFiveSlotFive, goBackItem, 0, null, null)
+
+        // If the Timer is not running display a Item for Starting the Timer
         if (!Timer.running) {
-            button(Slots.RowTwoSlotThree, itemStack(Material.GREEN_DYE) {
+            button(Slots.RowThreeSlotThree, itemStack(Material.GREEN_DYE) {
                 meta {
                     name = "§aStart the Timer"
                     addLore {
@@ -250,8 +273,9 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
                 Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
                 it.player.closeInventory()
             }
+        // If Timer is Running display Item for stopping the Timer
         } else {
-            button(Slots.RowTwoSlotThree, itemStack(Material.REDSTONE) {
+            button(Slots.RowThreeSlotThree, itemStack(Material.REDSTONE) {
                 meta {
                     name = "§6Stop the Timer"
                     addLore {
@@ -266,7 +290,8 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
             }
         }
 
-        button(Slots.RowTwoSlotFive, generateTimerItem()) {
+        // Item for changing the Time
+        button(Slots.RowThreeSlotFive, generateTimerItem()) {
             it.bukkitEvent.isCancelled = true
             if (it.bukkitEvent.isLeftClick) {
                 Timer.time += 60
@@ -278,7 +303,8 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateTimerItem())
         }
 
-        button(Slots.RowTwoSlotSeven, itemStack(Material.BARRIER) {
+        // Item for resetting the Timer
+        button(Slots.RowThreeSlotSeven, itemStack(Material.BARRIER) {
             meta {
                 name = "§cReset the Timer"
                 addLore {
@@ -296,23 +322,28 @@ fun timerGUI(showGoBackItem: Boolean) = kSpigotGUI(GUIType.THREE_BY_NINE) {
             }
         }
     }
-}
 
-/**
- * The Method to generate a new Instance of the Timer GUI
- */
-fun resetGUI() = kSpigotGUI(GUIType.THREE_BY_NINE) {
-    title = "§cReset"
-    page(1) {
-        placeholder(Slots.RowOneSlotOne rectTo Slots.RowThreeSlotNine, placeHolderItem)
-        button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(settingsGUI()) }
+    // Settings Page for World reset
+    page(-2) {
+        // Transitions
+        this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        button(Slots.RowTwoSlotThree, generateVillageSpawnItem()) {
+        // Placeholders
+        placeholder(Slots.Border, placeHolderItemGray)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+
+        // Go back Item
+        pageChanger(Slots.RowFiveSlotFive, goBackItem, 0, null, null)
+
+        // Item for activating/deactivating Village Spawn
+        button(Slots.RowThreeSlotThree, generateVillageSpawnItem()) {
             Config.resetSettings.villageSpawn = !Config.resetSettings.villageSpawn
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateVillageSpawnItem())
+            it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateVillageSpawnItem())
         }
 
-        button(Slots.RowTwoSlotSeven, itemStack(Material.BARRIER) {
+        // Item for running a World reset
+        button(Slots.RowThreeSlotSeven, itemStack(Material.BARRIER) {
             meta {
                 name = "§cReset World"
                 addLore {
@@ -324,98 +355,6 @@ fun resetGUI() = kSpigotGUI(GUIType.THREE_BY_NINE) {
             }
         }) {
             it.player.resetWorlds()
-        }
-    }
-}
-
-private fun generateItemForChange(change: GameChange) = itemStack(change.material) {
-        meta {
-            name = change.name
-            localName = change.id
-            addLore {
-                change.description.forEach {
-                    + it
-                }
-                + " "
-                if (change.active) {
-                    + "§aActivated§7, Click to deactivate"
-                } else {
-                    + "§cDeactivated§7, Click to activate"
-                }
-                if (change.configurationGUI() != null) {
-                    + "§7Right Click to open the Configuration for ${change.name}"
-                }
-            }
-        }
-     }
-private fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.material) {
-        meta {
-            name = challenge.name
-            localName = challenge.id
-            addLore {
-                challenge.description.forEach {
-                    + it
-                }
-                + " "
-                if (challenge.active) {
-                    + "§aActivated§7, Click to deactivate"
-                } else {
-                    + "§cDeactivated§7, Click to activate"
-                }
-                if (challenge.configurationGUI() != null) {
-                    + "§7Right Click to open the Configuration for ${challenge.name}"
-                }
-            }
-        }
-     }
-private fun generateItemForGoal(goal: Goal) = itemStack(goal.material) {
-    meta {
-        name = goal.name
-        localName = goal.id
-        addLore {
-            goal.description.forEach {
-                + it
-            }
-            + " "
-            if (GoalManager.activeGoal == goal) {
-                + "§aThis Goal is currently activated"
-            } else {
-                +"§cThis Goal is currently deactivated,"
-                +"§7click to activate it"
-            }
-        }
-    }
-}
-private fun generateTimerItem() = itemStack(Material.CLOCK) {
-    meta {
-        name = "§6Change Timer Time"
-        addLore {
-            + " "
-            if (Timer.time > 0) {
-                + "§7Current Time: $Timer"
-            } else {
-                +"§7Current Time: §c0m"
-            }
-            + " "
-            + "§7Left-click to higher §c1m"
-            + "§7Right-click to lower §c1m"
-        }
-    }
-}
-private fun generateVillageSpawnItem() = itemStack(Material.VILLAGER_SPAWN_EGG) {
-    meta {
-        name = "${KColors.SANDYBROWN}Village Spawn"
-        addLore {
-            + " "
-            if (Config.resetSettings.villageSpawn) {
-                + "§7Currently §aactivated"
-                + " "
-                +"§7Click to §cdeactivate"
-            } else {
-                + "§7Currently §cdeactivated"
-                + " "
-                +"§7Click to §aactivate"
-            }
         }
     }
 }

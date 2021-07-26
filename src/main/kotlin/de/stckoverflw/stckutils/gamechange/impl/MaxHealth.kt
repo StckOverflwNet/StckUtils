@@ -3,9 +3,10 @@ package de.stckoverflw.stckutils.gamechange.impl
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.gamechange.GameChange
 import de.stckoverflw.stckutils.gamechange.active
-import de.stckoverflw.stckutils.user.changesGUI
 import de.stckoverflw.stckutils.user.goBackItem
-import de.stckoverflw.stckutils.user.placeHolderItem
+import de.stckoverflw.stckutils.user.placeHolderItemGray
+import de.stckoverflw.stckutils.user.placeHolderItemWhite
+import de.stckoverflw.stckutils.user.settingsGUI
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
@@ -29,12 +30,18 @@ object MaxHealth : GameChange() {
 
     private var health: Double = 20.0
 
-    override fun configurationGUI(): GUI<ForInventoryThreeByNine> = kSpigotGUI(GUIType.THREE_BY_NINE) {
+    override fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
         title = name
         page(1) {
-            placeholder(Slots.RowOneSlotOne rectTo Slots.RowThreeSlotNine, placeHolderItem)
-            button(Slots.RowOneSlotOne, goBackItem) { it.player.openGUI(changesGUI()) }
-            button(Slots.RowTwoSlotFive, healthItem()) {
+            // Placeholders at the Border of the Inventory
+            placeholder(Slots.Border, placeHolderItemGray)
+            // Placeholders in the Middle field of the Inventory
+            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+
+            // Go back Item
+            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 3) }
+
+            button(Slots.RowThreeSlotFive, healthItem()) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (health >= 20) {

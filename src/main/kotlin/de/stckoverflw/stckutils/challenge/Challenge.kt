@@ -2,7 +2,7 @@ package de.stckoverflw.stckutils.challenge
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.timer.Timer
-import net.axay.kspigot.gui.ForInventoryThreeByNine
+import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
@@ -41,7 +41,7 @@ abstract class Challenge : Listener {
     /**
      * The GUI for changing settings for that challenge
      */
-    abstract fun configurationGUI(): GUI<ForInventoryThreeByNine>?
+    abstract fun configurationGUI(): GUI<ForInventoryFiveByNine>?
 
     /**
      * Is run before the Timer starts to prepare the Challenge
