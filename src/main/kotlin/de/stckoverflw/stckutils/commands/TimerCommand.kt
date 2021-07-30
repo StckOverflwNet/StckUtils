@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.commands
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsGUI
 import net.axay.kspigot.gui.openGUI
 import net.kyori.adventure.text.Component

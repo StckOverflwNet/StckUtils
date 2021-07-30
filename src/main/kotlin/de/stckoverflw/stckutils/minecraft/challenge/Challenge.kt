@@ -1,7 +1,7 @@
-package de.stckoverflw.stckutils.challenge
+package de.stckoverflw.stckutils.minecraft.challenge
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance

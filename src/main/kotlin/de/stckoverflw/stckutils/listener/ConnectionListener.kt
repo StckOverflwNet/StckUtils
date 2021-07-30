@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.gamechange.GameChangeManager
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
 import net.kyori.adventure.text.Component
 import org.bukkit.GameMode

@@ -1,8 +1,9 @@
-package de.stckoverflw.stckutils.goal
+package de.stckoverflw.stckutils.minecraft.goal
 
-import de.stckoverflw.stckutils.goal.impl.FindDiamond
-import de.stckoverflw.stckutils.goal.impl.GoToNether
-import de.stckoverflw.stckutils.goal.impl.KillEnderdragon
+import de.stckoverflw.stckutils.minecraft.goal.impl.FindDiamond
+import de.stckoverflw.stckutils.minecraft.goal.impl.GoToNether
+import de.stckoverflw.stckutils.minecraft.goal.impl.KillEnderdragon
+import de.stckoverflw.stckutils.minecraft.goal.impl.BakeCake
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -16,7 +17,8 @@ object GoalManager {
         goals = arrayListOf(
             KillEnderdragon,
             FindDiamond,
-            GoToNether
+            GoToNether,
+            BakeCake
         )
     }
 

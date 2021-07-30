@@ -1,12 +1,14 @@
-package de.stckoverflw.stckutils.goal
+package de.stckoverflw.stckutils.minecraft.goal
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.Timer
+import net.axay.kspigot.extensions.onlinePlayers
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Material
+import org.bukkit.*
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Firework
 import org.bukkit.event.Listener
+
 
 abstract class Goal : Listener {
 
@@ -33,6 +35,20 @@ abstract class Goal : Listener {
 
     fun win(reason: String) {
         if (Timer.running) {
+            onlinePlayers.forEach {
+                val loc = it.location
+                val fw = loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework
+                val fwm = fw.fireworkMeta
+
+                fwm.power = 1
+                fwm.addEffect(FireworkEffect.builder().withColor(Color.BLUE).flicker(true).build())
+
+                fw.fireworkMeta = fwm
+                fw.detonate()
+
+                (loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework).fireworkMeta = fwm
+                it.gameMode = GameMode.SPECTATOR
+            }
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7You finished the Challenge §asucessfully"))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.toString())))

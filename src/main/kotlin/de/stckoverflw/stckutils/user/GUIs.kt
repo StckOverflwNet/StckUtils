@@ -1,17 +1,17 @@
 package de.stckoverflw.stckutils.user
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.challenge.Challenge
-import de.stckoverflw.stckutils.challenge.ChallengeManager
-import de.stckoverflw.stckutils.challenge.active
+import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.resetWorlds
-import de.stckoverflw.stckutils.gamechange.GameChange
-import de.stckoverflw.stckutils.gamechange.GameChangeManager
-import de.stckoverflw.stckutils.gamechange.active
-import de.stckoverflw.stckutils.goal.Goal
-import de.stckoverflw.stckutils.goal.GoalManager
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.gamechange.active
+import de.stckoverflw.stckutils.minecraft.goal.Goal
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore

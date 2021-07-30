@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.gamechange
+package de.stckoverflw.stckutils.minecraft.gamechange
 
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI

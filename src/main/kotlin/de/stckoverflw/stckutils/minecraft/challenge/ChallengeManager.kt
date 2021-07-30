@@ -1,8 +1,7 @@
-package de.stckoverflw.stckutils.challenge
-import de.stckoverflw.stckutils.challenge.impl.GamerChallenge
-import de.stckoverflw.stckutils.challenge.impl.InventoryDamageClear
-import de.stckoverflw.stckutils.challenge.impl.SingleUse
-import de.stckoverflw.stckutils.timer.Timer
+package de.stckoverflw.stckutils.minecraft.challenge
+import de.stckoverflw.stckutils.minecraft.challenge.impl.GamerChallenge
+import de.stckoverflw.stckutils.minecraft.challenge.impl.InventoryDamageClear
+import de.stckoverflw.stckutils.minecraft.challenge.impl.SingleUse
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance

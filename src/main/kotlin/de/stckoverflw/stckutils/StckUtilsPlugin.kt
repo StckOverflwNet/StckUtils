@@ -1,25 +1,22 @@
 package de.stckoverflw.stckutils
 
-import de.stckoverflw.stckutils.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.commands.SettingsCommand
 import de.stckoverflw.stckutils.commands.TimerCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.gamechange.GameChangeManager
-import de.stckoverflw.stckutils.goal.GoalManager
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.listener.ConnectionListener
 import de.stckoverflw.stckutils.listener.InteractListener
 import de.stckoverflw.stckutils.listener.ProtectionListener
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
-import org.bukkit.World
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
-
 
 class StckUtilsPlugin : KSpigot() {
 
@@ -27,7 +24,7 @@ class StckUtilsPlugin : KSpigot() {
         const val prefix: String = "§f§lStckUtils §7| §r"
     }
 
-    var wasReset = false
+    private var wasReset = false
 
     override fun load() {
         Config()

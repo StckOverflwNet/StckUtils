@@ -1,8 +1,8 @@
-package de.stckoverflw.stckutils.gamechange.impl
+package de.stckoverflw.stckutils.minecraft.gamechange.impl
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.gamechange.GameChange
-import de.stckoverflw.stckutils.gamechange.active
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
+import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
 import de.stckoverflw.stckutils.user.placeHolderItemWhite

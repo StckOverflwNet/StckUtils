@@ -1,8 +1,8 @@
-package de.stckoverflw.stckutils.timer
+package de.stckoverflw.stckutils.minecraft.timer
 
-import de.stckoverflw.stckutils.challenge.ChallengeManager
-import de.stckoverflw.stckutils.gamechange.GameChangeManager
-import de.stckoverflw.stckutils.goal.GoalManager
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.user.settingsItem
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component

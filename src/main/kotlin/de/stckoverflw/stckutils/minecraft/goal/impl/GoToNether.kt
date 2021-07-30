@@ -1,6 +1,6 @@
-package de.stckoverflw.stckutils.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.goal.Goal
+import de.stckoverflw.stckutils.minecraft.goal.Goal
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler

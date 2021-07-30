@@ -1,18 +1,14 @@
-package de.stckoverflw.stckutils.challenge.impl
+package de.stckoverflw.stckutils.minecraft.challenge.impl
 
-import de.stckoverflw.stckutils.challenge.Challenge
-import de.stckoverflw.stckutils.timer.Timer
+import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.extensions.bukkit.kill
 import net.axay.kspigot.extensions.geometry.minus
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
-import net.axay.kspigot.gui.ForInventoryThreeByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.runnables.task
 import org.bukkit.Material
-import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.util.Vector
 import java.util.*
 import kotlin.collections.HashMap

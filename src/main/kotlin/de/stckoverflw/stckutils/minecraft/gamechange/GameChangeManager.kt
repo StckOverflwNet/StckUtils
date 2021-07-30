@@ -1,7 +1,7 @@
-package de.stckoverflw.stckutils.gamechange
+package de.stckoverflw.stckutils.minecraft.gamechange
 
-import de.stckoverflw.stckutils.gamechange.impl.DeathCounter
-import de.stckoverflw.stckutils.gamechange.impl.MaxHealth
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.DeathCounter
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.MaxHealth
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance

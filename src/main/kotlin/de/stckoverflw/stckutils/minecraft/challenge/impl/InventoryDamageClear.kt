@@ -1,10 +1,11 @@
-package de.stckoverflw.stckutils.challenge.impl
+package de.stckoverflw.stckutils.minecraft.challenge.impl
 
-import de.stckoverflw.stckutils.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
-import net.axay.kspigot.gui.ForInventoryThreeByNine
 import net.axay.kspigot.gui.GUI
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.kSpigotGUI
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -26,9 +27,8 @@ object InventoryDamageClear : Challenge() {
     @EventHandler(ignoreCancelled = true)
     fun onDamage(event: EntityDamageEvent) {
         if (event.entity is Player) {
-            onlinePlayers.forEach {
-                it.inventory.clear()
-            }
+            val player: Player = event.entity as Player
+            (event.entity as Player).inventory.clear()
         }
     }
 }
