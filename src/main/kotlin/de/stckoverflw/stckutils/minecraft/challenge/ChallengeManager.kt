@@ -1,4 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge
+
+import de.stckoverflw.stckutils.minecraft.challenge.impl.ChunkFlattener
 import de.stckoverflw.stckutils.minecraft.challenge.impl.GamerChallenge
 import de.stckoverflw.stckutils.minecraft.challenge.impl.InventoryDamageClear
 import de.stckoverflw.stckutils.minecraft.challenge.impl.SingleUse
@@ -14,6 +16,7 @@ object ChallengeManager {
         challenges[InventoryDamageClear] = false
         challenges[SingleUse] = false
         challenges[GamerChallenge] = false
+        challenges[ChunkFlattener] = false
     }
 
     fun registerChallengeListeners() {
