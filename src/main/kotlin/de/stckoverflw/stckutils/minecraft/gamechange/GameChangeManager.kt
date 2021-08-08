@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
 
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.DamageMultiplier
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.DeathCounter
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.MaxHealth
 import net.axay.kspigot.event.unregister
@@ -13,6 +14,7 @@ object GameChangeManager {
     operator fun invoke() {
         gameChanges[MaxHealth] = MaxHealth.defaultActivated
         gameChanges[DeathCounter] = DeathCounter.defaultActivated
+        gameChanges[DamageMultiplier] = DeathCounter.defaultActivated
     }
 
     fun registerGameChangeListeners() {
