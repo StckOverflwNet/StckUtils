@@ -11,7 +11,6 @@ import net.axay.kspigot.runnables.task
 import org.bukkit.Material
 import org.bukkit.util.Vector
 import java.util.*
-import kotlin.collections.HashMap
 
 object GamerChallenge : Challenge() {
     override val id: String = "no-grass"
@@ -65,5 +64,4 @@ object GamerChallenge : Challenge() {
             }
         }
     }
-
 }

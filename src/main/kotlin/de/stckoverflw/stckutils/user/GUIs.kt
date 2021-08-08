@@ -1,11 +1,11 @@
 package de.stckoverflw.stckutils.user
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
-import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.active
@@ -41,9 +41,9 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§6Challenges"
                 addLore {
-                    + "§6Challenges§7, change the Minecraft Gameplay"
-                    + " "
-                    + "§7Click to open the Challenge Inventory"
+                    +"§6Challenges§7, change the Minecraft Gameplay"
+                    +" "
+                    +"§7Click to open the Challenge Inventory"
                 }
             }
         }, 2, null, null)
@@ -53,10 +53,10 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§cGame Changes"
                 addLore {
-                    + "§cGame Changes§7, change basic Game mechanics or"
-                    + "§7add features to the basic Game"
-                    + " "
-                    + "§7Click to open the Challenge Inventory"
+                    +"§cGame Changes§7, change basic Game mechanics or"
+                    +"§7add features to the basic Game"
+                    +" "
+                    +"§7Click to open the Challenge Inventory"
                 }
             }
         }, 3, null, null)
@@ -66,11 +66,11 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§bGoals"
                 addLore {
-                    + "§bGoals§7, the Goal you have while"
-                    + "§7playing. The Challenge ends automatically"
-                    + "§7when this goal is reached"
-                    + " "
-                    + "§7Click to open the Goal Inventory"
+                    +"§bGoals§7, the Goal you have while"
+                    +"§7playing. The Challenge ends automatically"
+                    +"§7when this goal is reached"
+                    +" "
+                    +"§7Click to open the Goal Inventory"
                 }
             }
         }, 4, null, null)
@@ -80,8 +80,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§cMore Settings"
                 addLore {
-                    + "§7Click to see §cmore settings§7, like Settings"
-                    + "§7for the §eTimer §7or ${KColors.ROSYBROWN}World Reset"
+                    +"§7Click to see §cmore settings§7, like Settings"
+                    +"§7for the §eTimer §7or ${KColors.ROSYBROWN}World Reset"
                 }
             }
         }, 0, null, null)
@@ -106,10 +106,10 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "${KColors.ROSYBROWN}World Reset"
                 addLore {
-                    + "${KColors.ROSYBROWN}World Reset§7, reset the world"
-                    + "§7in game"
-                    + " "
-                    + "§7Click to open the Challenge Inventory"
+                    +"${KColors.ROSYBROWN}World Reset§7, reset the world"
+                    +"§7in game"
+                    +" "
+                    +"§7Click to open the Challenge Inventory"
                 }
             }
         }, -2, null, null)
@@ -119,10 +119,10 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§eTimer"
                 addLore {
-                    + "§eTimer§7, a simple Timer that counts"
-                    + "§7upwards in seconds, minutes and hours"
-                    + " "
-                    + "§7Click to open the Timer Inventory"
+                    +"§eTimer§7, a simple Timer that counts"
+                    +"§7upwards in seconds, minutes and hours"
+                    +" "
+                    +"§7Click to open the Timer Inventory"
                 }
             }
         }, -1, null, null)
@@ -167,7 +167,6 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 }
             }
         )
-
         compound.addContent(ChallengeManager.challenges.keys)
     }
 
@@ -208,7 +207,6 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 }
             }
         )
-
         compound.addContent(GameChangeManager.gameChanges.keys)
     }
 
@@ -240,7 +238,6 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 clickEvent.guiInstance.reloadCurrentPage()
             }
         )
-
         compound.addContent(GoalManager.goals)
     }
 
@@ -264,8 +261,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 meta {
                     name = "§aStart the Timer"
                     addLore {
-                        + " "
-                        + "§7Click to Start the Timer"
+                        +" "
+                        +"§7Click to Start the Timer"
                     }
                 }
             }) {
@@ -273,14 +270,14 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
                 it.player.closeInventory()
             }
-        // If Timer is Running display Item for stopping the Timer
+            // If Timer is Running display Item for stopping the Timer
         } else {
             button(Slots.RowThreeSlotThree, itemStack(Material.REDSTONE) {
                 meta {
                     name = "§6Stop the Timer"
                     addLore {
-                        + " "
-                        + "§7Click to Stop the Timer"
+                        +" "
+                        +"§7Click to Stop the Timer"
                     }
                 }
             }) {
@@ -308,8 +305,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§cReset the Timer"
                 addLore {
-                    + " "
-                    + "§7Click to Reset the Timer"
+                    +" "
+                    +"§7Click to Reset the Timer"
                 }
             }
         }) {
@@ -347,10 +344,10 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§cReset World"
                 addLore {
-                    + " "
-                    + "§7Click to §creset §7the World"
-                    + "§7All Progress will be gone and"
-                    + "§7the Timer will start at 0"
+                    +" "
+                    +"§7Click to §creset §7the World"
+                    +"§7All Progress will be gone and"
+                    +"§7the Timer will start at 0"
                 }
             }
         }) {

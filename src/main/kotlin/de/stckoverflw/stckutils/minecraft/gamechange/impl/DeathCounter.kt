@@ -89,11 +89,11 @@ object DeathCounter : GameChange() {
         meta {
             name = "§9Deaths"
             addLore {
-                + " "
-                + "§7Change the value of the Death Counter"
-                + " "
-                + "§7Left-click to higher the deaths"
-                + "§7Right-click to lower the deaths"
+                +" "
+                +"§7Change the value of the Death Counter"
+                +" "
+                +"§7Left-click to higher the deaths"
+                +"§7Right-click to lower the deaths"
             }
         }
     }

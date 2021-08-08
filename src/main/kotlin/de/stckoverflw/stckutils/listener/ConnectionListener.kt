@@ -54,8 +54,10 @@ class ConnectionListener : Listener {
                 player.gameMode = GameMode.SPECTATOR
                 player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
             } else {
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                    Component.text("§cThe Timer is currently running, you can't join at the moment."))
+                event.disallow(
+                    PlayerLoginEvent.Result.KICK_OTHER,
+                    Component.text("§cThe Timer is currently running, you can't join at the moment.")
+                )
             }
         }
     }

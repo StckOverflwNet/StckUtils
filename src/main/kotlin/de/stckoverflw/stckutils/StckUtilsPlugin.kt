@@ -1,14 +1,14 @@
 package de.stckoverflw.stckutils
 
-import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.commands.SettingsCommand
 import de.stckoverflw.stckutils.commands.TimerCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
-import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.listener.ConnectionListener
 import de.stckoverflw.stckutils.listener.InteractListener
 import de.stckoverflw.stckutils.listener.ProtectionListener
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot

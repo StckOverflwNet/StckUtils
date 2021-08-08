@@ -34,5 +34,4 @@ object GameChangeManager {
         }
         return null
     }
-
 }

@@ -1,11 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
-import net.axay.kspigot.gui.GUIType
-import net.axay.kspigot.gui.kSpigotGUI
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

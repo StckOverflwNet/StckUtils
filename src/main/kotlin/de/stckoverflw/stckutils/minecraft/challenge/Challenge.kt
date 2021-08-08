@@ -62,7 +62,6 @@ abstract class Challenge : Listener {
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time wasted: $Timer"))
     }
-
 }
 
 var Challenge.active: Boolean

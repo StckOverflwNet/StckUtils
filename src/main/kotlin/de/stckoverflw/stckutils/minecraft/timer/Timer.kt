@@ -123,7 +123,6 @@ object Timer {
             }
         }
 
-
         return timerString.toString()
     }
 }
