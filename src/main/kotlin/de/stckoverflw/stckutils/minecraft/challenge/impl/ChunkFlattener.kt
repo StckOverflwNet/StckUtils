@@ -82,7 +82,7 @@ object ChunkFlattener : Challenge() {
             addLore {
                 +" "
                 +"§7Toggle Item Drops"
-                +"§7Value: §f${doDrop}"
+                +"§7Currently ".plus(if (doDrop) "§aenabled" else "§cdisabled")
             }
         }
     }
@@ -171,7 +171,7 @@ object ChunkFlattener : Challenge() {
                                 blocks.reverse()
                                 blocks.forEach {
                                     player.world.playEffect(it.location, Effect.STEP_SOUND, it.type)
-                                    player.world.playSound(it.location, it.soundGroup.breakSound, 1F, 1F)
+                                    player.world.playSound(it.location, it.soundGroup.breakSound, 0.5F, 1F)
                                     it.type = Material.AIR
                                 }
                             }
