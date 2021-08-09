@@ -16,6 +16,7 @@ object ChallengeManager {
         challenges[ChunkFlattener] = false
         challenges[NoXP] = false
         challenges[NoBlockBreak] = false
+        challenges[NoBlockPlace] = false
     }
 
     fun registerChallengeListeners() {
