@@ -1,14 +1,18 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
+import de.stckoverflw.stckutils.extension.fromBase64
+import de.stckoverflw.stckutils.extension.toBase64
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.user.settingsItem
+import net.axay.kspigot.main.KSpigotMainInstance
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
+import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import org.bukkit.persistence.PersistentDataType
 
 object Timer {
 
@@ -16,8 +20,6 @@ object Timer {
 
     var time: Long = 0
     var running = false
-
-    private val inventorys = HashMap<UUID, Array<ItemStack>>()
 
     operator fun invoke(startTime: Long) {
         require(!initialized) { "Timer has been initialized already" }
@@ -76,8 +78,10 @@ object Timer {
             GoalManager.registerActiveGoal()
             Bukkit.getOnlinePlayers().forEach {
                 it.inventory.clear()
-                if (inventorys.containsKey(it.uniqueId)) {
-                    it.inventory.contents = inventorys[it.uniqueId]!!
+                if (it.persistentDataContainer.has(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)) {
+                    it.inventory.contents =
+                        it.persistentDataContainer.get(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)
+                            ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>
                 }
             }
             running = !running
@@ -92,7 +96,11 @@ object Timer {
             ChallengeManager.unregisterChallengeListeners()
             running = !running
             Bukkit.getOnlinePlayers().forEach {
-                inventorys[it.uniqueId] = it.inventory.contents as Array<ItemStack>
+                it.persistentDataContainer.set(
+                    NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
+                    PersistentDataType.STRING,
+                    toBase64(it.inventory.contents)
+                )
                 it.inventory.clear()
                 if (it.isOp) {
                     it.inventory.setItem(8, settingsItem)
