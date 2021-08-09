@@ -99,7 +99,7 @@ object Timer {
                 it.persistentDataContainer.set(
                     NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
                     PersistentDataType.STRING,
-                    toBase64(it.inventory.contents)
+                    toBase64(it.inventory.contents as Array<ItemStack>)
                 )
                 it.inventory.clear()
                 if (it.isOp) {

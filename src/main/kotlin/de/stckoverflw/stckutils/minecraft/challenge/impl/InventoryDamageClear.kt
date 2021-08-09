@@ -24,7 +24,6 @@ object InventoryDamageClear : Challenge() {
     @EventHandler(ignoreCancelled = true)
     fun onDamage(event: EntityDamageEvent) {
         if (event.entity is Player) {
-            val player: Player = event.entity as Player
             (event.entity as Player).inventory.clear()
         }
     }

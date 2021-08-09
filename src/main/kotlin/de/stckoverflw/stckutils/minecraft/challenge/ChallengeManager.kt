@@ -1,9 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge
 
-import de.stckoverflw.stckutils.minecraft.challenge.impl.ChunkFlattener
-import de.stckoverflw.stckutils.minecraft.challenge.impl.GamerChallenge
-import de.stckoverflw.stckutils.minecraft.challenge.impl.InventoryDamageClear
-import de.stckoverflw.stckutils.minecraft.challenge.impl.SingleUse
+import de.stckoverflw.stckutils.minecraft.challenge.impl.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -17,6 +14,7 @@ object ChallengeManager {
         challenges[SingleUse] = false
         challenges[GamerChallenge] = false
         challenges[ChunkFlattener] = false
+        challenges[NoXP] = false
     }
 
     fun registerChallengeListeners() {

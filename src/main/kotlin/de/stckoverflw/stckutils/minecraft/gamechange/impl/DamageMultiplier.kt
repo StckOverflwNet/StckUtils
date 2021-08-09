@@ -19,7 +19,7 @@ import org.bukkit.inventory.Inventory
 
 object DamageMultiplier : GameChange() {
     override val id: String = "damage-multiplier"
-    override val name: String = "§6DamageMultiplier"
+    override val name: String = "§6Damage Multiplier"
     override val description: List<String> = listOf(
         " ",
         "§7Multiplies the damage you do to entities"

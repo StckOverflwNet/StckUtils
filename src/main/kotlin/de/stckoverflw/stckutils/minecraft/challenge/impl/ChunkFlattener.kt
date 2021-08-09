@@ -22,7 +22,7 @@ import org.bukkit.inventory.Inventory
 
 object ChunkFlattener : Challenge() {
     override val id: String = "chunk-flattener"
-    override val name: String = "§aChunkFlattener"
+    override val name: String = "§aChunk Flattener"
     override val material: Material = Material.BEDROCK
     override val description: List<String> = listOf(
         " ",
