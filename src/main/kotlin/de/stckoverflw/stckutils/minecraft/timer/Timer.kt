@@ -92,7 +92,7 @@ object Timer {
             ChallengeManager.unregisterChallengeListeners()
             running = !running
             Bukkit.getOnlinePlayers().forEach {
-                inventorys[it.uniqueId] = it.inventory.contents
+                inventorys[it.uniqueId] = it.inventory.contents as Array<ItemStack>
                 it.inventory.clear()
                 if (it.isOp) {
                     it.inventory.setItem(8, settingsItem)

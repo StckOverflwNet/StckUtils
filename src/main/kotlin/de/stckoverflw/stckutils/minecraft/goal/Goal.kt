@@ -37,16 +37,16 @@ abstract class Goal : Listener {
         if (Timer.running) {
             onlinePlayers.forEach {
                 val loc = it.location
-                val fw = loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework
-                val fwm = fw.fireworkMeta
+                val firework = loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework
+                val fireworkMeta = firework.fireworkMeta
 
-                fwm.power = 1
-                fwm.addEffect(FireworkEffect.builder().withColor(Color.BLUE).flicker(true).build())
+                fireworkMeta.power = 1
+                fireworkMeta.addEffect(FireworkEffect.builder().withColor(Color.BLUE).flicker(true).build())
 
-                fw.fireworkMeta = fwm
-                fw.detonate()
+                firework.fireworkMeta = fireworkMeta
+                firework.detonate()
 
-                (loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework).fireworkMeta = fwm
+                (loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework).fireworkMeta = fireworkMeta
                 it.gameMode = GameMode.SPECTATOR
             }
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))

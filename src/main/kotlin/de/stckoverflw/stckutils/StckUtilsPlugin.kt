@@ -61,9 +61,9 @@ class StckUtilsPlugin : KSpigot() {
 
         val pluginDescription = this.description
         logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")
-        logger.info("§aThis Plugin was made by §3${pluginDescription.authors.joinToString(", ")}")
-        logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
-        logger.info("§aMore Information at §3${pluginDescription.website}")
+        logger.info("§aThis Plugin is made by §3${pluginDescription.authors.joinToString(", ")}")
+        if (pluginDescription.apiVersion != null) logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
+        if (pluginDescription.website != null) logger.info("§aMore Information at §3${pluginDescription.website}")
     }
 
     private fun deleteWorld(world: String) {
