@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils
 
-import de.stckoverflw.stckutils.commands.SettingsCommand
-import de.stckoverflw.stckutils.commands.TimerCommand
+import de.stckoverflw.stckutils.command.SettingsCommand
+import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.listener.ConnectionListener
 import de.stckoverflw.stckutils.listener.InteractListener
