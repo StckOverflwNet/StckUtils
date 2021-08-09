@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 
 object KillEnderdragon : Goal() {
-
     override val id: String = "kill-dragon"
     override val name: String = "§cKill Enderdragon"
     override val description: List<String> = listOf(
@@ -15,7 +14,6 @@ object KillEnderdragon : Goal() {
         "§7The Challenge is finished when someone",
         "§ckills the Enderdragon"
     )
-
     override val material: Material = Material.DRAGON_HEAD
 
     @EventHandler

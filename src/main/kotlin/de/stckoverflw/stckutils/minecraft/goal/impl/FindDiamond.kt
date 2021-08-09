@@ -8,14 +8,12 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 
 object FindDiamond : Goal() {
     override val id: String = "find-diamond"
-
     override val name: String = "§bFind a Diamond"
     override val description: List<String> = listOf(
         " ",
         "§7The Challenge is finished when someone",
         "§bfinds a Diamond"
     )
-
     override val material: Material = Material.DIAMOND
 
     @EventHandler
