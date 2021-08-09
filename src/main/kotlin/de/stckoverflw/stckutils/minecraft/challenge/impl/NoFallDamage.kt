@@ -23,7 +23,7 @@ object NoFallDamage : Challenge() {
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
-    fun onFallDamage(event: EntityDamageByBlockEvent) {
+    fun onFallDamage(event: EntityDamageEvent) {
         if (event.cause == EntityDamageEvent.DamageCause.FALL && event.entity is Player)
             lose("${event.entity.name} took fall damage.")
     }
