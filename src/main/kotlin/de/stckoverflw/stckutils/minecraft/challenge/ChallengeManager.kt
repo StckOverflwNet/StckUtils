@@ -20,6 +20,7 @@ object ChallengeManager {
         challenges[NoVillagerTrade] = false
         challenges[NoCrafting] = false
         challenges[InvisibleEntities] = false
+        challenges[NoFallDamage] = false
     }
 
     fun registerChallengeListeners() {
