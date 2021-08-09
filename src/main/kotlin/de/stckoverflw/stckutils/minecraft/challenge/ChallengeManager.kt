@@ -21,6 +21,7 @@ object ChallengeManager {
         challenges[NoCrafting] = false
         challenges[InvisibleEntities] = false
         challenges[NoFallDamage] = false
+        challenges[RandomEffect] = false
     }
 
     fun registerChallengeListeners() {
