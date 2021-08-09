@@ -18,6 +18,7 @@ object ChallengeManager {
         challenges[NoBlockBreak] = false
         challenges[NoBlockPlace] = false
         challenges[NoVillagerTrade] = false
+        challenges[NoCrafting] = false
     }
 
     fun registerChallengeListeners() {
