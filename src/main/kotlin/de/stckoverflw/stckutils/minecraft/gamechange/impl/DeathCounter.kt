@@ -25,7 +25,7 @@ object DeathCounter : GameChange() {
     override val description: List<String> = listOf(
         " ",
         "§9Death Counter §7counts the Deaths of every",
-        "§7player and displayes them in a Bossbar"
+        "§7player and displays them in a Bossbar"
     )
     override val material: Material = Material.WITHER_SKELETON_SKULL
     override val usesEvents: Boolean = true
@@ -50,7 +50,7 @@ object DeathCounter : GameChange() {
                     if (deaths > 0) {
                         deaths--
                     } else {
-                        it.player.sendMessage(StckUtilsPlugin.prefix + "§cYou can't have less then 0 deaths")
+                        it.player.sendMessage(StckUtilsPlugin.prefix + "§cYou can't have less than 0 deaths")
                     }
                 }
                 run()

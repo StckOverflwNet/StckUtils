@@ -32,7 +32,7 @@ val goBackItem = itemStack(Material.KNOWLEDGE_BOOK) {
         name = "${KColors.LIGHTGREEN}Go back"
         addLore {
             +""
-            +"§7§oClick to go to the previous Page"
+            +"§7§oClick to go back to the previous Page"
         }
     }
 }

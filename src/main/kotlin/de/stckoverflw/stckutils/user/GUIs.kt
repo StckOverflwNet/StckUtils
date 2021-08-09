@@ -41,7 +41,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§6Challenges"
                 addLore {
-                    +"§6Challenges§7, change the Minecraft Gameplay"
+                    +"§6Challenges§7: change the Minecraft Gameplay"
                     +" "
                     +"§7Click to open the Challenge Inventory"
                 }
@@ -53,10 +53,10 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§cGame Changes"
                 addLore {
-                    +"§cGame Changes§7, change basic Game mechanics or"
+                    +"§cGame Changes§7: change basic Game mechanics or"
                     +"§7add features to the basic Game"
                     +" "
-                    +"§7Click to open the Challenge Inventory"
+                    +"§7Click to open the Game Change Inventory"
                 }
             }
         }, 3, null, null)
@@ -106,8 +106,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "${KColors.ROSYBROWN}World Reset"
                 addLore {
-                    +"${KColors.ROSYBROWN}World Reset§7, reset the world"
-                    +"§7in game"
+                    +"${KColors.ROSYBROWN}World Reset§7: reset the"
+                    +"§7in game world"
                     +" "
                     +"§7Click to open the Challenge Inventory"
                 }
@@ -119,7 +119,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             meta {
                 name = "§eTimer"
                 addLore {
-                    +"§eTimer§7, a simple Timer that counts"
+                    +"§eTimer§7: a simple Timer that counts"
                     +"§7upwards in seconds, minutes and hours"
                     +" "
                     +"§7Click to open the Timer Inventory"
@@ -347,7 +347,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                     +" "
                     +"§7Click to §creset §7the World"
                     +"§7All Progress will be gone and"
-                    +"§7the Timer will start at 0"
+                    +"§7the Timer will be set to 0"
                 }
             }
         }) {

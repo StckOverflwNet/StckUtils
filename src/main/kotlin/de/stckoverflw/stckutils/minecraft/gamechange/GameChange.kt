@@ -18,6 +18,9 @@ abstract class GameChange : Listener {
      */
     abstract val name: String
 
+    /**
+     * the description of the challenge, the item in the inventory is called like this
+     */
     abstract val description: List<String>
 
     /**
@@ -36,7 +39,7 @@ abstract class GameChange : Listener {
     abstract fun configurationGUI(): GUI<ForInventoryFiveByNine>?
 
     /**
-     * Says if the Game Change is activated by default
+     * Whether the Game Change is activated by default
      */
     abstract val defaultActivated: Boolean
 
