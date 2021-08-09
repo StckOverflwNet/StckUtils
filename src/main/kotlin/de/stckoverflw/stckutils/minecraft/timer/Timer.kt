@@ -11,6 +11,7 @@ import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
+import org.bukkit.entity.Creature
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
@@ -82,6 +83,7 @@ object Timer {
                     it.inventory.contents =
                         it.persistentDataContainer.get(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)
                             ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>
+                    it.persistentDataContainer.remove(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"))
                 }
             }
             running = !running
@@ -95,15 +97,19 @@ object Timer {
         } else {
             ChallengeManager.unregisterChallengeListeners()
             running = !running
-            Bukkit.getOnlinePlayers().forEach {
-                it.persistentDataContainer.set(
+            Bukkit.getOnlinePlayers().forEach { player ->
+                player.persistentDataContainer.set(
                     NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
                     PersistentDataType.STRING,
-                    toBase64(it.inventory.contents as Array<ItemStack>)
+                    toBase64(player.inventory.contents as Array<ItemStack>)
                 )
-                it.inventory.clear()
-                if (it.isOp) {
-                    it.inventory.setItem(8, settingsItem)
+                player.inventory.clear()
+                player.getNearbyEntities(48.0, 48.0, 48.0).forEach {
+                    if (it is Creature)
+                        it.target = null
+                }
+                if (player.isOp) {
+                    player.inventory.setItem(8, settingsItem)
                 }
             }
             true
