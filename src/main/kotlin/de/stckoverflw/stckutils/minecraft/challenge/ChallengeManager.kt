@@ -22,6 +22,8 @@ object ChallengeManager {
         challenges[InvisibleEntities] = false
         challenges[NoFallDamage] = false
         challenges[RandomEffect] = false
+        challenges[NoSneak] = false
+
         challenges[NoDeath] = true
     }
 
