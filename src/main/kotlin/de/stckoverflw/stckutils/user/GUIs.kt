@@ -149,14 +149,16 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             },
             onClick = { clickEvent, challenge ->
                 val player = clickEvent.player
-                if (Timer.running) {
-                    player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
-                }
+
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
-                    challenge.active = !challenge.active
-                    clickEvent.bukkitEvent.clickedInventory!!
-                        .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge))
+                    if (Timer.running) {
+                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                    } else {
+                        challenge.active = !challenge.active
+                        clickEvent.bukkitEvent.clickedInventory!!
+                            .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge))
+                    }
                 } else if (clickEvent.bukkitEvent.isRightClick) {
                     val configGUI = challenge.configurationGUI()
                     if (configGUI != null) {
@@ -197,10 +199,14 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 val player = clickEvent.player
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
-                    change.active = !change.active
-                    change.run()
-                    clickEvent.bukkitEvent.clickedInventory!!
-                        .setItem(clickEvent.bukkitEvent.slot, generateItemForChange(change))
+                    if (Timer.running) {
+                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                    } else {
+                        change.active = !change.active
+                        change.run()
+                        clickEvent.bukkitEvent.clickedInventory!!
+                            .setItem(clickEvent.bukkitEvent.slot, generateItemForChange(change))
+                    }
                 } else if (clickEvent.bukkitEvent.isRightClick) {
                     val configGUI = change.configurationGUI()
                     if (configGUI != null) {
