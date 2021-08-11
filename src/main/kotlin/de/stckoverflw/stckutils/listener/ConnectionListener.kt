@@ -1,5 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
+import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
@@ -22,6 +24,7 @@ class ConnectionListener : Listener {
                 player.inventory.setItem(8, settingsItem)
             }
         } else {
+            player.setSavedInventory()
             event.joinMessage(null)
         }
         GameChangeManager.gameChanges.forEach { (change, active) ->
@@ -37,6 +40,8 @@ class ConnectionListener : Listener {
         if (!Timer.running && player.gameMode != GameMode.SPECTATOR) {
             event.quitMessage(Component.text("§7[§c-§7]§7 ${player.name}"))
         } else {
+            player.saveInventory()
+            player.inventory.clear()
             event.quitMessage(null)
         }
         GameChangeManager.gameChanges.forEach { (change, active) ->

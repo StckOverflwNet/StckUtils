@@ -1,5 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
+import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
@@ -7,8 +9,7 @@ import de.stckoverflw.stckutils.user.settingsItem
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.inventory.ItemStack
-import java.util.*
+import org.bukkit.entity.Creature
 
 object Timer {
 
@@ -16,8 +17,6 @@ object Timer {
 
     var time: Long = 0
     var running = false
-
-    private val inventorys = HashMap<UUID, Array<ItemStack>>()
 
     operator fun invoke(startTime: Long) {
         require(!initialized) { "Timer has been initialized already" }
@@ -76,9 +75,7 @@ object Timer {
             GoalManager.registerActiveGoal()
             Bukkit.getOnlinePlayers().forEach {
                 it.inventory.clear()
-                if (inventorys.containsKey(it.uniqueId)) {
-                    it.inventory.contents = inventorys[it.uniqueId]!!
-                }
+                it.setSavedInventory()
             }
             running = !running
             true
@@ -91,11 +88,15 @@ object Timer {
         } else {
             ChallengeManager.unregisterChallengeListeners()
             running = !running
-            Bukkit.getOnlinePlayers().forEach {
-                inventorys[it.uniqueId] = it.inventory.contents
-                it.inventory.clear()
-                if (it.isOp) {
-                    it.inventory.setItem(8, settingsItem)
+            Bukkit.getOnlinePlayers().forEach { player ->
+                player.saveInventory()
+                player.inventory.clear()
+                player.getNearbyEntities(48.0, 48.0, 48.0).forEach {
+                    if (it is Creature)
+                        it.target = null
+                }
+                if (player.isOp) {
+                    player.inventory.setItem(8, settingsItem)
                 }
             }
             true

@@ -1,14 +1,14 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.minecraft.goal.Goal
+import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 
-object FindDiamond : Goal() {
-    override val id: String = "find-diamond"
+object FindDiamond : TeamGoal() {
 
+    override val id: String = "find-diamond"
     override val name: String = "§bFind a Diamond"
     override val description: List<String> = listOf(
         " ",

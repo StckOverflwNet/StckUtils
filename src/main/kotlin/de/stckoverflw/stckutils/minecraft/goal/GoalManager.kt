@@ -1,9 +1,9 @@
 package de.stckoverflw.stckutils.minecraft.goal
 
+import de.stckoverflw.stckutils.minecraft.goal.impl.BakeCake
 import de.stckoverflw.stckutils.minecraft.goal.impl.FindDiamond
 import de.stckoverflw.stckutils.minecraft.goal.impl.GoToNether
 import de.stckoverflw.stckutils.minecraft.goal.impl.KillEnderdragon
-import de.stckoverflw.stckutils.minecraft.goal.impl.BakeCake
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -16,19 +16,10 @@ object GoalManager {
     operator fun invoke() {
         goals = arrayListOf(
             KillEnderdragon,
-            FindDiamond,
             GoToNether,
+            FindDiamond,
             BakeCake
         )
-    }
-
-    fun getGoal(id: String): Goal? {
-        goals.forEach {
-            if (it.id.equals(id, true)) {
-                return it
-            }
-        }
-        return null
     }
 
     fun registerActiveGoal() {
