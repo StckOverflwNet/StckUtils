@@ -27,10 +27,8 @@ class ConnectionListener : Listener {
             player.setSavedInventory()
             event.joinMessage(null)
         }
-        GameChangeManager.gameChanges.forEach { (change, active) ->
-            if (active) {
-                change.run()
-            }
+        GameChangeManager.gameChanges.forEach { change ->
+            change.run()
         }
     }
 
@@ -44,10 +42,8 @@ class ConnectionListener : Listener {
             player.inventory.clear()
             event.quitMessage(null)
         }
-        GameChangeManager.gameChanges.forEach { (change, active) ->
-            if (active) {
-                change.run()
-            }
+        GameChangeManager.gameChanges.forEach { change ->
+            change.run()
         }
     }
 

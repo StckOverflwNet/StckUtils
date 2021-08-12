@@ -8,26 +8,26 @@ import net.axay.kspigot.main.KSpigotMainInstance
 
 object GameChangeManager {
 
-    val gameChanges = HashMap<GameChange, Boolean>()
+    lateinit var gameChanges: ArrayList<GameChange>
 
     operator fun invoke() {
-        gameChanges[MaxHealth] = MaxHealth.defaultActivated
-        gameChanges[DeathCounter] = DeathCounter.defaultActivated
+        gameChanges = arrayListOf(
+            MaxHealth,
+            DeathCounter
+        )
     }
 
     fun registerGameChangeListeners() {
-        gameChanges.forEach { (change, active) ->
+        gameChanges.forEach { change ->
             change.unregister()
-            if (active) {
-                if (change.usesEvents) {
-                    pluginManager.registerEvents(change, KSpigotMainInstance)
-                }
+            if (change.usesEvents) {
+                pluginManager.registerEvents(change, KSpigotMainInstance)
             }
         }
     }
 
     fun getGameChange(id: String): GameChange? {
-        gameChanges.forEach { (change, _) ->
+        gameChanges.forEach { change ->
             if (change.id.equals(id, true)) {
                 return change
             }

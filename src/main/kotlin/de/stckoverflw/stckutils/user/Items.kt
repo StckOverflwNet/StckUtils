@@ -1,10 +1,8 @@
 package de.stckoverflw.stckutils.user
 
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
-import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
-import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.goal.Goal
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -47,26 +45,6 @@ val settingsItem = itemStack(Material.NETHER_STAR) {
     }
 }
 
-fun generateItemForChange(change: GameChange) = itemStack(change.material) {
-    meta {
-        name = change.name
-        localName = change.id
-        addLore {
-            change.description.forEach {
-                + it
-            }
-            + " "
-            if (change.active) {
-                + "§aActivated§7, Click to deactivate"
-            } else {
-                + "§cDeactivated§7, Click to activate"
-            }
-            if (change.configurationGUI() != null) {
-                + "§7Right Click to open the Configuration for ${change.name}"
-            }
-        }
-    }
-}
 fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.material) {
     meta {
         name = challenge.name

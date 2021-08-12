@@ -1,13 +1,9 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
-import de.stckoverflw.stckutils.minecraft.gamechange.active
-import de.stckoverflw.stckutils.user.goBackItem
-import de.stckoverflw.stckutils.user.placeHolderItemGray
-import de.stckoverflw.stckutils.user.placeHolderItemWhite
-import de.stckoverflw.stckutils.user.settingsGUI
-import net.axay.kspigot.gui.*
+import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
+import net.axay.kspigot.gui.ForInventoryFiveByNine
+import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -19,49 +15,33 @@ import org.bukkit.boss.BarStyle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
 
-object DeathCounter : GameChange() {
+object DeathCounter : GameExtension() {
     override val id: String = "death-counter"
-    override val name: String = "§9Death Counter"
-    override val description: List<String> = listOf(
-        " ",
-        "§9Death Counter §7counts the Deaths of every",
-        "§7player and displayes them in a Bossbar"
-    )
-    override val material: Material = Material.WITHER_SKELETON_SKULL
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
-        defaultPage
-        page(1) {
-            // Placeholders at the Border of the Inventory
-            placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+    override val item = deathCountItem()
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 3) }
-
-            button(Slots.RowThreeSlotFive, deathItem()) {
-                it.bukkitEvent.isCancelled = true
-                if (it.bukkitEvent.isLeftClick) {
-                    deaths++
-                } else if (it.bukkitEvent.isRightClick) {
-                    if (deaths > 0) {
-                        deaths--
-                    } else {
-                        it.player.sendMessage(StckUtilsPlugin.prefix + "§cYou can't have less then 0 deaths")
-                    }
+    override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
+        event.bukkitEvent.isCancelled = true
+        if (event.bukkitEvent.isShiftClick) {
+            if (event.bukkitEvent.isLeftClick) {
+                deaths++
+            } else if (event.bukkitEvent.isRightClick) {
+                if (deaths > 0) {
+                    deaths--
+                } else {
+                    event.player.sendMessage(StckUtilsPlugin.prefix + "§cYou can't have less then 0 deaths")
                 }
-                run()
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, deathItem())
             }
+        } else {
+            active = !active
         }
+        run()
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, deathCountItem())
     }
 
-    override val defaultActivated: Boolean = false
-
     private val bossbar = Bukkit.createBossBar("§9Deaths: 0", BarColor.BLUE, BarStyle.SOLID)
+    private var active = false
     var deaths = 0
 
     override fun run() {
@@ -79,21 +59,23 @@ object DeathCounter : GameChange() {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        if (active) {
-            deaths++
-            run()
-        }
+        deaths++
+        run()
     }
 
-    private fun deathItem() = itemStack(Material.WITHER_SKELETON_SKULL) {
+    private fun deathCountItem() = itemStack(Material.WITHER_SKELETON_SKULL) {
         meta {
-            name = "§9Deaths"
+            name = "§9Death Counter"
             addLore {
                 + " "
-                + "§7Change the value of the Death Counter"
+                + "§9Death Counter §7counts the Deaths of every"
+                + "§7Player and displays them in a Bossbar"
                 + " "
-                + "§7Left-click to higher the deaths"
-                + "§7Right-click to lower the deaths"
+                + "§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
+                /*
+                + "§7Shift Left-click to higher the deaths"
+                + "§7Shift Right-click to lower the deaths"
+                 */
             }
         }
     }

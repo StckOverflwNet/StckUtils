@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
@@ -62,8 +63,13 @@ object BlockExplode : Challenge() {
         }
     }
 
-    var fire = false
-    var chance = 50
+    private var fire: Boolean
+        get() = Config.challengeSettings.getSetting(id, "fire") as Boolean? ?: false
+        set(value) = Config.challengeSettings.setSetting(id, "fire", value)
+
+    private var chance: Int
+        get() = Config.challengeSettings.getSetting(id, "chance") as Int? ?: 50
+        set(value) = Config.challengeSettings.setSetting(id, "chance", value)
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {

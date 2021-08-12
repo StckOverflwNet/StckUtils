@@ -6,9 +6,9 @@ import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
-import de.stckoverflw.stckutils.minecraft.gamechange.active
+import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
+import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.goal.Battle
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
@@ -174,55 +174,52 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             }
         )
 
-        compound.addContent(ChallengeManager.challenges.keys)
+        compound.addContent(ChallengeManager.challenges)
     }
 
     // GameChange Page
     page(3) {
         // Transitions
-        this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
-        this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
+        this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
+        this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders at the left Border
+        // Placeholders at the Border
         placeholder(Slots.Border, placeHolderItemGray)
 
-        // Go back Item
-        pageChanger(Slots.RowThreeSlotOne, goBackItem, 1, null, null)
+        // Placeholders in the Middle
+        placeholder(Slots.RowThreeSlotTwo rectTo Slots.RowThreeSlotEight, placeHolderItemWhite)
 
-        // Compound for displaying the GameChanges
-        val compound = createRectCompound<GameChange>(
-            Slots.RowOneSlotTwo, Slots.RowFiveSlotNine,
+        // Go back Item
+        pageChanger(Slots.RowOneSlotFive, goBackItem, 1, null, null)
+
+        // Compound for displaying the GameExtensions
+        val gameExtensionCompound = createRectCompound<GameExtension>(
+            Slots.RowFourSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = {
-                generateItemForChange(it)
+                it.item
             },
-            onClick = { clickEvent, change ->
-                val player = clickEvent.player
+            onClick = { clickEvent, extension ->
                 clickEvent.bukkitEvent.isCancelled = true
-                if (clickEvent.bukkitEvent.isLeftClick) {
-                    if (Timer.running) {
-                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
-                    } else {
-                        change.active = !change.active
-                        change.run()
-                        clickEvent.bukkitEvent.clickedInventory!!
-                            .setItem(clickEvent.bukkitEvent.slot, generateItemForChange(change))
-                    }
-                } else if (clickEvent.bukkitEvent.isRightClick) {
-                    val configGUI = change.configurationGUI()
-                    if (configGUI != null) {
-                        if (change.active) {
-                            player.openGUI(configGUI)
-                        } else {
-                            player.sendMessage(
-                                StckUtilsPlugin.prefix
-                                        + "§cYou need to activate the Game change before you can configure it")
-                        }
-                    }
-                }
+                extension.click(clickEvent)
             }
         )
 
-        compound.addContent(GameChangeManager.gameChanges.keys)
+        // Compound for displaying the Minecraft GameRules
+        val gameRuleCompound = createRectCompound<GameRule>(
+            Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
+            iconGenerator = {
+                it.item
+            },
+            onClick = { clickEvent, extension ->
+                clickEvent.bukkitEvent.isCancelled = true
+                extension.click(clickEvent)
+            }
+        )
+
+        gameExtensionCompound
+            .addContent(GameChangeManager.gameChanges.filterIsInstance<GameExtension>())
+        gameRuleCompound
+            .addContent(GameChangeManager.gameChanges.filterIsInstance<GameRule>())
     }
 
     // Goals Page
@@ -295,8 +292,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             }
         )
 
-        battleCompound.addContent(GoalManager.goals.filter { it is Battle } as List<Battle>)
-        teamGoalCompound.addContent(GoalManager.goals.filter { it is TeamGoal } as List<TeamGoal>)
+        battleCompound.addContent(GoalManager.goals.filterIsInstance<Battle>())
+        teamGoalCompound.addContent(GoalManager.goals.filterIsInstance<TeamGoal>())
     }
 
     // Settings Page for the Timer

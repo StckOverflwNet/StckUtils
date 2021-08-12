@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils.minecraft.timer
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.user.settingsItem
@@ -31,8 +32,8 @@ object Timer {
         ) {
             if (running) {
                 time++
-                ChallengeManager.challenges.forEach { (challenge, active) ->
-                    if (active) {
+                ChallengeManager.challenges.forEach { challenge ->
+                    if (challenge.active) {
                         challenge.update()
                     }
                 }
@@ -61,14 +62,12 @@ object Timer {
         } else {
             GameChangeManager.registerGameChangeListeners()
             ChallengeManager.registerChallengeListeners()
-            GameChangeManager.gameChanges.forEach { (change, active) ->
-                if (active) {
-                    change.run()
-                }
+            GameChangeManager.gameChanges.forEach { change ->
+                change.run()
             }
             ChallengeManager.registerChallengeListeners()
-            ChallengeManager.challenges.forEach { (challenge, active) ->
-                if (active) {
+            ChallengeManager.challenges.forEach { challenge ->
+                if (challenge.active) {
                     challenge.prepareChallenge()
                 }
             }

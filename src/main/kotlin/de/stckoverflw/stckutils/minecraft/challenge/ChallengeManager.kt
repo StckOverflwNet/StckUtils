@@ -9,19 +9,21 @@ import net.axay.kspigot.main.KSpigotMainInstance
 
 object ChallengeManager {
 
-    val challenges = HashMap<Challenge, Boolean>()
+    lateinit var challenges: ArrayList<Challenge>
 
     operator fun invoke() {
-        challenges[InventoryDamageClear] = false
-        challenges[SingleUse] = false
-        challenges[GamerChallenge] = false
-        challenges[BlockExplode] = false
+        challenges = arrayListOf(
+            InventoryDamageClear,
+            SingleUse,
+            GamerChallenge,
+            BlockExplode
+        )
     }
 
     fun registerChallengeListeners() {
-        challenges.forEach { (challenge, active) ->
+        challenges.forEach { challenge ->
             challenge.unregister()
-            if (active) {
+            if (challenge.active) {
                 if (challenge.usesEvents) {
                     pluginManager.registerEvents(challenge, KSpigotMainInstance)
                 }
@@ -30,13 +32,13 @@ object ChallengeManager {
     }
 
     fun unregisterChallengeListeners() {
-        challenges.forEach { (challenge, _) ->
+        challenges.forEach { challenge ->
             challenge.unregister()
         }
     }
 
     fun getChallenge(id: String): Challenge? {
-        challenges.forEach { (challenge, _) ->
+        challenges.forEach { challenge ->
             if (challenge.id.equals(id, true)) {
                 return challenge
             }
