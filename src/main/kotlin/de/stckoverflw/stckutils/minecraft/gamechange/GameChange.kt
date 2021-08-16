@@ -1,32 +1,21 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
 
 import net.axay.kspigot.gui.ForInventoryFiveByNine
-import net.axay.kspigot.gui.GUI
-import org.bukkit.Material
+import net.axay.kspigot.gui.GUIClickEvent
 import org.bukkit.event.Listener
+import org.bukkit.inventory.ItemStack
 
-abstract class GameChange : Listener {
-
+sealed class GameChange : Listener {
     /**
      * this is the id of the challenge, it has to be unique
-     * it is used to get the information about the challenge from the challenges.json
+     * it is used to get the information about the gamechange from the gamechanges.yml
      */
     abstract val id: String
 
     /**
-     * the name of the challenge, the item in the inventory is called like this
+     * the item that is shown in the GUI
      */
-    abstract val name: String
-
-    /**
-     * the description of the challenge, the item in the inventory is called like this
-     */
-    abstract val description: List<String>
-
-    /**
-     * the item of the gamechange, this is used in the challenge inventory
-     */
-    abstract val material: Material
+    abstract val item: ItemStack
 
     /**
      * If the Challenge uses Event(s) register the class as a Listener
@@ -34,14 +23,9 @@ abstract class GameChange : Listener {
     abstract val usesEvents: Boolean
 
     /**
-     * The GUI for changing settings for that challenge
+     * Gets called when someone clicks the Item for the GameChange in the Inventory
      */
-    abstract fun configurationGUI(): GUI<ForInventoryFiveByNine>?
-
-    /**
-     * Whether the Game Change is activated by default
-     */
-    abstract val defaultActivated: Boolean
+    abstract fun click(event: GUIClickEvent<ForInventoryFiveByNine>)
 
     /**
      * This method is run everytime someone joins the server and when the gamechange gets updated
@@ -49,6 +33,6 @@ abstract class GameChange : Listener {
     abstract fun run()
 }
 
-var GameChange.active: Boolean
-    get() = GameChangeManager.gameChanges.getOrDefault(this, false)
-    set(value) = GameChangeManager.gameChanges.set(this, value)
+abstract class GameExtension: GameChange()
+
+abstract class GameRule: GameChange()

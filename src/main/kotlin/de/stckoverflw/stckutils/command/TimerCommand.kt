@@ -44,12 +44,14 @@ class TimerCommand : CommandExecutor, TabCompleter {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String>? {
-        var completions = listOf("")
-        if (args.isEmpty()) {
-            return null
-        } else if (args.size == 1) {
-            completions = listOf("resume", "pause", "reset")
-        }
-        return completions.filter { it.startsWith(args[0], true) }.sorted()
+        val completions =
+            if (args.isEmpty()) {
+                null
+            } else if (args.size == 1) {
+                listOf("resume", "pause", "reset")
+            } else {
+                null
+            }
+        return completions?.filter { it.startsWith(args[0], true) }?.sorted()
     }
 }

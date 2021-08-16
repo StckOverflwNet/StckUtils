@@ -16,19 +16,10 @@ object GoalManager {
     operator fun invoke() {
         goals = arrayListOf(
             KillEnderdragon,
-            FindDiamond,
             GoToNether,
+            FindDiamond,
             BakeCake
         )
-    }
-
-    fun getGoal(id: String): Goal? {
-        goals.forEach {
-            if (it.id.equals(id, true)) {
-                return it
-            }
-        }
-        return null
     }
 
     fun registerActiveGoal() {

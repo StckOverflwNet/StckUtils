@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils
 import de.stckoverflw.stckutils.command.SettingsCommand
 import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.listener.ConnectionListener
 import de.stckoverflw.stckutils.listener.InteractListener
 import de.stckoverflw.stckutils.listener.ProtectionListener
@@ -10,6 +11,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
@@ -64,6 +66,13 @@ class StckUtilsPlugin : KSpigot() {
         logger.info("§aThis Plugin is made by §3${pluginDescription.authors.joinToString(", ")}")
         if (pluginDescription.apiVersion != null) logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
         if (pluginDescription.website != null) logger.info("§aMore Information at §3${pluginDescription.website}")
+    }
+
+    override fun shutdown() {
+        onlinePlayers.forEach {
+            it.saveInventory()
+            it.inventory.clear()
+        }
     }
 
     private fun deleteWorld(world: String) {

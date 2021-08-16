@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.extension.fromBase64
+import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.extension.toBase64
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -28,18 +29,11 @@ class ConnectionListener : Listener {
                 player.inventory.setItem(8, settingsItem)
             }
         } else {
-            if (player.persistentDataContainer.has(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)) {
-                player.inventory.contents =
-                    player.persistentDataContainer.get(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)
-                        ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>
-                player.persistentDataContainer.remove(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"))
-            }
+            player.setSavedInventory()
             event.joinMessage(null)
         }
-        GameChangeManager.gameChanges.forEach { (change, active) ->
-            if (active) {
-                change.run()
-            }
+        GameChangeManager.gameChanges.forEach { change ->
+            change.run()
         }
     }
 
@@ -57,12 +51,12 @@ class ConnectionListener : Listener {
             player.inventory.clear()
             event.quitMessage(null)
         } else {
+            player.saveInventory()
+            player.inventory.clear()
             event.quitMessage(null)
         }
-        GameChangeManager.gameChanges.forEach { (change, active) ->
-            if (active) {
-                change.run()
-            }
+        GameChangeManager.gameChanges.forEach { change ->
+            change.run()
         }
     }
 

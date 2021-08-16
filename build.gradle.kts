@@ -22,10 +22,6 @@ dependencies {
 
     // Gson dependency
     implementation("com.google.code.gson", "gson", "2.8.7")
-
-    // You can add Dependencies here
-    // For Example:
-    // implementation("io.ktor", "ktor-client", "1.4.0") // This would be shaded into the final jar
 }
 
 tasks {

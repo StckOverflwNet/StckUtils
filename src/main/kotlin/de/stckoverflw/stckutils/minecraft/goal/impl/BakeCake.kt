@@ -1,12 +1,13 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.minecraft.goal.Goal
+import de.stckoverflw.stckutils.minecraft.goal.Battle
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
 
-object BakeCake : Goal() {
+object BakeCake : Battle() {
+
     override val id: String = "bake-cake"
     override val name: String = "§fBake a Cake"
     override val description: List<String> = listOf(
@@ -22,7 +23,7 @@ object BakeCake : Goal() {
     @EventHandler
     fun onCraft(event: CraftItemEvent) {
         if (event.currentItem!!.type == Material.CAKE) {
-            win("§9${(event.whoClicked as Player).name} §7crafted a §7Cake§7!")
+            win(event.whoClicked as Player, "§9${(event.whoClicked as Player).name} §7crafted a §7Cake§7!")
         }
     }
 }

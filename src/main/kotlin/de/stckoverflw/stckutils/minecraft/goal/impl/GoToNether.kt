@@ -1,13 +1,14 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.minecraft.goal.Goal
+import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerChangedWorldEvent
 
-object GoToNether : Goal() {
+object GoToNether : TeamGoal() {
+
     override val id: String = "go-to-nether"
     override val name: String = "§6Go to the Nether"
     override val description: List<String> = listOf(

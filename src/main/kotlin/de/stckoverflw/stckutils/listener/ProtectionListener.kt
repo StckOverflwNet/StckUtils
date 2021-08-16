@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.listener
 
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -10,9 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent
-import org.bukkit.event.player.PlayerRespawnEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
+import org.bukkit.event.player.*
 
 class ProtectionListener : Listener {
 
@@ -31,7 +30,7 @@ class ProtectionListener : Listener {
     }
 
     @EventHandler
-    fun onHostileMob(event: EntityTargetEvent) {
+    fun onEntityTarget(event: EntityTargetEvent) {
         if (!Timer.running) {
             event.isCancelled = true
         }
@@ -76,6 +75,32 @@ class ProtectionListener : Listener {
     fun onFoodLevelChange(event: FoodLevelChangeEvent) {
         if (!Timer.running) {
             event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onDrop(event: PlayerDropItemEvent) {
+        if (!Timer.running) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onCommand(event: PlayerCommandPreprocessEvent) {
+        val player = event.player
+        if (!Timer.running) {
+            if (player.isOp) {
+                val command = event.message.split(" ")[0].replace("/", "")
+                val target = Bukkit.getPlayer(event.message.split(" ")[1])
+                if (target != null) {
+                    if (command == "op") {
+                        target.inventory.setItem(8, settingsItem)
+                    } else if (command == "deop") {
+                        target.inventory.setItem(8, null)
+                        target.closeInventory()
+                    }
+                }
+            }
         }
     }
 }

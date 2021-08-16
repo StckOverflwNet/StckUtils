@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.challenge
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -8,7 +9,6 @@ import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.event.Listener
 
@@ -72,5 +72,5 @@ abstract class Challenge : Listener {
 }
 
 var Challenge.active: Boolean
-    get() = ChallengeManager.challenges.getOrDefault(this, false)
-    set(value) = ChallengeManager.challenges.set(this, value)
+    get() = Config.challengeSettings.getActive(this.id)
+    set(value) = Config.challengeSettings.setActive(this.id, value)

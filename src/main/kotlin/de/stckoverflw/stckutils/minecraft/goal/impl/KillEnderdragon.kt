@@ -1,12 +1,13 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.minecraft.goal.Goal
+import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 
-object KillEnderdragon : Goal() {
+object KillEnderdragon : TeamGoal() {
+
     override val id: String = "kill-dragon"
     override val name: String = "§cKill Enderdragon"
     override val description: List<String> = listOf(

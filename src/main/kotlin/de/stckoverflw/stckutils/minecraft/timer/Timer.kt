@@ -1,8 +1,9 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
-import de.stckoverflw.stckutils.extension.fromBase64
-import de.stckoverflw.stckutils.extension.toBase64
+import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.user.settingsItem
@@ -10,10 +11,7 @@ import net.axay.kspigot.main.KSpigotMainInstance
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.NamespacedKey
 import org.bukkit.entity.Creature
-import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 
 object Timer {
 
@@ -35,8 +33,8 @@ object Timer {
         ) {
             if (running) {
                 time++
-                ChallengeManager.challenges.forEach { (challenge, active) ->
-                    if (active) {
+                ChallengeManager.challenges.forEach { challenge ->
+                    if (challenge.active) {
                         challenge.update()
                     }
                 }
@@ -65,26 +63,19 @@ object Timer {
         } else {
             GameChangeManager.registerGameChangeListeners()
             ChallengeManager.registerChallengeListeners()
-            GameChangeManager.gameChanges.forEach { (change, active) ->
-                if (active) {
-                    change.run()
-                }
+            GameChangeManager.gameChanges.forEach { change ->
+                change.run()
             }
             ChallengeManager.registerChallengeListeners()
-            ChallengeManager.challenges.forEach { (challenge, active) ->
-                if (active) {
+            ChallengeManager.challenges.forEach { challenge ->
+                if (challenge.active) {
                     challenge.prepareChallenge()
                 }
             }
             GoalManager.registerActiveGoal()
             Bukkit.getOnlinePlayers().forEach {
                 it.inventory.clear()
-                if (it.persistentDataContainer.has(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)) {
-                    it.inventory.contents =
-                        it.persistentDataContainer.get(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)
-                            ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>
-                    it.persistentDataContainer.remove(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"))
-                }
+                it.setSavedInventory()
             }
             running = !running
             true
@@ -98,11 +89,7 @@ object Timer {
             ChallengeManager.unregisterChallengeListeners()
             running = !running
             Bukkit.getOnlinePlayers().forEach { player ->
-                player.persistentDataContainer.set(
-                    NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
-                    PersistentDataType.STRING,
-                    toBase64(player.inventory.contents as Array<ItemStack>)
-                )
+                player.saveInventory()
                 player.inventory.clear()
                 player.getNearbyEntities(48.0, 48.0, 48.0).forEach {
                     if (it is Creature)
