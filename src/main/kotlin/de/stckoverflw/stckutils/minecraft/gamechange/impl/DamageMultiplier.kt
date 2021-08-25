@@ -16,13 +16,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
 import kotlin.math.roundToInt
 
 object DamageMultiplier : GameExtension() {
     override val id: String = "damage-multiplier"
     override val usesEvents: Boolean = true
 
-    override val item = damageMultiplierItem()
+    override val item: ItemStack = damageMultiplierItem()
 
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
         event.bukkitEvent.isCancelled = true

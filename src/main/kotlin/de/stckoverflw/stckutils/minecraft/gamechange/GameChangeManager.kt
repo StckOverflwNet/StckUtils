@@ -17,7 +17,7 @@ object GameChangeManager {
             MaxHealth,
             DeathCounter,
             DamageMultiplier,
-            EntityDuplicator
+            EntityDuplicator,
         )
     }
 

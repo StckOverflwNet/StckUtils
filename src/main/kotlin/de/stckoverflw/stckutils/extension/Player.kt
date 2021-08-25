@@ -26,6 +26,7 @@ fun Player.resetWorlds() {
 
 fun Player.setSavedInventory() {
     if (persistentDataContainer.has(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)) {
+        inventory.clear()
         inventory.contents =
             persistentDataContainer.get(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)
                 ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>

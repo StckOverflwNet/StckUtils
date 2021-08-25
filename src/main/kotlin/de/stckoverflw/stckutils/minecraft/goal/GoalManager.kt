@@ -18,7 +18,7 @@ object GoalManager {
             KillEnderdragon,
             GoToNether,
             FindDiamond,
-            BakeCake
+            BakeCake,
         )
     }
 

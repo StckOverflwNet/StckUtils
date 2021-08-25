@@ -23,6 +23,7 @@ class ConnectionListener : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
+        player.inventory.clear()
         if (!Timer.running) {
             event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
             if (player.isOp) {

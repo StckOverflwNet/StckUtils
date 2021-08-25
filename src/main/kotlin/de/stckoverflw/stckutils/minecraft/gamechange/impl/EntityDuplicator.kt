@@ -13,12 +13,13 @@ import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.inventory.ItemStack
 
 object EntityDuplicator : GameExtension() {
     override val id: String = "entity-duplicator"
     override val usesEvents: Boolean = true
 
-    override val item = entityDuplicatorItem()
+    override val item: ItemStack = entityDuplicatorItem()
 
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
         event.bukkitEvent.isCancelled = true

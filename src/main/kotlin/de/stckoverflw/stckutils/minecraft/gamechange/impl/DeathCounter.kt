@@ -14,12 +14,13 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.inventory.ItemStack
 
 object DeathCounter : GameExtension() {
     override val id: String = "death-counter"
     override val usesEvents: Boolean = true
 
-    override val item = deathCountItem()
+    override val item: ItemStack = deathCountItem()
 
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
         event.bukkitEvent.isCancelled = true
