@@ -28,10 +28,10 @@ import org.bukkit.Material
  */
 fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
     title = "§9Settings"
-    defaultPage = 1
+    defaultPage = 2
 
     // Default Settings Page
-    page(1) {
+    page(2) {
         // Placeholders at the Border of the Inventory
         placeholder(Slots.Border, placeHolderItemGray)
         // Placeholders in the Middle field of the Inventory
@@ -47,7 +47,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                     +"§7Click to open the Challenge Inventory"
                 }
             }
-        }, 2, null, null)
+        }, 1, null, null)
 
         // Item for opening the GameChanges Page
         pageChanger(Slots.RowThreeSlotFive, itemStack(Material.FILLED_MAP) {
@@ -100,7 +100,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         // Go back Item
-        pageChanger(Slots.RowFiveSlotFive, goBackItem, 1, null, null)
+        pageChanger(Slots.RowFiveSlotFive, goBackItem, defaultPage, null, null)
 
         // Item for opening the World reset Settings Page
         pageChanger(Slots.RowThreeSlotFour, itemStack(Material.GRASS_BLOCK) {
@@ -130,7 +130,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
     }
 
     // Challenges Page
-    page(2) {
+    page(1) {
         // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
@@ -139,11 +139,11 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         placeholder(Slots.Border, placeHolderItemGray)
 
         // Go back Item
-        pageChanger(Slots.RowThreeSlotOne, goBackItem, 1, null, null)
+        pageChanger(Slots.RowThreeSlotNine, goBackItem, defaultPage, null, null)
 
         // Compound for displaying the Challenges
         val compound = createRectCompound<Challenge>(
-            Slots.RowOneSlotTwo, Slots.RowFiveSlotNine,
+            Slots.RowOneSlotOne, Slots.RowFiveSlotEight,
             iconGenerator = {
                 generateItemForChallenge(it)
             },
@@ -190,7 +190,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         placeholder(Slots.RowThreeSlotTwo rectTo Slots.RowThreeSlotEight, placeHolderItemWhite)
 
         // Go back Item
-        pageChanger(Slots.RowOneSlotFive, goBackItem, 1, null, null)
+        pageChanger(Slots.RowOneSlotFive, goBackItem, defaultPage, null, null)
 
         // Compound for displaying the GameExtensions
         val gameExtensionCompound = createRectCompound<GameExtension>(
@@ -231,7 +231,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         placeholder(Slots.RowOneSlotOne rectTo Slots.RowFiveSlotNine, placeHolderItemGray)
 
         // Go back Item
-        pageChanger(Slots.RowThreeSlotOne, goBackItem, 1, null, null)
+        pageChanger(Slots.RowThreeSlotOne, goBackItem, defaultPage, null, null)
 
         placeholder(Slots.RowFourSlotTwo, itemStack(Material.AZALEA) {
             meta {

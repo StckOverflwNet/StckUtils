@@ -69,7 +69,7 @@ private fun spawnFireworks() {
         fw.fireworkMeta = fwm
         fw.detonate()
 
-        (loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework).fireworkMeta = fwm
+        fw.fireworkMeta = fwm
         it.gameMode = GameMode.SPECTATOR
     }
 }

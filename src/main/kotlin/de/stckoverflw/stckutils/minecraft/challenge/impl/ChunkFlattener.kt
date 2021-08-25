@@ -41,7 +41,7 @@ object ChunkFlattener : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 2) }
+            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 1) }
 
             button(Slots.RowThreeSlotSeven, plusItem()) {
                 it.bukkitEvent.isCancelled = true

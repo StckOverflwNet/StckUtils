@@ -1,6 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl
 
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChange
+import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
 import de.stckoverflw.stckutils.user.placeHolderItemWhite
@@ -16,20 +16,27 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import kotlin.math.roundToInt
 
-object DamageMultiplier : GameChange() {
+object DamageMultiplier : GameExtension() {
     override val id: String = "damage-multiplier"
-    override val name: String = "§6Damage Multiplier"
-    override val description: List<String> = listOf(
-        " ",
-        "§7Multiplies the damage you do to entities"
-    )
-    override val material: Material = Material.IRON_SWORD
     override val usesEvents: Boolean = true
-    override val defaultActivated: Boolean = false
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+    override val item = damageMultiplierItem()
+
+    override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
+        event.bukkitEvent.isCancelled = true
+        if (event.bukkitEvent.isLeftClick) {
+            active = !active
+        } else if (event.bukkitEvent.isRightClick) {
+            event.player.openGUI(configurationGUI())
+        }
+
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, damageMultiplierItem())
+    }
+
+    fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+        title = "§6Damage Multiplier"
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -72,7 +79,7 @@ object DamageMultiplier : GameChange() {
             addLore {
                 +" "
                 +"§7Reset the value of the Multiplier"
-                +"§7Value: §f$multiplier §7(§8Default: 1.0§7)"
+                +"§7Value: §f${String.format("%.1f", multiplier)} §7(§8Default: 1.0§7)"
             }
         }
     }
@@ -83,7 +90,7 @@ object DamageMultiplier : GameChange() {
             addLore {
                 +" "
                 +"§7Increase the value of the Multiplier"
-                +"§7Value: §f$multiplier"
+                +"§7Value: §f${String.format("%.1f", multiplier)}"
                 +" "
                 +"§7Left-click + Shift:     §a+ 0.1"
                 +"§7Left-click:             §a+ 0.5"
@@ -99,7 +106,7 @@ object DamageMultiplier : GameChange() {
             addLore {
                 +" "
                 +"§7Decrease the value of the Multiplier"
-                +"§7Value: §f$multiplier"
+                +"§7Value: §f${String.format("%.1f", multiplier)}"
                 +" "
                 +"§7Left-click + Shift:     §c- 0.1"
                 +"§7Left-click:             §c- 0.5"
@@ -130,24 +137,44 @@ object DamageMultiplier : GameChange() {
     }
 
     private fun updateMultiplier(value: Double) {
-        if ((multiplier + value) < maxMultiplier && (multiplier + value) > minMultiplier) {
-            multiplier += value
+        multiplier = if ((multiplier + value) < maxMultiplier && (multiplier + value) > minMultiplier) {
+            ((multiplier + value) * 10.0).roundToInt() / 10.0
         } else {
-            multiplier = if (value > 0) maxMultiplier else minMultiplier
+            if (value > 0) maxMultiplier else minMultiplier
         }
     }
 
     override fun run() {
+        // since this method is empty we don't ever call it
     }
 
     private var minMultiplier: Double = 0.1
     private var maxMultiplier: Double = 100.0
     private var multiplier: Double = 1.0
+    private var active = false
 
     @EventHandler
     fun onDamage(event: EntityDamageByEntityEvent) {
         if (event.damager is Player) {
             event.damage *= multiplier
+        }
+    }
+
+    private fun damageMultiplierItem() = itemStack(Material.IRON_SWORD) {
+        meta {
+            name = "§6Damage Multiplier"
+            addLore {
+                +" "
+                +"§7Multiplies the damage you do to entities"
+                +" "
+                +"§7Right-click: §fOpen more settings"
+                +""
+                +"§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
+                /*
+                + "§7Shift Left-click to higher the deaths"
+                + "§7Shift Right-click to lower the deaths"
+                 */
+            }
         }
     }
 }

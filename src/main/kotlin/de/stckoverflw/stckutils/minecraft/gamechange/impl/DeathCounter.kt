@@ -67,11 +67,11 @@ object DeathCounter : GameExtension() {
         meta {
             name = "§9Death Counter"
             addLore {
-                + " "
-                + "§9Death Counter §7counts the Deaths of every"
-                + "§7Player and displays them in a Bossbar"
-                + " "
-                + "§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
+                +" "
+                +"§9Death Counter §7counts the Deaths of every"
+                +"§7Player and displays them in a Bossbar"
+                +" "
+                +"§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
                 /*
                 + "§7Shift Left-click to higher the deaths"
                 + "§7Shift Right-click to lower the deaths"
