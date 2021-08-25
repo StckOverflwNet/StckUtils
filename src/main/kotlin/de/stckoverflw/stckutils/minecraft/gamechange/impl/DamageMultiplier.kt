@@ -155,6 +155,7 @@ object DamageMultiplier : GameExtension() {
 
     @EventHandler
     fun onDamage(event: EntityDamageByEntityEvent) {
+        if (!active) return
         if (event.damager is Player) {
             event.damage *= multiplier
         }
@@ -170,10 +171,6 @@ object DamageMultiplier : GameExtension() {
                 +"§7Right-click: §fOpen more settings"
                 +""
                 +"§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
-                /*
-                + "§7Shift Left-click to higher the deaths"
-                + "§7Shift Right-click to lower the deaths"
-                 */
             }
         }
     }

@@ -2,8 +2,9 @@ name: StckUtils
 api-version: 1.17
 authors:
   - StckOverflw
+  - l4zs
 main: de.stckoverflw.stckutils.StckUtilsPlugin
-version: 0.0.1
+version: 1.0.0
 libraries:
   - "net.axay:kspigot:1.17.2"
 

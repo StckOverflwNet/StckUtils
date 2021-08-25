@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.minecraft.gamechange
 
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.DamageMultiplier
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.DeathCounter
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.EntityDuplicator
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.MaxHealth
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
@@ -15,7 +16,8 @@ object GameChangeManager {
         gameChanges = arrayListOf(
             MaxHealth,
             DeathCounter,
-            DamageMultiplier
+            DamageMultiplier,
+            EntityDuplicator
         )
     }
 
@@ -36,5 +38,4 @@ object GameChangeManager {
         }
         return null
     }
-
 }
