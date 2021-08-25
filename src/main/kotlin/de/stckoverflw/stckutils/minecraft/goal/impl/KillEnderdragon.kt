@@ -13,7 +13,7 @@ object KillEnderdragon : TeamGoal() {
     override val description: List<String> = listOf(
         " ",
         "§7The Challenge is finished when someone",
-        "§ckills the Enderdragon"
+        "§ckills the Enderdragon",
     )
     override val material: Material = Material.DRAGON_HEAD
 

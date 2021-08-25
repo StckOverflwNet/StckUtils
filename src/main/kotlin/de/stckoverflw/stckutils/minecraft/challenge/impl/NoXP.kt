@@ -13,7 +13,7 @@ object NoXP : Challenge() {
     override val material: Material = Material.EXPERIENCE_BOTTLE
     override val description: List<String> = listOf(
         " ",
-        "§7When you pick up xp the challenge is over."
+        "§7When you pick up xp the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

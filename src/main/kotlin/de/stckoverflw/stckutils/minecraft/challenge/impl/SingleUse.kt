@@ -18,7 +18,7 @@ object SingleUse : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7§lEvery §7Item has §c1 durability §7and",
-        "§7can just be used §conce"
+        "§7can just be used §conce",
     )
     override val usesEvents: Boolean = true
 

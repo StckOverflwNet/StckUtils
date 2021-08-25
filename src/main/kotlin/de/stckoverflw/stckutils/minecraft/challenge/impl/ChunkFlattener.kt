@@ -27,7 +27,7 @@ object ChunkFlattener : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7Every now and then the top layer",
-        "§7of your current chunk will be removed"
+        "§7of your current chunk will be removed",
     )
     override val usesEvents: Boolean = false
 

@@ -13,7 +13,7 @@ object NoBlockPlace : Challenge() {
     override val material: Material = Material.GOLDEN_PICKAXE
     override val description: List<String> = listOf(
         " ",
-        "§7When you place a block the challenge is over."
+        "§7When you place a block the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

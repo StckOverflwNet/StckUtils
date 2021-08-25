@@ -24,7 +24,7 @@ object BlockExplode : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§cEvery §7Block you break has a ",
-        "§7chance to §cexplode"
+        "§7chance to §cexplode",
     )
     override val usesEvents: Boolean = true
 

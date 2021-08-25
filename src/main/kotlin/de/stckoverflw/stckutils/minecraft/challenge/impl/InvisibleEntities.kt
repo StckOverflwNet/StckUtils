@@ -14,7 +14,7 @@ object InvisibleEntities : Challenge() {
     override val material: Material = Material.WHITE_BANNER
     override val description: List<String> = listOf(
         " ",
-        "§7Every Mob is invisible."
+        "§7Every Mob is invisible.",
     )
     override val usesEvents: Boolean = true
 

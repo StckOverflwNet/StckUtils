@@ -20,7 +20,7 @@ object GamerChallenge : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7When you walk on or in Grass",
-        "§7you die"
+        "§7you die",
     )
     override val usesEvents: Boolean = false
 

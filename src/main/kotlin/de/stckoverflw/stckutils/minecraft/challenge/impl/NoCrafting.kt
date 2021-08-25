@@ -13,7 +13,7 @@ object NoCrafting : Challenge() {
     override val material: Material = Material.CRAFTING_TABLE
     override val description: List<String> = listOf(
         " ",
-        "§7When you craft something the challenge is over."
+        "§7When you craft something the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

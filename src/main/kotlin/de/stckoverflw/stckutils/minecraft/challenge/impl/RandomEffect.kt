@@ -20,7 +20,7 @@ object RandomEffect : Challenge() {
 
     override val description: List<String> = listOf(
         " ",
-        "§7Every time you get damage every player is getting a random effect."
+        "§7Every time you get damage every player is getting a random effect.",
     )
 
     override val usesEvents: Boolean = true

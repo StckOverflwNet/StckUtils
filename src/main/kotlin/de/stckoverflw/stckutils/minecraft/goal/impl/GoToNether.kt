@@ -14,7 +14,7 @@ object GoToNether : TeamGoal() {
     override val description: List<String> = listOf(
         " ",
         "§7The Challenge is finished when someone",
-        "§6goes to the Nether"
+        "§6goes to the Nether",
     )
     override val material: Material = Material.NETHERRACK
 

@@ -15,7 +15,7 @@ object NoVillagerTrade : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7When you trade with a villager",
-        "§7or wandering trader the challenge is over."
+        "§7or wandering trader the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

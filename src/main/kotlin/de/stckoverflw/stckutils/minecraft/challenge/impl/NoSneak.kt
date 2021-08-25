@@ -13,7 +13,7 @@ object NoSneak : Challenge() {
     override val material: Material = Material.CHAINMAIL_BOOTS
     override val description: List<String> = listOf(
         " ",
-        "§7When you sneak the challenge is over."
+        "§7When you sneak the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

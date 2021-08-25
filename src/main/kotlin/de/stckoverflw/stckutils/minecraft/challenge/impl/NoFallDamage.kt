@@ -14,7 +14,7 @@ object NoFallDamage : Challenge() {
     override val material: Material = Material.LEATHER_BOOTS
     override val description: List<String> = listOf(
         " ",
-        "§7When you get fall damgage the challenge is over."
+        "§7When you get fall damgage the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

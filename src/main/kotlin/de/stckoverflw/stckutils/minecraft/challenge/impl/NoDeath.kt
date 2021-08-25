@@ -13,7 +13,7 @@ object NoDeath : Challenge() {
     override val material: Material = Material.SKELETON_SKULL
     override val description: List<String> = listOf(
         " ",
-        "§7When you die the challenge is over."
+        "§7When you die the challenge is over.",
     )
     override val usesEvents: Boolean = true
 

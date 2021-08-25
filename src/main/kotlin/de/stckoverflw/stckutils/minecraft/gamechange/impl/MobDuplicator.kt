@@ -15,11 +15,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 
-object EntityDuplicator : GameExtension() {
-    override val id: String = "entity-duplicator"
+object MobDuplicator : GameExtension() {
+    override val id: String = "mob-duplicator"
     override val usesEvents: Boolean = true
 
-    override val item: ItemStack = entityDuplicatorItem()
+    override val item: ItemStack = mobDuplicatorItem()
 
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
         event.bukkitEvent.isCancelled = true
@@ -29,7 +29,7 @@ object EntityDuplicator : GameExtension() {
             exponential = !exponential
         }
 
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, entityDuplicatorItem())
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, mobDuplicatorItem())
     }
 
     private var active: Boolean = false
@@ -50,9 +50,9 @@ object EntityDuplicator : GameExtension() {
 
     }
 
-    private fun entityDuplicatorItem() = itemStack(Material.SUSPICIOUS_STEW) {
+    private fun mobDuplicatorItem() = itemStack(Material.SUSPICIOUS_STEW) {
         meta {
-            name = "§dEntity Duplicator"
+            name = "§dMob Duplicator"
             addLore {
                 +" "
                 if (exponential) {
@@ -71,5 +71,4 @@ object EntityDuplicator : GameExtension() {
             }
         }
     }
-
 }
