@@ -26,6 +26,7 @@ object ChallengeManager {
             RandomEffect,
             NoSneak,
             NoDeath,
+            BalanceLife,
         )
     }
 
