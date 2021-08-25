@@ -49,7 +49,6 @@ abstract class TeamGoal : Goal() {
 abstract class Battle : Goal() {
     fun win(player: Player, reason: String) {
         if (Timer.running) {
-
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§9${player.name} §awon §7the Challenge"))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.toString())))
@@ -70,7 +69,7 @@ private fun spawnFireworks() {
         fw.fireworkMeta = fwm
         fw.detonate()
 
-        (loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework).fireworkMeta = fwm
+        fw.fireworkMeta = fwm
         it.gameMode = GameMode.SPECTATOR
     }
 }

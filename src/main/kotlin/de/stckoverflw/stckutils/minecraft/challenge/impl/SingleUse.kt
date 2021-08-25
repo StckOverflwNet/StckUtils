@@ -43,7 +43,7 @@ object SingleUse : Challenge() {
     private fun setOneDurability(itemStack: ItemStack) {
         val itemMeta = itemStack.itemMeta ?: return
         if (itemMeta is Damageable) {
-            (itemMeta as Damageable).damage = itemStack.type.maxDurability - 1
+            itemMeta.damage = itemStack.type.maxDurability - 1
         }
         itemStack.itemMeta = itemMeta
     }

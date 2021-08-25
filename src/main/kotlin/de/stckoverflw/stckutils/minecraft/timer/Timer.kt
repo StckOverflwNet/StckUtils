@@ -7,6 +7,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.user.settingsItem
+import net.axay.kspigot.main.KSpigotMainInstance
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -122,7 +123,6 @@ object Timer {
                 timerString.append("$seconds seconds")
             }
         }
-
 
         return timerString.toString()
     }

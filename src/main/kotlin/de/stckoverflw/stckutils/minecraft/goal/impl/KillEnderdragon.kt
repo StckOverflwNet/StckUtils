@@ -15,7 +15,6 @@ object KillEnderdragon : TeamGoal() {
         "§7The Challenge is finished when someone",
         "§ckills the Enderdragon"
     )
-
     override val material: Material = Material.DRAGON_HEAD
 
     @EventHandler

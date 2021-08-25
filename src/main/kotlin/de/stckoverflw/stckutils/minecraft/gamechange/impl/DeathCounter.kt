@@ -42,7 +42,7 @@ object DeathCounter : GameExtension() {
 
     private val bossbar = Bukkit.createBossBar("§9Deaths: 0", BarColor.BLUE, BarStyle.SOLID)
     private var active = false
-    var deaths = 0
+    private var deaths = 0
 
     override fun run() {
         if (active) {
@@ -67,11 +67,11 @@ object DeathCounter : GameExtension() {
         meta {
             name = "§9Death Counter"
             addLore {
-                + " "
-                + "§9Death Counter §7counts the Deaths of every"
-                + "§7Player and displays them in a Bossbar"
-                + " "
-                + "§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
+                +" "
+                +"§9Death Counter §7counts the Deaths of every"
+                +"§7Player and displays them in a Bossbar"
+                +" "
+                +"§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
                 /*
                 + "§7Shift Left-click to higher the deaths"
                 + "§7Shift Right-click to lower the deaths"

@@ -2,16 +2,21 @@ package de.stckoverflw.stckutils.listener
 
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
+import de.stckoverflw.stckutils.extension.toBase64
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
+import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
 import org.bukkit.GameMode
+import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 
 class ConnectionListener : Listener {
 
@@ -37,6 +42,14 @@ class ConnectionListener : Listener {
         val player = event.player
         if (!Timer.running && player.gameMode != GameMode.SPECTATOR) {
             event.quitMessage(Component.text("§7[§c-§7]§7 ${player.name}"))
+        } else if (Timer.running && player.gameMode != GameMode.SPECTATOR) {
+            player.persistentDataContainer.set(
+                NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
+                PersistentDataType.STRING,
+                toBase64(player.inventory.contents as Array<ItemStack>)
+            )
+            player.inventory.clear()
+            event.quitMessage(null)
         } else {
             player.saveInventory()
             player.inventory.clear()
@@ -55,8 +68,10 @@ class ConnectionListener : Listener {
                 player.gameMode = GameMode.SPECTATOR
                 player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
             } else {
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                    Component.text("§cThe Timer is currently running, you can't join at the moment."))
+                event.disallow(
+                    PlayerLoginEvent.Result.KICK_OTHER,
+                    Component.text("§cThe Timer is currently running, you can't join at the moment.")
+                )
             }
         }
     }

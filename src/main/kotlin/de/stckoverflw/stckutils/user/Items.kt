@@ -29,8 +29,8 @@ val goBackItem = itemStack(Material.KNOWLEDGE_BOOK) {
     meta {
         name = "${KColors.LIGHTGREEN}Go back"
         addLore {
-            + ""
-            + "§7§oClick to go to the previous Page"
+            +""
+            +"§7§oClick to go back to the previous Page"
         }
     }
 }
@@ -51,67 +51,70 @@ fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.materia
         localName = challenge.id
         addLore {
             challenge.description.forEach {
-                + it
+                +it
             }
-            + " "
+            +" "
             if (challenge.active) {
-                + "§aActivated§7, Click to deactivate"
+                +"§aActivated§7, Click to deactivate"
             } else {
-                + "§cDeactivated§7, Click to activate"
+                +"§cDeactivated§7, Click to activate"
             }
             if (challenge.configurationGUI() != null) {
-                + "§7Right Click to open the Configuration for ${challenge.name}"
+                +"§7Right Click to open the Configuration for ${challenge.name}"
             }
         }
     }
 }
+
 fun generateItemForGoal(goal: Goal) = itemStack(goal.material) {
     meta {
         name = goal.name
         localName = goal.id
         addLore {
             goal.description.forEach {
-                + it
+                +it
             }
-            + " "
+            +" "
             if (GoalManager.activeGoal == goal) {
-                + "§aThis Goal is currently activated,"
-                + "§7click to §cdeactivate §7it"
+                +"§aThis Goal is currently activated,"
+                +"§7click to §cdeactivate §7it"
             } else {
-                + "§cThis Goal is currently deactivated,"
-                + "§7click to §aactivate §7it"
+                +"§cThis Goal is currently deactivated,"
+                +"§7click to §aactivate §7it"
             }
         }
     }
 }
+
 fun generateTimerItem() = itemStack(Material.CLOCK) {
     meta {
         name = "§6Change Timer Time"
         addLore {
-            + " "
+            +" "
             if (Timer.time > 0) {
-                + "§7Current Time: $Timer"
+                +"§7Current Time: $Timer"
             } else {
                 +"§7Current Time: §c0m"
             }
-            + " "
-            + "§7Left-click to higher §c1m"
-            + "§7Right-click to lower §c1m"
+            +" "
+            +"§7Left-click to higher §c1m"
+            +"§7Right-click to lower §c1m"
         }
     }
 }
+
 fun generateVillageSpawnItem() = itemStack(Material.VILLAGER_SPAWN_EGG) {
     meta {
         name = "${KColors.SANDYBROWN}Village Spawn"
         addLore {
-            + " "
+            +" "
             if (Config.resetSettings.villageSpawn) {
-                + "§7Currently §aactivated"
-                + " "
+                +"§7Currently §aactivated"
+                +" "
                 +"§7Click to §cdeactivate"
             } else {
-                + "§7Currently §cdeactivated"
-                + " "
+                +"§7Currently §cdeactivated"
+                +" "
                 +"§7Click to §aactivate"
             }
         }

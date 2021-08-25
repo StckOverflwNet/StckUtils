@@ -16,6 +16,27 @@ import org.bukkit.event.player.*
 class ProtectionListener : Listener {
 
     @EventHandler
+    fun onRespawn(event: PlayerRespawnEvent) {
+        if (!Timer.running && event.player.isOp) {
+            event.player.inventory.setItem(8, settingsItem)
+        }
+    }
+
+    @EventHandler
+    fun onItemPickUp(event: PlayerAttemptPickupItemEvent) {
+        if (!Timer.running) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onEntityTarget(event: EntityTargetEvent) {
+        if (!Timer.running) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         if (!Timer.running) {
             event.isCancelled = true
@@ -52,27 +73,6 @@ class ProtectionListener : Listener {
 
     @EventHandler
     fun onFoodLevelChange(event: FoodLevelChangeEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
-    }
-
-    @EventHandler
-    fun onRespawn(event: PlayerRespawnEvent) {
-        if (!Timer.running && event.player.isOp) {
-            event.player.inventory.setItem(8, settingsItem)
-        }
-    }
-
-    @EventHandler
-    fun onItemPickUp(event: PlayerAttemptPickupItemEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
-    }
-
-    @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
         if (!Timer.running) {
             event.isCancelled = true
         }
