@@ -160,6 +160,7 @@ object ChunkFlattener : Challenge() {
                     for (j in 0..15) {
                         sync {
                             val block = player.world.getHighestBlockAt(player.location.chunk.x * 16 + i, player.location.chunk.z * 16 + j)
+                            if (block.type.blastResistance > 1200.0F) return@sync
                             if (doDrop) {
                                 block.breakNaturally()
                             } else {
