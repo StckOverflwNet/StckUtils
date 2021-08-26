@@ -27,6 +27,7 @@ object ChallengeManager {
             NoSneak,
             NoDeath,
             BalanceLife,
+            AdvancementDamage,
         )
     }
 

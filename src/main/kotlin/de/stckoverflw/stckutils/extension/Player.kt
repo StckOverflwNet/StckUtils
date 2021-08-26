@@ -16,8 +16,8 @@ fun Player.resetWorlds() {
         it.kick(
             Component.join(
                 Component.newline(),
-                Component.text("§7The World is §cresetting"),
-                Component.text("§7World reset started by §9${name}")
+                Component.text("§7The Worlds are §cresetting"),
+                Component.text("§7Reset started by §9${name}"),
             )
         )
     }

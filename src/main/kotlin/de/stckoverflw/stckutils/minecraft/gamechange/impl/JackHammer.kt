@@ -35,6 +35,7 @@ object JackHammer : GameExtension() {
 
     @EventHandler
     fun onDeath(event: BlockBreakEvent) {
+        if (!active) return
         for (i in event.block.y downTo 0) {
             val block = event.block.world.getBlockAt(event.block.x, i, event.block.z)
             if (block.type.blastResistance > 1200.0F) return

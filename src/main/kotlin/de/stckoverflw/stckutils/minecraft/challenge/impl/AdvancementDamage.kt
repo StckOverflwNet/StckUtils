@@ -5,22 +5,24 @@ import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
-import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.player.PlayerAdvancementDoneEvent
 
-object NoBlockPlace : Challenge() {
-    override val id: String = "no-block-place"
-    override val name: String = "§eNo Block Place"
-    override val material: Material = Material.GRASS_BLOCK
+object AdvancementDamage : Challenge() {
+    override val id: String = "advancement-damage"
+    override val name: String = "§bAdvancement Damage"
+    override val material: Material = Material.DAMAGED_ANVIL
     override val description: List<String> = listOf(
         " ",
-        "§7When you place a block the challenge is over.",
+        "§7For every advancement you get, you lose hp.",
     )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 
+    private var damage: Double = 2.0
+
     @EventHandler
-    fun onBlockPlace(event: BlockPlaceEvent) {
-        lose("${event.player.name} placed a Block.")
+    fun onAchievement(event: PlayerAdvancementDoneEvent) {
+        event.player.damage(damage)
     }
 }
