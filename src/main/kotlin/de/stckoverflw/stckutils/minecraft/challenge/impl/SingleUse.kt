@@ -18,7 +18,7 @@ object SingleUse : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7§lEvery §7Item has §c1 durability §7and",
-        "§7can just be used §conce"
+        "§7can just be used §conce",
     )
     override val usesEvents: Boolean = true
 
@@ -43,7 +43,7 @@ object SingleUse : Challenge() {
     private fun setOneDurability(itemStack: ItemStack) {
         val itemMeta = itemStack.itemMeta ?: return
         if (itemMeta is Damageable) {
-            (itemMeta as Damageable).damage = itemStack.type.maxDurability - 1
+            itemMeta.damage = itemStack.type.maxDurability - 1
         }
         itemStack.itemMeta = itemMeta
     }

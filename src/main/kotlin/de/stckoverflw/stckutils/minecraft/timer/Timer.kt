@@ -11,6 +11,8 @@ import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Creature
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 object Timer {
 
@@ -106,24 +108,14 @@ object Timer {
         time = 0
     }
 
+    @OptIn(ExperimentalTime::class)
     override fun toString(): String {
-        val hours = time / 3600
-        val minutes = (time % 3600) / 60
-        val seconds = time % 60
-
-        val timerString = StringBuilder("§c§l")
-
-        if (hours > 0) timerString.append("${hours}h ")
-        if (minutes > 0) timerString.append("${minutes}m ")
-        if (seconds > 0) {
-            if (hours > 0 || minutes > 0) {
-                timerString.append("${seconds}s")
-            } else {
-                timerString.append("$seconds seconds")
-            }
-        }
-
-
-        return timerString.toString()
+        val duration = Duration.seconds(time)
+        duration.toComponents(action = { days, hours, minutes, seconds, _ ->
+            return ("§c§l" + (if (days != 0) "${days}d " else "") +
+                    (if (hours != 0) "${hours}h " else "") +
+                    (if (minutes != 0) "${minutes}m " else "") +
+                    if (seconds != 0) "$seconds s" + if (days + hours + minutes == 0) "econd" + if (seconds != 1) "s" else "" else "" else "")
+        })
     }
 }

@@ -24,7 +24,7 @@ object BlockExplode : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§cEvery §7Block you break has a ",
-        "§7chance to §cexplode"
+        "§7chance to §cexplode",
     )
     override val usesEvents: Boolean = true
 
@@ -36,7 +36,7 @@ object BlockExplode : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 2) }
+            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 1) }
 
             button(Slots.RowThreeSlotFour, generateChanceItem()) {
                 val player = it.player

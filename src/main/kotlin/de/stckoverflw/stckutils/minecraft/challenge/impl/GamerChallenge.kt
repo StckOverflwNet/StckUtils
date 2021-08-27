@@ -11,7 +11,6 @@ import net.axay.kspigot.runnables.task
 import org.bukkit.Material
 import org.bukkit.util.Vector
 import java.util.*
-import kotlin.collections.HashMap
 
 object GamerChallenge : Challenge() {
     override val id: String = "no-grass"
@@ -21,7 +20,7 @@ object GamerChallenge : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7When you walk on or in Grass",
-        "§7you die"
+        "§7you die",
     )
     override val usesEvents: Boolean = false
 
@@ -65,5 +64,4 @@ object GamerChallenge : Challenge() {
             }
         }
     }
-
 }

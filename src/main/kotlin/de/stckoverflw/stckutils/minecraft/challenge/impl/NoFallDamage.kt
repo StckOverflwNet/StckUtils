@@ -8,23 +8,21 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 
-object InventoryDamageClear : Challenge() {
-    override val id: String = "inventory-damage-clear"
-    override val name: String = "§9Inventory Damage Clear"
-    override val material: Material = Material.PURPLE_WOOL
+object NoFallDamage : Challenge() {
+    override val id: String = "no-fall-damage"
+    override val name: String = "§aNo Fall Damage"
+    override val material: Material = Material.LEATHER_BOOTS
     override val description: List<String> = listOf(
         " ",
-        "§7Every Time you get §cDamage §7your",
-        "§7entire Inventory gets cleared",
+        "§7When you get fall damgage the challenge is over.",
     )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 
-    @EventHandler(ignoreCancelled = true)
-    fun onDamage(event: EntityDamageEvent) {
-        if (event.entity is Player) {
-            (event.entity as Player).inventory.clear()
-        }
+    @EventHandler
+    fun onFallDamage(event: EntityDamageEvent) {
+        if (event.cause == EntityDamageEvent.DamageCause.FALL && event.entity is Player)
+            lose("${event.entity.name} took fall damage.")
     }
 }

@@ -12,11 +12,11 @@ abstract class AbstractConfig(name: String) {
     val yaml: YamlConfiguration
 
     init {
-        if(!dir.exists()) {
+        if (!dir.exists()) {
             dir.mkdirs()
         }
         file = File(dir, name)
-        if(!file.exists()) {
+        if (!file.exists()) {
             KSpigotMainInstance.saveResource(name, false)
         }
         yaml = YamlConfiguration()

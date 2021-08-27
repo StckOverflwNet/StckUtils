@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
@@ -56,7 +57,10 @@ object MaxHealth : GameExtension() {
         event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
     }
 
-    private var health: Int = 20
+    private var health: Int
+        get() = Config.gameChangeConfig.getSetting(id, "max-health") as Int? ?: 20
+        set(value) = Config.gameChangeConfig.setSetting(id, "max-health", value)
+
 
     override fun run() {
         Bukkit.getOnlinePlayers().forEach {
@@ -66,4 +70,5 @@ object MaxHealth : GameExtension() {
             it.health = health.toDouble()
         }
     }
+
 }

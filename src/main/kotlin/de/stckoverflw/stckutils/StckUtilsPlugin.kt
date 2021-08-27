@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils
 
-import de.stckoverflw.stckutils.commands.SettingsCommand
-import de.stckoverflw.stckutils.commands.TimerCommand
+import de.stckoverflw.stckutils.command.SettingsCommand
+import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.listener.ConnectionListener
@@ -11,6 +11,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.user.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
@@ -63,9 +64,25 @@ class StckUtilsPlugin : KSpigot() {
 
         val pluginDescription = this.description
         logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")
-        logger.info("§aThis Plugin was made by §3${pluginDescription.authors.joinToString(", ")}")
-        logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
-        logger.info("§aMore Information at §3${pluginDescription.website}")
+        logger.info(
+            "§aThis Plugin is made by §3".plus(
+                if (pluginDescription.authors.size <= 1) {
+                    pluginDescription.authors.joinToString()
+                } else {
+                    pluginDescription.authors.joinToString(limit = pluginDescription.authors.lastIndex, truncated = "").dropLast(2)
+                        .plus(" and ${pluginDescription.authors.last()}")
+                }
+            )
+        )
+        if (pluginDescription.apiVersion != null) logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
+        if (pluginDescription.website != null) logger.info("§aMore Information at §3${pluginDescription.website}")
+
+        onlinePlayers.forEach { player ->
+            player.inventory.clear()
+            if (player.isOp) {
+                player.inventory.setItem(8, settingsItem)
+            }
+        }
     }
 
     override fun shutdown() {
@@ -81,7 +98,8 @@ class StckUtilsPlugin : KSpigot() {
             Files.walk(worldFile.toPath()).sorted(Comparator.reverseOrder()).map { obj: Path -> obj.toFile() }
                 .forEach { obj: File -> obj.delete() }
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.warning("An Error occured while trying to delete the world files ($world)")
+            logger.warning(e.stackTraceToString())
         }
         worldFile.mkdirs()
         File(worldFile, "data").mkdirs()
