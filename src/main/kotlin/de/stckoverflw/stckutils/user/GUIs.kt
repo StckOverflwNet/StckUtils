@@ -22,6 +22,7 @@ import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
 /**
  * The Method to generate a new Instance of the Settings GUI
@@ -175,6 +176,15 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             }
         )
         compound.addContent(ChallengeManager.challenges)
+
+        compoundScroll(
+            Slots.RowOneSlotNine,
+            ItemStack(Material.PAPER), compound, scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowFiveSlotNine,
+            ItemStack(Material.PAPER), compound, scrollTimes = 1, reverse = true
+        )
     }
 
     // GameChange Page
@@ -219,6 +229,24 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             .addContent(GameChangeManager.gameChanges.filterIsInstance<GameExtension>())
         gameRuleCompound
             .addContent(GameChangeManager.gameChanges.filterIsInstance<GameRule>())
+
+        compoundScroll(
+            Slots.RowFourSlotNine,
+            ItemStack(Material.PAPER), gameRuleCompound, scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowFourSlotOne,
+            ItemStack(Material.PAPER), gameRuleCompound, scrollTimes = 1, reverse = true
+        )
+
+        compoundScroll(
+            Slots.RowTwoSlotNine,
+            ItemStack(Material.PAPER), gameExtensionCompound, scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowTwoSlotOne,
+            ItemStack(Material.PAPER), gameExtensionCompound, scrollTimes = 1, reverse = true
+        )
     }
 
     // Goals Page
@@ -292,6 +320,24 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         )
         battleCompound.addContent(GoalManager.goals.filterIsInstance<Battle>())
         teamGoalCompound.addContent(GoalManager.goals.filterIsInstance<TeamGoal>())
+
+        compoundScroll(
+            Slots.RowFourSlotNine,
+            ItemStack(Material.PAPER), teamGoalCompound, scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowFourSlotOne,
+            ItemStack(Material.PAPER), teamGoalCompound, scrollTimes = 1, reverse = true
+        )
+
+        compoundScroll(
+            Slots.RowTwoSlotNine,
+            ItemStack(Material.PAPER), battleCompound, scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowTwoSlotOne,
+            ItemStack(Material.PAPER), battleCompound, scrollTimes = 1, reverse = true
+        )
     }
 
     // Settings Page for the Timer

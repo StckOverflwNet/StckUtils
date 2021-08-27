@@ -91,13 +91,15 @@ class ProtectionListener : Listener {
         if (!Timer.running) {
             if (player.isOp) {
                 val command = event.message.split(" ")[0].replace("/", "")
-                val target = Bukkit.getPlayer(event.message.split(" ")[1])
-                if (target != null) {
-                    if (command == "op") {
-                        target.inventory.setItem(8, settingsItem)
-                    } else if (command == "deop") {
-                        target.inventory.setItem(8, null)
-                        target.closeInventory()
+                if (event.message.split(" ").size > 1) {
+                    val target = Bukkit.getPlayer(event.message.split(" ")[1])
+                    if (target != null) {
+                        if (command == "op") {
+                            target.inventory.setItem(8, settingsItem)
+                        } else if (command == "deop") {
+                            target.inventory.setItem(8, null)
+                            target.closeInventory()
+                        }
                     }
                 }
             }
