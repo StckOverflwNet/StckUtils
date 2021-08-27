@@ -88,6 +88,7 @@ class ProtectionListener : Listener {
     @EventHandler
     fun onCommand(event: PlayerCommandPreprocessEvent) {
         val player = event.player
+        if (event.message.split(" ").isEmpty()) return
         if (!Timer.running) {
             if (player.isOp) {
                 val command = event.message.split(" ")[0].replace("/", "")

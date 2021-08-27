@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.gamechange.impl
+package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
@@ -19,7 +19,22 @@ object DeathCounter : GameExtension() {
     override val id: String = "death-counter"
     override val usesEvents: Boolean = true
 
-    override val item = deathCountItem()
+    override fun item() = itemStack(Material.WITHER_SKELETON_SKULL) {
+        meta {
+            name = "§9Death Counter"
+            addLore {
+                + " "
+                + "§9Death Counter §7counts the Deaths of every"
+                + "§7Player and displays them in a Bossbar"
+                + " "
+                + "§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
+                /*
+                + "§7Shift Left-click to higher the deaths"
+                + "§7Shift Right-click to lower the deaths"
+                 */
+            }
+        }
+    }
 
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
         event.bukkitEvent.isCancelled = true
@@ -37,7 +52,7 @@ object DeathCounter : GameExtension() {
             active = !active
         }
         run()
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, deathCountItem())
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
     }
 
     private val bossbar = Bukkit.createBossBar("§9Deaths: 0", BarColor.BLUE, BarStyle.SOLID)
@@ -61,22 +76,5 @@ object DeathCounter : GameExtension() {
     fun onDeath(event: PlayerDeathEvent) {
         deaths++
         run()
-    }
-
-    private fun deathCountItem() = itemStack(Material.WITHER_SKELETON_SKULL) {
-        meta {
-            name = "§9Death Counter"
-            addLore {
-                + " "
-                + "§9Death Counter §7counts the Deaths of every"
-                + "§7Player and displays them in a Bossbar"
-                + " "
-                + "§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
-                /*
-                + "§7Shift Left-click to higher the deaths"
-                + "§7Shift Right-click to lower the deaths"
-                 */
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.gamechange.impl
+package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
@@ -15,7 +15,19 @@ import org.bukkit.inventory.ItemStack
 
 object MaxHealth : GameExtension() {
     override val id: String = "max-health"
-    override val item: ItemStack = maxHealthItem()
+    override fun item() =  itemStack(Material.REDSTONE) {
+        meta {
+            name = "§aMax Health"
+            addLore {
+                + " "
+                + "§7Current value: §6$health"
+                + "§7Default: §620"
+                + " "
+                + "§7Left-click to higher"
+                + "§7Right-click to lower"
+            }
+        }
+    }
 
     override val usesEvents: Boolean = false
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
@@ -41,7 +53,7 @@ object MaxHealth : GameExtension() {
             }
         }
         run()
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, maxHealthItem())
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
     }
 
     private var health: Int = 20
@@ -52,20 +64,6 @@ object MaxHealth : GameExtension() {
             it.healthScale = health.toDouble()
             it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue = health.toDouble()
             it.health = health.toDouble()
-        }
-    }
-
-    private fun maxHealthItem() = itemStack(Material.REDSTONE) {
-        meta {
-            name = "§aMax Health"
-            addLore {
-                + " "
-                + "§7Current value: §6$health"
-                + "§7Default: §620"
-                + " "
-                + "§7Left-click to higher"
-                + "§7Right-click to lower"
-            }
         }
     }
 }

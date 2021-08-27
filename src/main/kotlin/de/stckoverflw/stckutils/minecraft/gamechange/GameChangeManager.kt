@@ -1,7 +1,10 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
 
-import de.stckoverflw.stckutils.minecraft.gamechange.impl.DeathCounter
-import de.stckoverflw.stckutils.minecraft.gamechange.impl.MaxHealth
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DeathCounter
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.MaxHealth
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.AllowPvP
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.Difficulty
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.KeepInventory
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -13,7 +16,10 @@ object GameChangeManager {
     operator fun invoke() {
         gameChanges = arrayListOf(
             MaxHealth,
-            DeathCounter
+            DeathCounter,
+            AllowPvP,
+            Difficulty,
+            KeepInventory
         )
     }
 

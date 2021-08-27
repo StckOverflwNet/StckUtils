@@ -15,7 +15,7 @@ sealed class GameChange : Listener {
     /**
      * the item that is shown in the GUI
      */
-    abstract val item: ItemStack
+    abstract fun item(): ItemStack
 
     /**
      * If the Challenge uses Event(s) register the class as a Listener

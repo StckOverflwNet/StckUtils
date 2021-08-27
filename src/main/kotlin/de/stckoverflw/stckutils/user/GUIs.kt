@@ -196,7 +196,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         val gameExtensionCompound = createRectCompound<GameExtension>(
             Slots.RowFourSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = {
-                it.item
+                it.item()
             },
             onClick = { clickEvent, extension ->
                 clickEvent.bukkitEvent.isCancelled = true
@@ -208,7 +208,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         val gameRuleCompound = createRectCompound<GameRule>(
             Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
             iconGenerator = {
-                it.item
+                it.item()
             },
             onClick = { clickEvent, extension ->
                 clickEvent.bukkitEvent.isCancelled = true

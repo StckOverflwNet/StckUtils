@@ -49,7 +49,7 @@ abstract class TeamGoal : Goal() {
 abstract class Battle : Goal() {
     fun win(player: Player, reason: String) {
         if (Timer.running) {
-
+            spawnFireworks()
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§9${player.name} §awon §7the Challenge"))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.toString())))
