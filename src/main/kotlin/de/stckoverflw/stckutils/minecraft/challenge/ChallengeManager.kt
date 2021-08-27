@@ -1,8 +1,5 @@
 package de.stckoverflw.stckutils.minecraft.challenge
-import de.stckoverflw.stckutils.minecraft.challenge.impl.BlockExplode
-import de.stckoverflw.stckutils.minecraft.challenge.impl.GamerChallenge
-import de.stckoverflw.stckutils.minecraft.challenge.impl.InventoryDamageClear
-import de.stckoverflw.stckutils.minecraft.challenge.impl.SingleUse
+import de.stckoverflw.stckutils.minecraft.challenge.impl.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -16,7 +13,8 @@ object ChallengeManager {
             InventoryDamageClear,
             SingleUse,
             GamerChallenge,
-            BlockExplode
+            BlockExplode,
+            ChunkSync
         )
     }
 
