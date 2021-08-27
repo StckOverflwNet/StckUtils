@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.commands
+package de.stckoverflw.stckutils.command
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -44,11 +44,14 @@ class TimerCommand : CommandExecutor, TabCompleter {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String>? {
-        val completions: ArrayList<String>? = if (args.size == 1) {
-            arrayListOf("resume", "pause", "reset")
-        } else {
-            null
-        }
+        val completions =
+            if (args.isEmpty()) {
+                null
+            } else if (args.size == 1) {
+                listOf("resume", "pause", "reset")
+            } else {
+                null
+            }
         return completions?.filter { it.startsWith(args[0], true) }?.sorted()
     }
 }

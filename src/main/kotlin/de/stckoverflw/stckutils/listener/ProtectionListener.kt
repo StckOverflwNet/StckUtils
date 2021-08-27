@@ -16,6 +16,27 @@ import org.bukkit.event.player.*
 class ProtectionListener : Listener {
 
     @EventHandler
+    fun onRespawn(event: PlayerRespawnEvent) {
+        if (!Timer.running && event.player.isOp) {
+            event.player.inventory.setItem(8, settingsItem)
+        }
+    }
+
+    @EventHandler
+    fun onItemPickUp(event: PlayerAttemptPickupItemEvent) {
+        if (!Timer.running) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onEntityTarget(event: EntityTargetEvent) {
+        if (!Timer.running) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         if (!Timer.running) {
             event.isCancelled = true
@@ -58,27 +79,6 @@ class ProtectionListener : Listener {
     }
 
     @EventHandler
-    fun onRespawn(event: PlayerRespawnEvent) {
-        if (!Timer.running && event.player.isOp) {
-            event.player.inventory.setItem(8, settingsItem)
-        }
-    }
-
-    @EventHandler
-    fun onItemPickUp(event: PlayerAttemptPickupItemEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
-    }
-
-    @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
-    }
-
-    @EventHandler
     fun onDrop(event: PlayerDropItemEvent) {
         if (!Timer.running) {
             event.isCancelled = true
@@ -92,13 +92,15 @@ class ProtectionListener : Listener {
         if (!Timer.running) {
             if (player.isOp) {
                 val command = event.message.split(" ")[0].replace("/", "")
-                val target = Bukkit.getPlayer(event.message.split(" ")[1])
-                if (target != null) {
-                    if (command == "op") {
-                        target.inventory.setItem(8, settingsItem)
-                    } else if (command == "deop") {
-                        target.inventory.setItem(8, null)
-                        target.closeInventory()
+                if (event.message.split(" ").size > 1) {
+                    val target = Bukkit.getPlayer(event.message.split(" ")[1])
+                    if (target != null) {
+                        if (command == "op") {
+                            target.inventory.setItem(8, settingsItem)
+                        } else if (command == "deop") {
+                            target.inventory.setItem(8, null)
+                            target.closeInventory()
+                        }
                     }
                 }
             }

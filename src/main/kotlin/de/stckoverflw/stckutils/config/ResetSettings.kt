@@ -15,5 +15,4 @@ class ResetSettings : AbstractConfig("resetsettings.yml") {
             yaml.set("villageSpawn", value)
             save()
         }
-
 }

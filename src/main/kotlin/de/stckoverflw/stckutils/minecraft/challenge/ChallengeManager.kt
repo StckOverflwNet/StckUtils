@@ -1,4 +1,5 @@
 package de.stckoverflw.stckutils.minecraft.challenge
+
 import de.stckoverflw.stckutils.minecraft.challenge.impl.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
@@ -14,7 +15,21 @@ object ChallengeManager {
             SingleUse,
             GamerChallenge,
             BlockExplode,
-            ChunkSync
+            ChunkSync,
+            ChunkFlattener,
+            NoXP,
+            NoBlockBreak,
+            NoBlockPlace,
+            NoVillagerTrade,
+            NoCrafting,
+            InvisibleEntities,
+            NoFallDamage,
+            RandomEffect,
+            NoSneak,
+            NoDeath,
+            BalanceLife,
+            AdvancementDamage,
+            Snake
         )
     }
 

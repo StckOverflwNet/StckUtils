@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.commands
+package de.stckoverflw.stckutils.command
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.user.settingsGUI

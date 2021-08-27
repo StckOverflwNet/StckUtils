@@ -16,7 +16,7 @@ object BakeCake : Battle() {
         "§7wins the Challenge",
         "§c§oKeep in mind that just crafting",
         "§c§ois counted, if you find one it",
-        "§c§owill not count as a win!"
+        "§c§owill not count as a win!",
     )
     override val material: Material = Material.CAKE
 
