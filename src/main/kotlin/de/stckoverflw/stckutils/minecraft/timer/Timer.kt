@@ -88,6 +88,7 @@ object Timer {
             false
         } else {
             ChallengeManager.unregisterChallengeListeners()
+            GameChangeManager.unregisterGameChangeListeners()
             running = !running
             Bukkit.getOnlinePlayers().forEach { player ->
                 player.saveInventory()

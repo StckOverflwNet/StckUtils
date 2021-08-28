@@ -1,4 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.impl.JackHammer
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.AllowPvP
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.Difficulty
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.KeepInventory
@@ -20,8 +22,7 @@ object GameChangeManager {
             KeepInventory,
             DamageMultiplier,
             MobDuplicator,
-            MobMagnet,
-            JackHammer,
+            MobMagnet
         )
     }
 
@@ -31,6 +32,12 @@ object GameChangeManager {
             if (change.usesEvents) {
                 pluginManager.registerEvents(change, KSpigotMainInstance)
             }
+        }
+    }
+
+    fun unregisterGameChangeListeners() {
+        gameChanges.forEach { change ->
+            change.unregister()
         }
     }
 

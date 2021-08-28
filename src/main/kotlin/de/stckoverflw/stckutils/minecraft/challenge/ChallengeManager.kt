@@ -29,7 +29,8 @@ object ChallengeManager {
             NoDeath,
             BalanceLife,
             AdvancementDamage,
-            Snake
+            Snake,
+            JackHammer
         )
     }
 
