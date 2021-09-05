@@ -116,7 +116,7 @@ object Timer {
             return ("§c§l" + (if (days != 0) "${days}d " else "") +
                     (if (hours != 0) "${hours}h " else "") +
                     (if (minutes != 0) "${minutes}m " else "") +
-                    if (seconds != 0) "$seconds s" + if (days + hours + minutes == 0) "econd" + if (seconds != 1) "s" else "" else "" else "")
+                    if (seconds != 0) "${seconds}s" + if (days + hours + minutes == 0) "econd" + if (seconds != 1) "s" else "" else "" else "")
         })
     }
 }

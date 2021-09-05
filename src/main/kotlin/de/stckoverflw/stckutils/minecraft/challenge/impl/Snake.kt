@@ -15,7 +15,6 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigotMainInstance
-import net.kyori.adventure.text.Component
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -121,16 +120,18 @@ object Snake : Challenge() {
         set(value) = Config.gameChangeConfig.setSetting(id, "isColored", value)
 
     override fun prepareChallenge() {
-        onlinePlayers.forEach { player ->
-            if (playerMaterials.containsKey(player)) return
-            if (materials.isEmpty()) {
-                player.gameMode = GameMode.SPECTATOR
-                player.sendMessage(StckUtilsPlugin.prefix + "§cthere was no material left for you, so you were excluded from the challenge")
+        if (isColored) {
+            onlinePlayers.forEach { player ->
+                if (playerMaterials.containsKey(player)) return
+                if (materials.isEmpty()) {
+                    player.gameMode = GameMode.SPECTATOR
+                    player.sendMessage(StckUtilsPlugin.prefix + "§cthere was no material left for you, so you were excluded from the challenge")
+                }
+                val material = materials.random()
+                playerMaterials[player] = material
+                materials.remove(material)
+                temporaryBlocks[player] = LinkedList()
             }
-            val material = materials.random()
-            playerMaterials[player] = material
-            materials.remove(material)
-            temporaryBlocks[player] = LinkedList()
         }
     }
 
@@ -138,6 +139,10 @@ object Snake : Challenge() {
     fun onBreak(event: BlockBreakEvent) {
         if (!isBreakable && event.block.hasMetadata("snake") || event.block.hasMetadata("temporary_snake"))
             event.isCancelled = true
+        if (event.block.hasMetadata("snake")) {
+            event.isDropItems = false
+            event.expToDrop = 0
+        }
     }
 
     @EventHandler
@@ -171,10 +176,9 @@ object Snake : Challenge() {
 
         if (temporaryBlocks[event.player]?.contains(block) == true) return
 
-        if (block.boundingBox.height < 0.75 && isVisible) {
-            block.type = Material.AIR
+        if (block.boundingBox.height < 0.85 && isVisible)
             block = block.getRelative(BlockFace.DOWN)
-        }
+
         temporaryBlocks[event.player]!!.add(block)
         if (temporaryBlocks[event.player]!!.size > 2) {
             val tempBlock = temporaryBlocks[event.player]!!.poll()
@@ -191,5 +195,6 @@ object Snake : Challenge() {
         if (isVisible)
             block.type = Material.WHITE_CONCRETE
         block.setMetadata("temporary_snake", FixedMetadataValue(KSpigotMainInstance, true))
+        block.getRelative(BlockFace.UP).type = Material.AIR
     }
 }
