@@ -1,0 +1,30 @@
+name: Build Project with Gradle
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validation:
+    name: "Validation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+  build:
+    needs:
+      - validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 16
+        uses: actions/setup-java@v1
+        with:
+          java-version: 16
+      - name: Test with Gradle
+        run: ./gradlew test
+      - name: Build with Gradle
+        run: ./gradlew classes
