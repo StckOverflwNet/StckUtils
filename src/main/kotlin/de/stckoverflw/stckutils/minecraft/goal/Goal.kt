@@ -40,7 +40,7 @@ abstract class TeamGoal : Goal() {
             spawnFireworks()
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7You finished the Challenge §asucessfully"))
-            Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.toString())))
+            Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.formatTime())))
             Timer.stop()
         }
     }
@@ -52,7 +52,7 @@ abstract class Battle : Goal() {
             spawnFireworks()
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§9${player.name} §awon §7the Challenge"))
-            Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.toString())))
+            Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time needed: §9" + ChatColor.stripColor(Timer.formatTime())))
             Timer.stop()
         }
     }

@@ -409,13 +409,12 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 }
             }
         }) {
-            if (!Timer.running) {
-                Timer.reset()
-                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §creset"))
-                it.player.closeInventory()
-            } else {
-                it.player.sendMessage(StckUtilsPlugin.prefix + "§cYou can't reset the Timer while it's running")
+            if (Timer.running) {
+                Timer.stop()
             }
+            Timer.reset()
+            Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §creset"))
+            it.player.closeInventory()
         }
     }
 

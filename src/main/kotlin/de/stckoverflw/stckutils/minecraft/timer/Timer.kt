@@ -48,7 +48,7 @@ object Timer {
 
     private fun broadcastTimer() {
         Bukkit.getOnlinePlayers().forEach {
-            it.sendActionBar(Component.text(this.toString()))
+            it.sendActionBar(Component.text(this.formatTime()))
         }
     }
 
@@ -110,13 +110,13 @@ object Timer {
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun toString(): String {
-        val duration = Duration.seconds(time)
-        duration.toComponents(action = { days, hours, minutes, seconds, _ ->
+    fun formatTime(seconds: Long = time): String {
+        val duration = Duration.seconds(seconds)
+        duration.toComponents(action = { days, hours, min, sec, _ ->
             return ("§c§l" + (if (days != 0) "${days}d " else "") +
                     (if (hours != 0) "${hours}h " else "") +
-                    (if (minutes != 0) "${minutes}m " else "") +
-                    if (seconds != 0) "${seconds}s" + if (days + hours + minutes == 0) "econd" + if (seconds != 1) "s" else "" else "" else "")
+                    (if (min != 0) "${min}m " else "") +
+                    if (sec != 0) "$sec" + if (days + hours + min == 0) " second" + if (sec != 1) "s" else "" else "s" else "")
         })
     }
 }

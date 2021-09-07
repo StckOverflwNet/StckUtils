@@ -30,7 +30,8 @@ object ChallengeManager {
             BalanceLife,
             AdvancementDamage,
             Snake,
-            JackHammer
+            JackHammer,
+            RandomItem,
         )
     }
 

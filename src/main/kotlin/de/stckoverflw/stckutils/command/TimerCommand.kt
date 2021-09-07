@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import java.util.*
 
 class TimerCommand : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -43,15 +44,15 @@ class TimerCommand : CommandExecutor, TabCompleter {
         return true
     }
 
-    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String>? {
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
         val completions =
             if (args.isEmpty()) {
-                null
+                Collections.emptyList()
             } else if (args.size == 1) {
                 listOf("resume", "pause", "reset")
             } else {
-                null
+                Collections.emptyList()
             }
-        return completions?.filter { it.startsWith(args[0], true) }?.sorted()
+        return completions.filter { it.startsWith(args[0], true) }.sorted()
     }
 }
