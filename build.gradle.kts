@@ -18,7 +18,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.17.1-R0.1-SNAPSHOT") // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.17.2")
+    implementation("net.axay", "kspigot", "1.17.3")
 
     // Gson dependency
     implementation("com.google.code.gson", "gson", "2.8.7")
