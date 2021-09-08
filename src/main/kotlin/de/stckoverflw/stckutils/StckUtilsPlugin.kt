@@ -1,6 +1,5 @@
 package de.stckoverflw.stckutils
 
-import de.stckoverflw.stckutils.command.PositionCommand
 import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.command.PositionCommand
 import de.stckoverflw.stckutils.command.SettingsCommand
