@@ -58,10 +58,8 @@ class StckUtilsPlugin : KSpigot() {
         pluginManager.registerEvents(InteractListener(), this)
         pluginManager.registerEvents(ProtectionListener(), this)
 
-        val timerCommand = TimerCommand()
-        getCommand("timer")!!.setExecutor(timerCommand)
-        getCommand("timer")!!.tabCompleter = timerCommand
-        getCommand("settings")!!.setExecutor(SettingsCommand())
+        TimerCommand().register()
+        SettingsCommand().register()
         HideCommand().register()
 
         val pluginDescription = this.description

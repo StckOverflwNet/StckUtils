@@ -7,9 +7,3 @@ main: de.stckoverflw.stckutils.StckUtilsPlugin
 version: 1.0.0
 libraries:
   - "net.axay:kspigot:1.17.3"
-
-commands:
-  timer:
-    description: Start stop and reset the Timer
-  settings:
-    description: Opens the Settings GUI
