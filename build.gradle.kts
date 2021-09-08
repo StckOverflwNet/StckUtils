@@ -8,7 +8,6 @@ group = "de.stckoverflw"
 version = "1.0.0"
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
@@ -17,8 +16,7 @@ repositories {
 
 dependencies {
     // PaperMC Dependency
-    compileOnly("io.papermc.paper", "paper", "1.17.1-R0.1-SNAPSHOT") // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
-//    compileOnly("io.papermc.paper", "paper-api", "1.17.1-R0.1-SNAPSHOT") // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
+    compileOnly("io.papermc.paper", "paper-api", "1.17.1-R0.1-SNAPSHOT") // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
 
     // KSpigot dependency
     implementation("net.axay", "kspigot", "1.17.3")
