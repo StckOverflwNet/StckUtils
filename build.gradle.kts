@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.5.21"
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
 }
 
@@ -10,7 +10,7 @@ ktlint {
 }
 
 group = "de.stckoverflw"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
