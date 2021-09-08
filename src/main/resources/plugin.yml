@@ -13,3 +13,5 @@ commands:
     description: Start stop and reset the Timer
   settings:
     description: Opens the Settings GUI
+  position:
+    description: Adds or shows a saved Location

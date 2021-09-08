@@ -104,7 +104,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         pageChanger(Slots.RowFiveSlotFive, goBackItem, defaultPage, null, null)
 
         // Item for opening the World reset Settings Page
-        pageChanger(Slots.RowThreeSlotFour, itemStack(Material.GRASS_BLOCK) {
+        pageChanger(Slots.RowThreeSlotThree, itemStack(Material.GRASS_BLOCK) {
             meta {
                 name = "${KColors.ROSYBROWN}World Reset"
                 addLore {
@@ -117,7 +117,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         }, -2, null, null)
 
         // Item for opening the Timer Settings Page
-        pageChanger(Slots.RowThreeSlotSix, itemStack(Material.CLOCK) {
+        pageChanger(Slots.RowThreeSlotSeven, itemStack(Material.CLOCK) {
             meta {
                 name = "§eTimer"
                 addLore {

@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils
 
+import de.stckoverflw.stckutils.command.PositionCommand
 import de.stckoverflw.stckutils.command.SettingsCommand
 import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
@@ -12,6 +13,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
+import net.axay.kspigot.extensions.bukkit.register
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
@@ -61,6 +63,7 @@ class StckUtilsPlugin : KSpigot() {
         getCommand("timer")!!.setExecutor(timerCommand)
         getCommand("timer")!!.tabCompleter = timerCommand
         getCommand("settings")!!.setExecutor(SettingsCommand())
+        PositionCommand().register("position")
 
         val pluginDescription = this.description
         logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")
