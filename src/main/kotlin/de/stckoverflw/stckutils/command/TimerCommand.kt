@@ -1,23 +1,32 @@
 package de.stckoverflw.stckutils.command
 
+import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsGUI
+import net.axay.kspigot.commands.*
 import net.axay.kspigot.gui.openGUI
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
-import org.bukkit.command.TabCompleter
-import org.bukkit.entity.Player
-import java.util.*
 
-class TimerCommand : CommandExecutor, TabCompleter {
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender.isOp) {
-            if (args.isNotEmpty()) {
-                when (args[0].lowercase()) {
+class TimerCommand {
+
+    fun register() = command("timer", true) {
+        requiresPermission("stckutils.command.timer")
+        argument("action", StringArgumentType.string()) {
+            suggestListSuspending { suggest ->
+                listOf("resume", "pause", "reset").filter {
+                    if (suggest.input != null && suggest.input.substring(suggest.input.length - 1) != " ")
+                        it.startsWith(
+                            suggest.getArgument<String>("action"),
+                            true
+                        ) else
+                        true
+                }.sorted()
+            }
+            runs {
+                println(getArgument<String>("action").lowercase())
+                when (getArgument<String>("action").lowercase()) {
                     "resume" -> {
                         Timer.start()
                         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
@@ -31,28 +40,10 @@ class TimerCommand : CommandExecutor, TabCompleter {
                         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §cresetted"))
                     }
                 }
-            } else {
-                if (sender is Player) {
-                    sender.openGUI(settingsGUI(), 5)
-                } else {
-                    sender.sendMessage(StckUtilsPlugin.prefix + "§cYou can't open a GUI since you are not a Player")
-                }
             }
-        } else {
-            sender.sendMessage(StckUtilsPlugin.prefix + "§cYou don't have Permission to use that Command!")
         }
-        return true
-    }
-
-    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
-        val completions =
-            if (args.isEmpty()) {
-                Collections.emptyList()
-            } else if (args.size == 1) {
-                listOf("resume", "pause", "reset")
-            } else {
-                Collections.emptyList()
-            }
-        return completions.filter { it.startsWith(args[0], true) }.sorted()
+        runs {
+            player.openGUI(settingsGUI(), -1)
+        }
     }
 }

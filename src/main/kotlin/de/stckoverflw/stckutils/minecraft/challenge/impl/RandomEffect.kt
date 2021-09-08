@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -30,6 +31,7 @@ object RandomEffect : Challenge() {
     @EventHandler
     fun onDamage(event: EntityDamageEvent) {
         if (event.entity !is Player) return
+        if (!(event.entity as Player).isPlaying()) return
 
         if (event.cause == EntityDamageEvent.DamageCause.POISON
             || event.cause == EntityDamageEvent.DamageCause.WITHER

@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
@@ -73,11 +74,9 @@ object BlockExplode : Challenge() {
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        val player = event.player
-        if (player.gameMode != GameMode.CREATIVE) {
-            if ((1..100).random() <= chance) {
-                event.block.location.world.createExplosion(event.block.location, 3.3F, fire)
-            }
+        if (!event.player.isPlaying()) return
+        if ((1..100).random() <= chance) {
+            event.block.location.world.createExplosion(event.block.location, 3.3F, fire)
         }
     }
 
@@ -85,11 +84,11 @@ object BlockExplode : Challenge() {
         meta {
             name = "§aChance"
             addLore {
-                + " "
-                + "§7The Chance how often the"
-                + "§7Block should §cexplode"
-                + " "
-                + "§7Current value: §9$chance%"
+                +" "
+                +"§7The Chance how often the"
+                +"§7Block should §cexplode"
+                +" "
+                +"§7Current value: §9$chance%"
             }
         }
     }
@@ -98,11 +97,11 @@ object BlockExplode : Challenge() {
         meta {
             name = "§cExplosion Fire"
             addLore {
-                + " "
-                + "§7If the Explosion should"
-                + "§7Create Fire in the radius"
-                + " "
-                + "§7Current value: ".plus(if (fire) "§a$fire" else "§c$fire")
+                +" "
+                +"§7If the Explosion should"
+                +"§7Create Fire in the radius"
+                +" "
+                +"§7Current value: ".plus(if (fire) "§a$fire" else "§c$fire")
             }
         }
     }

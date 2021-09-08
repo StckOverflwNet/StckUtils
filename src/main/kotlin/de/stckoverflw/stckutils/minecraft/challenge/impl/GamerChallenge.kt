@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.extensions.bukkit.kill
@@ -39,6 +40,7 @@ object GamerChallenge : Challenge() {
         ) {
             if (Timer.running) {
                 onlinePlayers.forEach { player ->
+                    if (!player.isPlaying()) return@forEach
                     if (
                         player.location.clone().minus(Vector(0.0, 0.25, 0.0)).block.type == Material.GRASS_BLOCK
                     ) {

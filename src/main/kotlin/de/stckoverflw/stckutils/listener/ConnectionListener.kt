@@ -1,8 +1,6 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.extension.saveInventory
-import de.stckoverflw.stckutils.extension.setSavedInventory
-import de.stckoverflw.stckutils.extension.toBase64
+import de.stckoverflw.stckutils.extension.*
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
@@ -23,6 +21,11 @@ class ConnectionListener : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
+        if (player.persistentDataContainer.get(
+                NamespacedKey(KSpigotMainInstance, "challenge-funciton-hidden"),
+                PersistentDataType.BYTE
+            ) == 1.toByte()
+        ) player.hide() else player.reveal()
         player.inventory.clear()
         if (!Timer.running) {
             event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
@@ -41,9 +44,9 @@ class ConnectionListener : Listener {
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         val player = event.player
-        if (!Timer.running && player.gameMode != GameMode.SPECTATOR) {
+        if (!Timer.running && player.isPlaying()) {
             event.quitMessage(Component.text("§7[§c-§7]§7 ${player.name}"))
-        } else if (Timer.running && player.gameMode != GameMode.SPECTATOR) {
+        } else if (Timer.running && player.isPlaying()) {
             player.persistentDataContainer.set(
                 NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
                 PersistentDataType.STRING,
@@ -65,7 +68,11 @@ class ConnectionListener : Listener {
     fun onLogin(event: PlayerLoginEvent) {
         val player = event.player
         if (Timer.running) {
-            if (player.isOp) {
+            if (player.isOp || player.persistentDataContainer.get(
+                    NamespacedKey(KSpigotMainInstance, "challenge-funciton-hidden"),
+                    PersistentDataType.BYTE
+                ) == 1.toByte()
+            ) {
                 player.gameMode = GameMode.SPECTATOR
                 player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
             } else {

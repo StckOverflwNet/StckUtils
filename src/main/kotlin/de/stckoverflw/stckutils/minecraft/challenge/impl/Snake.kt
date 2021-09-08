@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.getKey
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
@@ -137,6 +138,7 @@ object Snake : Challenge() {
 
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
+        if (!event.player.isPlaying()) return
         if (!isBreakable && event.block.hasMetadata("snake") || event.block.hasMetadata("temporary_snake"))
             event.isCancelled = true
         if (event.block.hasMetadata("snake")) {
@@ -147,6 +149,7 @@ object Snake : Challenge() {
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
+        if (!event.player.isPlaying()) return
         if (!event.hasChangedBlock()) return
         var block = event.to.block
         while (!block.isSolid || block.type.hardness <= 0.2) {

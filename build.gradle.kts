@@ -11,6 +11,7 @@ repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://libraries.minecraft.net")
 }
 
 dependencies {
@@ -22,6 +23,9 @@ dependencies {
 
     // Gson dependency
     implementation("com.google.code.gson", "gson", "2.8.7")
+
+    // Brigadier dependency
+    compileOnly("com.mojang", "brigadier", "1.0.18")
 }
 
 tasks {

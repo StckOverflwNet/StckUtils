@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import io.papermc.paper.event.player.PlayerTradeEvent
 import net.axay.kspigot.chat.KColors
@@ -23,6 +24,7 @@ object NoVillagerTrade : Challenge() {
 
     @EventHandler
     fun onVillagerTrade(event: PlayerTradeEvent) {
+        if (!event.player.isPlaying()) return
         lose("${event.player.name} traded with a ${event.villager.name}.")
     }
 }

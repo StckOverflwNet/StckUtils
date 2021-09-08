@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils
 
+import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.command.PositionCommand
 import de.stckoverflw.stckutils.command.SettingsCommand
 import de.stckoverflw.stckutils.command.TimerCommand
@@ -61,10 +62,9 @@ class StckUtilsPlugin : KSpigot() {
         pluginManager.registerEvents(InteractListener(), this)
         pluginManager.registerEvents(ProtectionListener(), this)
 
-        val timerCommand = TimerCommand()
-        getCommand("timer")!!.setExecutor(timerCommand)
-        getCommand("timer")!!.tabCompleter = timerCommand
-        getCommand("settings")!!.setExecutor(SettingsCommand())
+        TimerCommand().register()
+        SettingsCommand().register()
+        HideCommand().register()
         PositionCommand().register("position")
 
         val pluginDescription = this.description
