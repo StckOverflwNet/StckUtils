@@ -1,47 +1,38 @@
 package de.stckoverflw.stckutils.command
 
+import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.builder.RequiredArgumentBuilder.argument
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.config.data.PositionData
+import net.axay.kspigot.commands.*
 import net.axay.kspigot.extensions.broadcast
-import net.axay.kspigot.extensions.onlinePlayers
-import org.bukkit.command.Command
-import org.bukkit.command.CommandSender
-import org.bukkit.command.TabExecutor
-import org.bukkit.entity.Player
 
-class PositionCommand : TabExecutor {
+class PositionCommand {
 
-    override fun onTabComplete(
-        sender: CommandSender,
-        command: Command,
-        alias: String,
-        args: Array<out String>
-    ): List<String> {
-        return if (args.isNotEmpty()) {
-            Config.positionConfig.positions.map { it.name }.filter { it.startsWith(args[0], true) }.sorted()
-        } else {
-            emptyList()
-        }
-    }
-
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender is Player) {
-            val player: Player = sender
-            if (args.isNotEmpty()) {
-                if (!Config.positionConfig.positions.any { it.name == args[0].lowercase() }) {
+    fun register() = command("position", true) {
+        argument("name", StringArgumentType.string()) {
+            suggestListSuspending { suggest ->
+                Config.positionConfig.positions.map { it.name }.filter {
+                    if (suggest.input != null && suggest.input.substring(suggest.input.length - 1) != " ")
+                        it.startsWith(suggest.getArgument<String>("name"), true) else
+                        true
+                }.sorted()
+            }
+            runs {
+                if (!Config.positionConfig.positions.any { it.name == getArgument<String>("name").lowercase() }) {
                     val location = player.location
                     Config.positionConfig.addPosition(
                         PositionData(
-                            args[0].lowercase(),
+                            getArgument<String>("name").lowercase(),
                             player.uniqueId,
                             location
                         )
                     )
-                    broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${args[0].lowercase()} §7at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
+                    broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${getArgument<String>("name").lowercase()} §7at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
                 } else {
                     val position = Config.positionConfig.positions.find {
-                        it.name == args[0]
+                        it.name == getArgument<String>("name")
                     }
                     if (position != null) {
                         val location = position.location
@@ -50,6 +41,5 @@ class PositionCommand : TabExecutor {
                 }
             }
         }
-        return true
     }
 }

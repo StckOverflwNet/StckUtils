@@ -65,7 +65,7 @@ class StckUtilsPlugin : KSpigot() {
         TimerCommand().register()
         SettingsCommand().register()
         HideCommand().register()
-        PositionCommand().register("position")
+        PositionCommand().register()
 
         val pluginDescription = this.description
         logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")
