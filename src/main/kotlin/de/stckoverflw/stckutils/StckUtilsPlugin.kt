@@ -43,6 +43,8 @@ class StckUtilsPlugin : KSpigot() {
     }
 
     override fun startup() {
+        Config.reloadPositions()
+
         if (Config.resetSettings.villageSpawn && wasReset) {
             val world = Bukkit.getWorld("world")!!
             val nearestVillage = world.locateNearestStructure(world.spawnLocation, StructureType.VILLAGE, 10000, true)

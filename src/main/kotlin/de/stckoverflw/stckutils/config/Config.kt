@@ -15,6 +15,9 @@ object Config {
         resetSettings = ResetSettings()
         challengeSettings = ChallengeSettings()
         gameChangeConfig = GameChangeConfig()
+    }
+
+    fun reloadPositions() {
         positionConfig = PositionConfig()
     }
 }

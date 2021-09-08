@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.config
 
 import de.stckoverflw.stckutils.config.data.PositionData
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import java.util.*
 
@@ -10,6 +11,7 @@ class PositionConfig : AbstractConfig("positions.yml") {
 
     init {
         yaml.getKeys(false).forEach {
+            Bukkit.getLogger().info("§aFound Position: $it")
             positions.add(
                 PositionData(
                     it,

@@ -38,14 +38,14 @@ class PositionCommand : TabExecutor {
                             location
                         )
                     )
-                    broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${args[0].lowercase()} §7at [§9${location.blockX}§7,${location.blockY}§7,§9${location.blockZ}§7]")
+                    broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${args[0].lowercase()} §7at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
                 } else {
                     val position = Config.positionConfig.positions.find {
                         it.name == args[0]
                     }
                     if (position != null) {
                         val location = position.location
-                        player.sendMessage(StckUtilsPlugin.prefix + "§9${position.name} §7by §9${player.name} §7is at [§9${location.blockX}§7,${location.blockY}§7,§9${location.blockZ}§7]")
+                        player.sendMessage(StckUtilsPlugin.prefix + "§9${position.name} §7by §9${player.name} §7is at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
                     }
                 }
             }
