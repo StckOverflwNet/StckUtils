@@ -39,54 +39,70 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         // Item for opening the Challenges Page
-        pageChanger(Slots.RowThreeSlotThree, itemStack(Material.DRAGON_HEAD) {
-            meta {
-                name = "§6Challenges"
-                addLore {
-                    +"§6Challenges§7: change the Minecraft Gameplay"
-                    +" "
-                    +"§7Click to open the Challenge Inventory"
+        pageChanger(
+            Slots.RowThreeSlotThree,
+            itemStack(Material.DRAGON_HEAD) {
+                meta {
+                    name = "§6Challenges"
+                    addLore {
+                        +"§6Challenges§7: change the Minecraft Gameplay"
+                        +" "
+                        +"§7Click to open the Challenge Inventory"
+                    }
                 }
-            }
-        }, 1, null, null)
+            },
+            1, null, null
+        )
 
         // Item for opening the GameChanges Page
-        pageChanger(Slots.RowThreeSlotFive, itemStack(Material.FILLED_MAP) {
-            meta {
-                name = "§cGame Changes"
-                addLore {
-                    +"§cGame Changes§7: change basic Game mechanics or"
-                    +"§7add features to the basic Game"
-                    +" "
-                    +"§7Click to open the Game Change Inventory"
+        pageChanger(
+            Slots.RowThreeSlotFive,
+            itemStack(Material.FILLED_MAP) {
+                meta {
+                    name = "§cGame Changes"
+                    addLore {
+                        +"§cGame Changes§7: change basic Game mechanics or"
+                        +"§7add features to the basic Game"
+                        +" "
+                        +"§7Click to open the Game Change Inventory"
+                    }
                 }
-            }
-        }, 3, null, null)
+            },
+            3, null, null
+        )
 
         // Item for opening the Goals Page
-        pageChanger(Slots.RowThreeSlotSeven, itemStack(Material.DIAMOND) {
-            meta {
-                name = "§bGoals"
-                addLore {
-                    +"§bGoals§7, the Goal you have while"
-                    +"§7playing. The Challenge ends automatically"
-                    +"§7when this goal is reached"
-                    +" "
-                    +"§7Click to open the Goal Inventory"
+        pageChanger(
+            Slots.RowThreeSlotSeven,
+            itemStack(Material.DIAMOND) {
+                meta {
+                    name = "§bGoals"
+                    addLore {
+                        +"§bGoals§7, the Goal you have while"
+                        +"§7playing. The Challenge ends automatically"
+                        +"§7when this goal is reached"
+                        +" "
+                        +"§7Click to open the Goal Inventory"
+                    }
                 }
-            }
-        }, 4, null, null)
+            },
+            4, null, null
+        )
 
         // Item for opening the Page with More settings
-        pageChanger(Slots.RowOneSlotFive, itemStack(Material.COMPARATOR) {
-            meta {
-                name = "§cMore Settings"
-                addLore {
-                    +"§7Click to see §cmore settings§7, like Settings"
-                    +"§7for the §eTimer §7or ${KColors.ROSYBROWN}World Reset"
+        pageChanger(
+            Slots.RowOneSlotFive,
+            itemStack(Material.COMPARATOR) {
+                meta {
+                    name = "§cMore Settings"
+                    addLore {
+                        +"§7Click to see §cmore settings§7, like Settings"
+                        +"§7for the §eTimer §7or ${KColors.ROSYBROWN}World Reset"
+                    }
                 }
-            }
-        }, 0, null, null)
+            },
+            0, null, null
+        )
     }
 
     // More settings Page
@@ -104,30 +120,38 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         pageChanger(Slots.RowFiveSlotFive, goBackItem, defaultPage, null, null)
 
         // Item for opening the World reset Settings Page
-        pageChanger(Slots.RowThreeSlotThree, itemStack(Material.GRASS_BLOCK) {
-            meta {
-                name = "${KColors.ROSYBROWN}World Reset"
-                addLore {
-                    +"${KColors.ROSYBROWN}World Reset§7: reset the"
-                    +"§7in game world"
-                    +" "
-                    +"§7Click to open the Challenge Inventory"
+        pageChanger(
+            Slots.RowThreeSlotThree,
+            itemStack(Material.GRASS_BLOCK) {
+                meta {
+                    name = "${KColors.ROSYBROWN}World Reset"
+                    addLore {
+                        +"${KColors.ROSYBROWN}World Reset§7: reset the"
+                        +"§7in game world"
+                        +" "
+                        +"§7Click to open the Challenge Inventory"
+                    }
                 }
-            }
-        }, -2, null, null)
+            },
+            -2, null, null
+        )
 
         // Item for opening the Timer Settings Page
-        pageChanger(Slots.RowThreeSlotSeven, itemStack(Material.CLOCK) {
-            meta {
-                name = "§eTimer"
-                addLore {
-                    +"§eTimer§7: a simple Timer that counts"
-                    +"§7upwards in seconds, minutes and hours"
-                    +" "
-                    +"§7Click to open the Timer Inventory"
+        pageChanger(
+            Slots.RowThreeSlotSeven,
+            itemStack(Material.CLOCK) {
+                meta {
+                    name = "§eTimer"
+                    addLore {
+                        +"§eTimer§7: a simple Timer that counts"
+                        +"§7upwards in seconds, minutes and hours"
+                        +" "
+                        +"§7Click to open the Timer Inventory"
+                    }
                 }
-            }
-        }, -1, null, null)
+            },
+            -1, null, null
+        )
     }
 
     // Challenges Page
@@ -167,8 +191,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                             player.openGUI(configGUI)
                         } else {
                             player.sendMessage(
-                                StckUtilsPlugin.prefix
-                                        + "§cYou need to activate the Challenge before you can configure it"
+                                StckUtilsPlugin.prefix +
+                                    "§cYou need to activate the Challenge before you can configure it"
                             )
                         }
                     }
@@ -261,29 +285,35 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         // Go back Item
         pageChanger(Slots.RowThreeSlotOne, goBackItem, defaultPage, null, null)
 
-        placeholder(Slots.RowFourSlotTwo, itemStack(Material.AZALEA) {
-            meta {
-                name = "§aTeam Goal"
-                addLore {
-                    +" "
-                    +"§7Play together/alone for a Goal"
-                    +"§7If one Player reaches the Goal"
-                    +"§aeveryone §7wins the Challenge"
+        placeholder(
+            Slots.RowFourSlotTwo,
+            itemStack(Material.AZALEA) {
+                meta {
+                    name = "§aTeam Goal"
+                    addLore {
+                        +" "
+                        +"§7Play together/alone for a Goal"
+                        +"§7If one Player reaches the Goal"
+                        +"§aeveryone §7wins the Challenge"
+                    }
                 }
             }
-        })
+        )
 
-        placeholder(Slots.RowTwoSlotTwo, itemStack(Material.NETHERITE_SWORD) {
-            meta {
-                name = "§cBattle"
-                addLore {
-                    +" "
-                    +"§7Everyone §cfights §7for a Goal,"
-                    +"§7The first Player reaching the Goal"
-                    +"§7wins the Challenge"
+        placeholder(
+            Slots.RowTwoSlotTwo,
+            itemStack(Material.NETHERITE_SWORD) {
+                meta {
+                    name = "§cBattle"
+                    addLore {
+                        +" "
+                        +"§7Everyone §cfights §7for a Goal,"
+                        +"§7The first Player reaching the Goal"
+                        +"§7wins the Challenge"
+                    }
                 }
             }
-        })
+        )
 
         // Compound for the Goals
         val teamGoalCompound = createRectCompound<TeamGoal>(
@@ -356,30 +386,36 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
 
         // If the Timer is not running display an Item for Starting the Timer
         if (!Timer.running) {
-            button(Slots.RowThreeSlotThree, itemStack(Material.GREEN_DYE) {
-                meta {
-                    name = "§aStart the Timer"
-                    addLore {
-                        +" "
-                        +"§7Click to Start the Timer"
+            button(
+                Slots.RowThreeSlotThree,
+                itemStack(Material.GREEN_DYE) {
+                    meta {
+                        name = "§aStart the Timer"
+                        addLore {
+                            +" "
+                            +"§7Click to Start the Timer"
+                        }
                     }
                 }
-            }) {
+            ) {
                 Timer.start()
                 Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
                 it.player.closeInventory()
             }
             // If Timer is Running display Item for stopping the Timer
         } else {
-            button(Slots.RowThreeSlotThree, itemStack(Material.REDSTONE) {
-                meta {
-                    name = "§6Stop the Timer"
-                    addLore {
-                        +" "
-                        +"§7Click to Stop the Timer"
+            button(
+                Slots.RowThreeSlotThree,
+                itemStack(Material.REDSTONE) {
+                    meta {
+                        name = "§6Stop the Timer"
+                        addLore {
+                            +" "
+                            +"§7Click to Stop the Timer"
+                        }
                     }
                 }
-            }) {
+            ) {
                 Timer.stop()
                 Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §6stopped"))
                 it.player.closeInventory()
@@ -400,15 +436,18 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         }
 
         // Item for resetting the Timer
-        button(Slots.RowThreeSlotSeven, itemStack(Material.BARRIER) {
-            meta {
-                name = "§cReset the Timer"
-                addLore {
-                    +" "
-                    +"§7Click to Reset the Timer"
+        button(
+            Slots.RowThreeSlotSeven,
+            itemStack(Material.BARRIER) {
+                meta {
+                    name = "§cReset the Timer"
+                    addLore {
+                        +" "
+                        +"§7Click to Reset the Timer"
+                    }
                 }
             }
-        }) {
+        ) {
             if (Timer.running) {
                 Timer.stop()
             }
@@ -438,17 +477,20 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         }
 
         // Item for running a World reset
-        button(Slots.RowThreeSlotSeven, itemStack(Material.BARRIER) {
-            meta {
-                name = "§cReset World"
-                addLore {
-                    +" "
-                    +"§7Click to §creset §7the World"
-                    +"§7All Progress will be gone and"
-                    +"§7the Timer will be set to 0"
+        button(
+            Slots.RowThreeSlotSeven,
+            itemStack(Material.BARRIER) {
+                meta {
+                    name = "§cReset World"
+                    addLore {
+                        +" "
+                        +"§7Click to §creset §7the World"
+                        +"§7All Progress will be gone and"
+                        +"§7the Timer will be set to 0"
+                    }
                 }
             }
-        }) {
+        ) {
             it.player.resetWorlds()
         }
     }

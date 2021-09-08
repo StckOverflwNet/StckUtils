@@ -33,6 +33,6 @@ sealed class GameChange : Listener {
     abstract fun run()
 }
 
-abstract class GameExtension: GameChange()
+abstract class GameExtension : GameChange()
 
-abstract class GameRule: GameChange()
+abstract class GameRule : GameChange()

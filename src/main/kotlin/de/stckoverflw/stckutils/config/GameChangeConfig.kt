@@ -10,5 +10,4 @@ class GameChangeConfig : AbstractConfig("gamechanges.yml") {
     fun getSetting(gameChangeId: String, setting: String): Any? {
         return yaml.get("$gameChangeId.$setting")
     }
-
 }

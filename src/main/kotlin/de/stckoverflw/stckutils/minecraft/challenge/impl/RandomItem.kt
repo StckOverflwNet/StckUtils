@@ -15,7 +15,6 @@ import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
-import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerMoveEvent
@@ -75,7 +74,7 @@ object RandomItem : Challenge() {
             // Go back Item
             pageChanger(Slots.RowThreeSlotOne, goBackItem, 0, null, null)
 
-            button(Slots.RowThreeSlotSix, plusItem("distance", "${distanceUnit}§7m", "10§7m", "100§7m")) {
+            button(Slots.RowThreeSlotSix, plusItem("distance", "$distanceUnit§7m", "10§7m", "100§7m")) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     distanceUnit += 10
@@ -85,13 +84,13 @@ object RandomItem : Challenge() {
                 updateInventory(it.bukkitEvent.inventory, false)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem("distance", "${distanceUnit}§7m", "500§7m")) {
+            button(Slots.RowThreeSlotFive, resetItem("distance", "$distanceUnit§7m", "500§7m")) {
                 it.bukkitEvent.isCancelled = true
                 distanceUnit = 500
                 updateInventory(it.bukkitEvent.inventory, false)
             }
 
-            button(Slots.RowThreeSlotFour, minusItem("distance", "${distanceUnit}§7m", "10§7m", "100§7m")) {
+            button(Slots.RowThreeSlotFour, minusItem("distance", "$distanceUnit§7m", "10§7m", "100§7m")) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (distanceUnit - 10 < minDistance)
@@ -157,9 +156,9 @@ object RandomItem : Challenge() {
             inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3§7m"))
             inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10§7s", "1§7m"))
         } else {
-            inv.setItem(21, minusItem("distance", "${distanceUnit}§7m", "10§7m", "100§7m"))
-            inv.setItem(22, resetItem("distance", "${distanceUnit}§7m", "500§7m"))
-            inv.setItem(23, plusItem("distance", "${distanceUnit}§7m", "10§7m", "100§7m"))
+            inv.setItem(21, minusItem("distance", "$distanceUnit§7m", "10§7m", "100§7m"))
+            inv.setItem(22, resetItem("distance", "$distanceUnit§7m", "500§7m"))
+            inv.setItem(23, plusItem("distance", "$distanceUnit§7m", "10§7m", "100§7m"))
         }
     }
 

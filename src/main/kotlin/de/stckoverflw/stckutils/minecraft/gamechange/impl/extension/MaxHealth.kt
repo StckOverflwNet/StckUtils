@@ -12,11 +12,10 @@ import net.axay.kspigot.items.name
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
-import org.bukkit.inventory.ItemStack
 
 object MaxHealth : GameExtension() {
     override val id: String = "max-health"
-    override fun item() =  itemStack(Material.REDSTONE) {
+    override fun item() = itemStack(Material.REDSTONE) {
         meta {
             name = "§aMax Health"
             addLore {
@@ -61,7 +60,6 @@ object MaxHealth : GameExtension() {
         get() = Config.gameChangeConfig.getSetting(id, "max-health") as Int? ?: 20
         set(value) = Config.gameChangeConfig.setSetting(id, "max-health", value)
 
-
     override fun run() {
         Bukkit.getOnlinePlayers().forEach {
             it.isHealthScaled = true
@@ -70,5 +68,4 @@ object MaxHealth : GameExtension() {
             it.health = health.toDouble()
         }
     }
-
 }

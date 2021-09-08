@@ -69,6 +69,5 @@ object MobDuplicator : GameExtension() {
             event.entity.world.spawnEntity(event.entity.location, event.entity.type)
         }
         if (exponential) if (amount * 2 > 64) amount = 64 else amount *= 2
-
     }
 }

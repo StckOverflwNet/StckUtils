@@ -56,7 +56,6 @@ abstract class Challenge : Listener {
      * Is run every second synchronously with the timer
      */
     open fun update() {
-
     }
 
     fun lose(reason: String) {

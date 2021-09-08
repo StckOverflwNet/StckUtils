@@ -1,13 +1,10 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.runnables.sync
-import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.Material
@@ -15,7 +12,6 @@ import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-
 
 object ChunkSync : Challenge() {
     override val id: String = "chunk-sync"

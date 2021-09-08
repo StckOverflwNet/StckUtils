@@ -47,6 +47,4 @@ object KeepInventory : GameRule() {
             it.setGameRule(org.bukkit.GameRule.KEEP_INVENTORY, keepInventory)
         }
     }
-
-
 }

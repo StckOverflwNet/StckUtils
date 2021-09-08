@@ -33,8 +33,8 @@ object RandomEffect : Challenge() {
         if (event.entity !is Player) return
         if (!(event.entity as Player).isPlaying()) return
 
-        if (event.cause == EntityDamageEvent.DamageCause.POISON
-            || event.cause == EntityDamageEvent.DamageCause.WITHER
+        if (event.cause == EntityDamageEvent.DamageCause.POISON ||
+            event.cause == EntityDamageEvent.DamageCause.WITHER
         ) return
 
         val potionTypes = PotionEffectType.values()

@@ -1,10 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
-import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
-import de.stckoverflw.stckutils.minecraft.challenge.impl.JackHammer
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.*
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.AllowPvP
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.Difficulty
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.KeepInventory
-import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance

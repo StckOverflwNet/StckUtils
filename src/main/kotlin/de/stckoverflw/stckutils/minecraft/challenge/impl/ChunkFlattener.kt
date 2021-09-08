@@ -3,7 +3,6 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DeathCounter
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
 import de.stckoverflw.stckutils.user.placeHolderItemWhite
@@ -16,7 +15,6 @@ import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.axay.kspigot.runnables.sync
 import org.bukkit.Effect
-import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
@@ -96,7 +94,7 @@ object ChunkFlattener : Challenge() {
             addLore {
                 +" "
                 +"§7Reset the period of the ChunkFlattener"
-                +"§7Period: §f${period}§7s (§8Default: 10§7)"
+                +"§7Period: §f$period§7s (§8Default: 10§7)"
             }
         }
     }
@@ -107,7 +105,7 @@ object ChunkFlattener : Challenge() {
             addLore {
                 +" "
                 +"§7Increase the period of the ChunkFlattener"
-                +"§7Period: §f${period}§7s"
+                +"§7Period: §f$period§7s"
                 +" "
                 +"§7Left-click:             §a+ 1§7s"
                 +"§7Right-click:            §a+ 10§7s"
@@ -121,7 +119,7 @@ object ChunkFlattener : Challenge() {
             addLore {
                 +" "
                 +"§7Decrease the period of the ChunkFlattener"
-                +"§7Period: §f${period}§7s"
+                +"§7Period: §f$period§7s"
                 +" "
                 +"§7Left-click:             §c- 1§7s"
                 +"§7Right-click:            §c- 10§7s"
@@ -187,7 +185,6 @@ object ChunkFlattener : Challenge() {
                                 player.world.playSound(it.location, it.soundGroup.breakSound, 0.5F, 1F)
                                 it.type = Material.AIR
                             }
-
                         }
                     }
                 }

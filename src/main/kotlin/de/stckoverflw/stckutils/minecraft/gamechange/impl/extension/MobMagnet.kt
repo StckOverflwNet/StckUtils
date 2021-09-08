@@ -13,7 +13,6 @@ import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.inventory.ItemStack
 
 object MobMagnet : GameExtension() {
     override val id: String = "mob-magnet"

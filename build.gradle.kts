@@ -2,6 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.30"
+    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+}
+
+ktlint {
+    disabledRules.set(listOf("no-wildcard-imports"))
 }
 
 group = "de.stckoverflw"
@@ -16,7 +21,11 @@ repositories {
 
 dependencies {
     // PaperMC Dependency
-    compileOnly("io.papermc.paper", "paper-api", "1.17.1-R0.1-SNAPSHOT") // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
+    compileOnly(
+        "io.papermc.paper",
+        "paper-api",
+        "1.17.1-R0.1-SNAPSHOT"
+    ) // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
 
     // KSpigot dependency
     implementation("net.axay", "kspigot", "1.17.3")

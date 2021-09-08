@@ -34,7 +34,6 @@ object Difficulty : GameRule() {
         get() = Difficulty.valueOf(Config.gameChangeConfig.getSetting(id, "difficulty") as String? ?: "NORMAL")
         set(value) = Config.gameChangeConfig.setSetting(id, "difficulty", value.name)
 
-
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
         difficulty = when (difficulty) {
             Difficulty.PEACEFUL -> {

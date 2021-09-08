@@ -3,7 +3,6 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
-import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.AllowPvP
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -16,7 +15,6 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.inventory.ItemStack
 
 object DeathCounter : GameExtension() {
     override val id: String = "death-counter"

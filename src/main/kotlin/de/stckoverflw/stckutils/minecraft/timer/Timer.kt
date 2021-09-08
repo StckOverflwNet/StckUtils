@@ -112,11 +112,15 @@ object Timer {
     @OptIn(ExperimentalTime::class)
     fun formatTime(seconds: Long = time): String {
         val duration = Duration.seconds(seconds)
-        duration.toComponents(action = { days, hours, min, sec, _ ->
-            return ("§c§l" + (if (days != 0) "${days}d " else "") +
-                    (if (hours != 0) "${hours}h " else "") +
-                    (if (min != 0) "${min}m " else "") +
-                    if (sec != 0) "$sec" + if (days + hours + min == 0) " second" + if (sec != 1) "s" else "" else "s" else "")
-        })
+        duration.toComponents(
+            action = { days, hours, min, sec, _ ->
+                return (
+                    "§c§l" + (if (days != 0) "${days}d " else "") +
+                        (if (hours != 0) "${hours}h " else "") +
+                        (if (min != 0) "${min}m " else "") +
+                        if (sec != 0) "$sec" + if (days + hours + min == 0) " second" + if (sec != 1) "s" else "" else "s" else ""
+                    )
+            }
+        )
     }
 }

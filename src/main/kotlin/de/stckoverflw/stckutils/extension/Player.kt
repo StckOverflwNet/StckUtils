@@ -18,7 +18,7 @@ fun Player.resetWorlds() {
             Component.join(
                 Component.newline(),
                 Component.text("§7The Worlds are §cresetting"),
-                Component.text("§7Reset started by §9${name}"),
+                Component.text("§7Reset started by §9$name"),
             )
         )
     }
@@ -30,7 +30,7 @@ fun Player.setSavedInventory() {
         inventory.clear()
         inventory.contents =
             persistentDataContainer.get(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"), PersistentDataType.STRING)
-                ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>
+            ?.let { it1 -> fromBase64(it1) } as Array<out ItemStack?>
         persistentDataContainer.remove(NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"))
     }
 }

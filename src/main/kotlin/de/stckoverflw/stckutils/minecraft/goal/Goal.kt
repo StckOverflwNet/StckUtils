@@ -10,7 +10,6 @@ import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
-
 sealed class Goal : Listener {
 
     /**
