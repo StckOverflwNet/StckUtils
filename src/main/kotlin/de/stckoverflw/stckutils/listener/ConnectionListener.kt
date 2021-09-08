@@ -1,8 +1,6 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.extension.saveInventory
-import de.stckoverflw.stckutils.extension.setSavedInventory
-import de.stckoverflw.stckutils.extension.toBase64
+import de.stckoverflw.stckutils.extension.*
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.settingsItem
@@ -46,9 +44,9 @@ class ConnectionListener : Listener {
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         val player = event.player
-        if (!Timer.running && player.gameMode != GameMode.SPECTATOR) {
+        if (!Timer.running && player.isPlaying()) {
             event.quitMessage(Component.text("§7[§c-§7]§7 ${player.name}"))
-        } else if (Timer.running && player.gameMode != GameMode.SPECTATOR) {
+        } else if (Timer.running && player.isPlaying()) {
             player.persistentDataContainer.set(
                 NamespacedKey(KSpigotMainInstance, "challenge-inventory-contents"),
                 PersistentDataType.STRING,

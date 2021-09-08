@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -22,6 +23,7 @@ object NoFallDamage : Challenge() {
 
     @EventHandler
     fun onFallDamage(event: EntityDamageEvent) {
+        if (!(event.entity as Player).isPlaying()) return
         if (event.cause == EntityDamageEvent.DamageCause.FALL && event.entity is Player)
             lose("${event.entity.name} took fall damage.")
     }

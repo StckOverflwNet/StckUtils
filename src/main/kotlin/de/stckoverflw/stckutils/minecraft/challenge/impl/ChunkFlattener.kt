@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DeathCounter
 import de.stckoverflw.stckutils.user.goBackItem
@@ -166,27 +167,27 @@ object ChunkFlattener : Challenge() {
         if (time % period != 0) return
 
         KSpigotMainInstance.server.onlinePlayers.forEach { player ->
-            if (player.gameMode == GameMode.SURVIVAL) {
-                for (i in 0..15) {
-                    for (j in 0..15) {
-                        sync {
-                            val block = player.world.getHighestBlockAt(player.location.chunk.x * 16 + i, player.location.chunk.z * 16 + j)
-                            if (block.type.blastResistance > 1200.0F) return@sync
-                            if (doDrop) {
-                                block.breakNaturally()
-                            } else {
-                                val blocks = ArrayList<Block>()
-                                blocks.add(block)
-                                while (blocks[blocks.lastIndex].getRelative(BlockFace.UP).type != Material.AIR) {
-                                    blocks.add(blocks[blocks.lastIndex].getRelative(BlockFace.UP))
-                                }
-                                blocks.reverse()
-                                blocks.forEach {
-                                    player.world.playEffect(it.location, Effect.STEP_SOUND, it.type)
-                                    player.world.playSound(it.location, it.soundGroup.breakSound, 0.5F, 1F)
-                                    it.type = Material.AIR
-                                }
+            if (!player.isPlaying()) return@forEach
+            for (i in 0..15) {
+                for (j in 0..15) {
+                    sync {
+                        val block = player.world.getHighestBlockAt(player.location.chunk.x * 16 + i, player.location.chunk.z * 16 + j)
+                        if (block.type.blastResistance > 1200.0F) return@sync
+                        if (doDrop) {
+                            block.breakNaturally()
+                        } else {
+                            val blocks = ArrayList<Block>()
+                            blocks.add(block)
+                            while (blocks[blocks.lastIndex].getRelative(BlockFace.UP).type != Material.AIR) {
+                                blocks.add(blocks[blocks.lastIndex].getRelative(BlockFace.UP))
                             }
+                            blocks.reverse()
+                            blocks.forEach {
+                                player.world.playEffect(it.location, Effect.STEP_SOUND, it.type)
+                                player.world.playSound(it.location, it.soundGroup.breakSound, 0.5F, 1F)
+                                it.type = Material.AIR
+                            }
+
                         }
                     }
                 }

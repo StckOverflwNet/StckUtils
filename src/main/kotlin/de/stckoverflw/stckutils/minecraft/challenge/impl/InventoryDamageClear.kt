@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -24,6 +25,7 @@ object InventoryDamageClear : Challenge() {
     @EventHandler(ignoreCancelled = true)
     fun onDamage(event: EntityDamageEvent) {
         if (event.entity is Player) {
+            if (!(event.entity as Player).isPlaying()) return
             (event.entity as Player).inventory.clear()
         }
     }

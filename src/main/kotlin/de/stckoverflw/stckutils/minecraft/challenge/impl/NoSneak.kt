@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -21,6 +22,7 @@ object NoSneak : Challenge() {
 
     @EventHandler
     fun onSneak(event: PlayerToggleSneakEvent) {
+        if (!event.player.isPlaying()) return
         if (event.isSneaking)
             lose("${event.player.name} sneaked.")
     }

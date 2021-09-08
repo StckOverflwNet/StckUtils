@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
@@ -40,7 +41,7 @@ object BalanceLife : Challenge() {
 
     @EventHandler
     fun onHealtRegain(event: EntityRegainHealthEvent) {
-        if (event.entity is Player && (event.entity as Player).health + event.amount >= (event.entity as Player).getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value!!) {
+        if (event.entity is Player && (event.entity as Player).isPlaying() && (event.entity as Player).health + event.amount >= (event.entity as Player).getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value!!) {
             lose("${event.entity.name} hit ${(event.entity as Player).getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value?.toInt() ?: "full"} hp.")
             isFirstRun = true
         }
@@ -48,6 +49,7 @@ object BalanceLife : Challenge() {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
+        if (!event.entity.isPlaying()) return
         lose("${event.entity.name} hit 0 hp.")
         isFirstRun = true
     }

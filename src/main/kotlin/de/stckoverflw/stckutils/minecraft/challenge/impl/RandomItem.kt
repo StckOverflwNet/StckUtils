@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.user.goBackItem
@@ -48,7 +49,7 @@ object RandomItem : Challenge() {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     isDistance = !isDistance
-                    it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, distanceItem())
+                    it.bukkitEvent.currentItem = distanceItem()
                 } else if (it.bukkitEvent.isRightClick) {
                     it.guiInstance.gotoPage(1)
                 }
@@ -58,7 +59,7 @@ object RandomItem : Challenge() {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     isTime = !isTime
-                    it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, timeItem())
+                    it.bukkitEvent.currentItem = timeItem()
                 } else if (it.bukkitEvent.isRightClick) {
                     it.guiInstance.gotoPage(2)
                 }
@@ -216,7 +217,7 @@ object RandomItem : Challenge() {
 
     private fun timeItem() = itemStack(Material.CLOCK) {
         meta {
-            name = "§aBreakable Lines"
+            name = "§aTime"
             addLore {
                 +" "
                 +"§7Toggle if random items are dropped for time passed"
@@ -253,13 +254,14 @@ object RandomItem : Challenge() {
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
         if (!isDistance) return
+        if (!event.player.isPlaying()) return
         if (!event.hasChangedBlock()) return
         distance++
         if (distance >= distanceUnit) {
             distance = 0
             onlinePlayers.forEach { player ->
-                if (player.gameMode == GameMode.SURVIVAL)
-                    player.give(ItemStack(materials.random())).values.forEach { itemStack -> player.world.dropItem(player.location, itemStack) }
+                if (!player.isPlaying()) return
+                player.give(ItemStack(materials.random()))
             }
         }
     }
@@ -270,8 +272,8 @@ object RandomItem : Challenge() {
         if (time >= timeUnit) {
             time = 0
             onlinePlayers.forEach { player ->
-                if (player.gameMode == GameMode.SURVIVAL)
-                    player.give(ItemStack(materials.random())).values.forEach { itemStack -> player.world.dropItem(player.location, itemStack) }
+                if (!player.isPlaying()) return
+                player.give(ItemStack(materials.random()))
             }
         }
     }

@@ -1,10 +1,12 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -26,6 +28,7 @@ object SingleUse : Challenge() {
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
+        if (!(event.whoClicked as Player).isPlaying()) return
         if (event.currentItem != null) {
             setOneDurability(event.currentItem!!)
         }
@@ -33,6 +36,7 @@ object SingleUse : Challenge() {
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
+        if (!(event.player as Player).isPlaying()) return
         event.player.inventory.contents.forEach {
             if (it != null) {
                 setOneDurability(it)
