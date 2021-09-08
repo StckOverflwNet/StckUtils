@@ -23,6 +23,11 @@ class ConnectionListener : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
+        if (player.persistentDataContainer.get(
+                NamespacedKey(KSpigotMainInstance, "challenge-funciton-hidden"),
+                PersistentDataType.BYTE
+            ) == 1.toByte()
+        ) player.hide() else player.reveal()
         player.inventory.clear()
         if (!Timer.running) {
             event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
@@ -65,7 +70,11 @@ class ConnectionListener : Listener {
     fun onLogin(event: PlayerLoginEvent) {
         val player = event.player
         if (Timer.running) {
-            if (player.isOp) {
+            if (player.isOp || player.persistentDataContainer.get(
+                    NamespacedKey(KSpigotMainInstance, "challenge-funciton-hidden"),
+                    PersistentDataType.BYTE
+                ) == 1.toByte()
+            ) {
                 player.gameMode = GameMode.SPECTATOR
                 player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
             } else {

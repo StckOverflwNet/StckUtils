@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils
 
+import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.command.SettingsCommand
 import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
@@ -61,6 +62,7 @@ class StckUtilsPlugin : KSpigot() {
         getCommand("timer")!!.setExecutor(timerCommand)
         getCommand("timer")!!.tabCompleter = timerCommand
         getCommand("settings")!!.setExecutor(SettingsCommand())
+        HideCommand().register()
 
         val pluginDescription = this.description
         logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")
