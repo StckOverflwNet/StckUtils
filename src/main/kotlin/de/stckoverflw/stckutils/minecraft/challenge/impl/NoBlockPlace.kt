@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockPlaceEvent
 
 object NoBlockPlace : Challenge() {
+
     override val id: String = "no-block-place"
     override val name: String = "§eNo Block Place"
     override val material: Material = Material.GRASS_BLOCK

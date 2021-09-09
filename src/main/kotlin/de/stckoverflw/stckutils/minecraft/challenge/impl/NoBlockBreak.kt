@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 
 object NoBlockBreak : Challenge() {
+
     override val id: String = "no-block-break"
     override val name: String = "§eNo Block Break"
     override val material: Material = Material.GOLDEN_PICKAXE

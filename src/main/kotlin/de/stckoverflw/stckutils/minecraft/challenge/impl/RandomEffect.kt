@@ -13,17 +13,14 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object RandomEffect : Challenge() {
+
     override val id: String = "random-effect"
-
     override val name: String = "§dRa§bnd§aom §eEf§3fe§6ct"
-
     override val material: Material = Material.POTION
-
     override val description: List<String> = listOf(
         " ",
         "§7Every time you get damage every player is getting a random effect.",
     )
-
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null

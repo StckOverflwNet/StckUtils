@@ -14,8 +14,10 @@ import org.bukkit.util.Vector
 import java.util.*
 
 object GamerChallenge : Challenge() {
-    override val id: String = "no-grass"
 
+    private val respawned = HashMap<UUID, Boolean>()
+
+    override val id: String = "no-grass"
     override val name: String = "§dGamer Challenge"
     override val material: Material = Material.GRASS
     override val description: List<String> = listOf(
@@ -26,8 +28,6 @@ object GamerChallenge : Challenge() {
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
-
-    private val respawned = HashMap<UUID, Boolean>()
 
     override fun prepareChallenge() {
         onlinePlayers.forEach { player ->

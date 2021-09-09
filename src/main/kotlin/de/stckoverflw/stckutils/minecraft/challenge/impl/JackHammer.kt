@@ -19,6 +19,7 @@ object JackHammer : Challenge() {
         "§7(Except Bedrock)"
     )
     override val usesEvents: Boolean = true
+
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler

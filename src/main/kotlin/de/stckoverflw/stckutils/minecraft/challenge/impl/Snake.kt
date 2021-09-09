@@ -28,6 +28,24 @@ import org.bukkit.metadata.FixedMetadataValue
 import java.util.*
 
 object Snake : Challenge() {
+
+    private val materials = ArrayList(
+        Material.values().filter { material ->
+            material.name.lowercase().contains("concrete") && !material.name.lowercase().contains("powder") && material != Material.WHITE_CONCRETE
+        }
+    )
+    private val playerMaterials = HashMap<Player, Material>()
+    private val temporaryBlocks = HashMap<Player, LinkedList<Block>>()
+    private var isVisible
+        get() = (Config.gameChangeConfig.getSetting(id, "isVisible") ?: true) as Boolean
+        set(value) = Config.gameChangeConfig.setSetting(id, "isVisible", value)
+    private var isBreakable
+        get() = (Config.gameChangeConfig.getSetting(id, "isBreakable") ?: true) as Boolean
+        set(value) = Config.gameChangeConfig.setSetting(id, "isBreakable", value)
+    private var isColored: Boolean
+        get() = (Config.gameChangeConfig.getSetting(id, "isColored") ?: true) as Boolean
+        set(value) = Config.gameChangeConfig.setSetting(id, "isColored", value)
+
     override val id: String = "snake"
     override val name: String = "§aSnake"
     override val material: Material = Material.PINK_CONCRETE
@@ -104,23 +122,6 @@ object Snake : Challenge() {
         }
     }
 
-    private val materials = ArrayList(
-        Material.values().filter { material ->
-            material.name.lowercase().contains("concrete") && !material.name.lowercase().contains("powder") && material != Material.WHITE_CONCRETE
-        }
-    )
-    private val playerMaterials = HashMap<Player, Material>()
-    private val temporaryBlocks = HashMap<Player, LinkedList<Block>>()
-    private var isVisible
-        get() = (Config.gameChangeConfig.getSetting(id, "isVisible") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isVisible", value)
-    private var isBreakable
-        get() = (Config.gameChangeConfig.getSetting(id, "isBreakable") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isBreakable", value)
-    private var isColored: Boolean
-        get() = (Config.gameChangeConfig.getSetting(id, "isColored") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isColored", value)
-
     override fun prepareChallenge() {
         if (isColored) {
             onlinePlayers.forEach { player ->
@@ -163,11 +164,11 @@ object Snake : Challenge() {
                     val player = playerMaterials.getKey(block.type) as Player
                     lose(
                         "${event.player.name} touched " +
-                            player.name +
-                            if (player.name.endsWith('s') || player.name.endsWith('x'))
-                                "' snake trail."
-                            else
-                                "'s snake trail."
+                                player.name +
+                                if (player.name.endsWith('s') || player.name.endsWith('x'))
+                                    "' snake trail."
+                                else
+                                    "'s snake trail."
                     )
                     return
                 }

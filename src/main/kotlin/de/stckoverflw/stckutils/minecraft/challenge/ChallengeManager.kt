@@ -32,6 +32,7 @@ object ChallengeManager {
             Snake,
             JackHammer,
             RandomItem,
+            MobDuplicator,
         )
     }
 

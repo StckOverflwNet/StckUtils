@@ -18,6 +18,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 
 object BlockExplode : Challenge() {
+
+    private var isFire: Boolean
+        get() = Config.challengeSettings.getSetting(id, "isFire") as Boolean? ?: false
+        set(value) = Config.challengeSettings.setSetting(id, "isFire", value)
+    private var chance: Int
+        get() = Config.challengeSettings.getSetting(id, "chance") as Int? ?: 50
+        set(value) = Config.challengeSettings.setSetting(id, "chance", value)
+
     override val id: String = "block-explode"
     override val name: String = "§cBlock Explode"
     override val material: Material = Material.TNT
@@ -57,25 +65,17 @@ object BlockExplode : Challenge() {
             }
 
             button(Slots.RowThreeSlotSix, generateFireItem()) {
-                fire = !fire
+                isFire = !isFire
                 it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateFireItem())
             }
         }
     }
 
-    private var fire: Boolean
-        get() = Config.challengeSettings.getSetting(id, "fire") as Boolean? ?: false
-        set(value) = Config.challengeSettings.setSetting(id, "fire", value)
-
-    private var chance: Int
-        get() = Config.challengeSettings.getSetting(id, "chance") as Int? ?: 50
-        set(value) = Config.challengeSettings.setSetting(id, "chance", value)
-
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         if (!event.player.isPlaying()) return
         if ((1..100).random() <= chance) {
-            event.block.location.world.createExplosion(event.block.location, 3.3F, fire)
+            event.block.location.world.createExplosion(event.block.location, 3.3F, isFire)
         }
     }
 
@@ -100,7 +100,7 @@ object BlockExplode : Challenge() {
                 +"§7If the Explosion should"
                 +"§7Create Fire in the radius"
                 +" "
-                +"§7Current value: ".plus(if (fire) "§a$fire" else "§c$fire")
+                +"§7Current value: ".plus(if (isFire) "§a$isFire" else "§c$isFire")
             }
         }
     }

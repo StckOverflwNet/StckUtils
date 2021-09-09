@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
 
 object NoDeath : Challenge() {
+
     override val id: String = "no-death"
     override val name: String = "§4No Death"
     override val material: Material = Material.SKELETON_SKULL

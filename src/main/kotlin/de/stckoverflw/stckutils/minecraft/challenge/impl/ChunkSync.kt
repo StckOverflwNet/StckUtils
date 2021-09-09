@@ -14,6 +14,9 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 
 object ChunkSync : Challenge() {
+
+    private val blockActions = HashMap<Block, ArrayList<Chunk>>()
+
     override val id: String = "chunk-sync"
     override val name: String = "§9Chunk Sync"
     override val material: Material = Material.HEART_OF_THE_SEA
@@ -23,12 +26,9 @@ object ChunkSync : Challenge() {
         "§7is gonna place/break at the same location",
         "§7in every Chunk"
     )
-
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
-
-    private val blockActions = HashMap<Block, ArrayList<Chunk>>()
 
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {

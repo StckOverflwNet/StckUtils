@@ -82,10 +82,10 @@ class StckUtilsPlugin : KSpigot() {
         if (pluginDescription.apiVersion != null) logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
         if (pluginDescription.website != null) logger.info("§aMore Information at §3${pluginDescription.website}")
 
-        onlinePlayers.forEach { player ->
-            player.inventory.clear()
-            if (player.isOp) {
-                player.inventory.setItem(8, settingsItem)
+        onlinePlayers.forEach {
+            it.inventory.clear()
+            if (it.isOp) {
+                it.inventory.setItem(8, settingsItem)
             }
         }
     }

@@ -10,6 +10,7 @@ import org.bukkit.Material
 import org.bukkit.event.EventHandler
 
 object NoVillagerTrade : Challenge() {
+
     override val id: String = "no-villager-trade"
     override val name: String = "${KColors.BROWN}No Villager Trade"
     override val material: Material = Material.VILLAGER_SPAWN_EGG

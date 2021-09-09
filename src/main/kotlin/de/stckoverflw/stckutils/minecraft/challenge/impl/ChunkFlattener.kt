@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.timer.Timer.time
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
 import de.stckoverflw.stckutils.user.placeHolderItemWhite
@@ -22,6 +23,23 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 object ChunkFlattener : Challenge() {
+
+    private var minPeriod: Int
+        get() = Config.gameChangeConfig.getSetting(id, "minPeriod") as Int? ?: 1
+        set(value) = Config.gameChangeConfig.setSetting(id, "minPeriod", value)
+    private var maxPeriod: Int
+        get() = Config.gameChangeConfig.getSetting(id, "maxPeriod") as Int? ?: 60
+        set(value) = Config.gameChangeConfig.setSetting(id, "maxPeriod", value)
+    private var period: Int
+        get() = Config.gameChangeConfig.getSetting(id, "period") as Int? ?: 10
+        set(value) = Config.gameChangeConfig.setSetting(id, "period", value)
+    private var doDrop: Boolean
+        get() = Config.gameChangeConfig.getSetting(id, "doDrop") as Boolean? ?: false
+        set(value) = Config.gameChangeConfig.setSetting(id, "doDrop", value)
+    private var time: Int
+        get() = Config.gameChangeConfig.getSetting(id, "time") as Int? ?: 0
+        set(value) = Config.gameChangeConfig.setSetting(id, "time", value)
+
     override val id: String = "chunk-flattener"
     override val name: String = "§aChunk Flattener"
     override val material: Material = Material.BEDROCK
@@ -144,21 +162,6 @@ object ChunkFlattener : Challenge() {
             period = if (value > 0) maxPeriod else minPeriod
         }
     }
-
-    private var minPeriod: Int
-        get() = Config.gameChangeConfig.getSetting(id, "minPeriod") as Int? ?: 1
-        set(value) = Config.gameChangeConfig.setSetting(id, "minPeriod", value)
-    private var maxPeriod: Int
-        get() = Config.gameChangeConfig.getSetting(id, "maxPeriod") as Int? ?: 60
-        set(value) = Config.gameChangeConfig.setSetting(id, "maxPeriod", value)
-    private var period: Int
-        get() = Config.gameChangeConfig.getSetting(id, "period") as Int? ?: 10
-        set(value) = Config.gameChangeConfig.setSetting(id, "period", value)
-    private var doDrop: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "doDrop") as Boolean? ?: false
-        set(value) = Config.gameChangeConfig.setSetting(id, "doDrop", value)
-
-    private var time: Int = 0
 
     override fun update() {
         time++

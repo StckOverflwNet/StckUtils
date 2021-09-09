@@ -9,6 +9,7 @@ import org.bukkit.Material
 import org.bukkit.event.EventHandler
 
 object NoXP : Challenge() {
+
     override val id: String = "no-xp"
     override val name: String = "§eNo XP"
     override val material: Material = Material.EXPERIENCE_BOTTLE

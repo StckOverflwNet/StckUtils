@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerToggleSneakEvent
 
 object NoSneak : Challenge() {
+
     override val id: String = "no-sneak"
     override val name: String = "§eNo Sneak"
     override val material: Material = Material.CHAINMAIL_BOOTS

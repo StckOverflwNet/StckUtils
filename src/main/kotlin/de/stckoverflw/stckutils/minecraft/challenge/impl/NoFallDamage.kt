@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 
 object NoFallDamage : Challenge() {
+
     override val id: String = "no-fall-damage"
     override val name: String = "§aNo Fall Damage"
     override val material: Material = Material.LEATHER_BOOTS

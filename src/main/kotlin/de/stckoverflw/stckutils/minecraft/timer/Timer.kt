@@ -7,6 +7,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.user.settingsItem
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -74,7 +75,7 @@ object Timer {
                 }
             }
             GoalManager.registerActiveGoal()
-            Bukkit.getOnlinePlayers().forEach {
+            onlinePlayers.forEach {
                 it.inventory.clear()
                 it.setSavedInventory()
             }
@@ -90,7 +91,7 @@ object Timer {
             ChallengeManager.unregisterChallengeListeners()
             GameChangeManager.unregisterGameChangeListeners()
             running = !running
-            Bukkit.getOnlinePlayers().forEach { player ->
+            onlinePlayers.forEach { player ->
                 player.saveInventory()
                 player.inventory.clear()
                 player.getNearbyEntities(48.0, 48.0, 48.0).forEach {

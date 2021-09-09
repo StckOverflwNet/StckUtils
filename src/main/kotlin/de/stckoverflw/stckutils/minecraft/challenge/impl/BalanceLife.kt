@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.extensions.onlinePlayers
@@ -13,6 +14,11 @@ import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 
 object BalanceLife : Challenge() {
+
+    private var isFirstRun
+        get() = Config.gameChangeConfig.getSetting(MobDuplicator.id, "isFirstRun") as Boolean? ?: true
+        set(value) = Config.gameChangeConfig.setSetting(MobDuplicator.id, "isFirstRun", value)
+
     override val id: String = "balance-life"
     override val name: String = "§aBalance Life"
     override val material: Material = Material.HEART_OF_THE_SEA
@@ -24,8 +30,6 @@ object BalanceLife : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
-
-    private var isFirstRun = true
 
     override fun prepareChallenge() {
         if (isFirstRun) {

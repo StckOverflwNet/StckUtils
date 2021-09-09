@@ -59,6 +59,9 @@ abstract class Challenge : Listener {
     open fun update() {
     }
 
+    /**
+     * Is run once a challenge is lost
+     */
     fun lose(reason: String) {
         Timer.stop()
         Bukkit.getOnlinePlayers().forEach {

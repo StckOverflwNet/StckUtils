@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
 
 object NoCrafting : Challenge() {
+
     override val id: String = "no-crafting"
     override val name: String = "§aNo Crafting"
     override val material: Material = Material.CRAFTING_TABLE

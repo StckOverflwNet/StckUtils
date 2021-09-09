@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
 
 object InvisibleEntities : Challenge() {
+
     override val id: String = "invisible-entities"
     override val name: String = "§fInvisible Entities"
     override val material: Material = Material.WHITE_BANNER

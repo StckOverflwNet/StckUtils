@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.Timer.time
 import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
 import de.stckoverflw.stckutils.user.placeHolderItemWhite
@@ -22,6 +23,31 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 object RandomItem : Challenge() {
+
+    private var isDistance
+        get() = (Config.gameChangeConfig.getSetting(id, "isDistance") ?: true) as Boolean
+        set(value) = Config.gameChangeConfig.setSetting(id, "isDistance", value)
+    private var distanceUnit
+        get() = (Config.gameChangeConfig.getSetting(id, "distanceUnit") ?: 500) as Int
+        set(value) = Config.gameChangeConfig.setSetting(id, "distanceUnit", value)
+    private var distance
+        get() = (Config.gameChangeConfig.getSetting(id, "distance") ?: 0) as Int
+        set(value) = Config.gameChangeConfig.setSetting(id, "distance", value)
+    private var minDistance: Int = 50
+
+    private var isTime
+        get() = (Config.gameChangeConfig.getSetting(id, "isTime") ?: true) as Boolean
+        set(value) = Config.gameChangeConfig.setSetting(id, "isTime", value)
+    private var timeUnit
+        get() = (Config.gameChangeConfig.getSetting(id, "timeUnit") ?: 300) as Int
+        set(value) = Config.gameChangeConfig.setSetting(id, "timeUnit", value)
+    private var time
+        get() = (Config.gameChangeConfig.getSetting(id, "time") ?: 0) as Int
+        set(value) = Config.gameChangeConfig.setSetting(id, "time", value)
+    private var minTime: Int = 10
+
+    private val materials = Material.values().filter { material -> material.isItem }
+
     override val id: String = "random-item"
     override val name: String = "§eRandom Item"
     override val material: Material = Material.BEACON
@@ -225,30 +251,6 @@ object RandomItem : Challenge() {
             }
         }
     }
-
-    private var isDistance
-        get() = (Config.gameChangeConfig.getSetting(id, "isDistance") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isDistance", value)
-    private var distanceUnit
-        get() = (Config.gameChangeConfig.getSetting(id, "distanceUnit") ?: 500) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "distanceUnit", value)
-    private var distance
-        get() = (Config.gameChangeConfig.getSetting(id, "distance") ?: 0) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "distance", value)
-    private var minDistance: Int = 50
-
-    private var isTime
-        get() = (Config.gameChangeConfig.getSetting(id, "isTime") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isTime", value)
-    private var timeUnit
-        get() = (Config.gameChangeConfig.getSetting(id, "timeUnit") ?: 300) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "timeUnit", value)
-    private var time
-        get() = (Config.gameChangeConfig.getSetting(id, "time") ?: 0) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "time", value)
-    private var minTime: Int = 10
-
-    private val materials = Material.values().filter { material -> material.isItem }
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {

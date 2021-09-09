@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 
 object InventoryDamageClear : Challenge() {
+
     override val id: String = "inventory-damage-clear"
     override val name: String = "§9Inventory Damage Clear"
     override val material: Material = Material.PURPLE_WOOL

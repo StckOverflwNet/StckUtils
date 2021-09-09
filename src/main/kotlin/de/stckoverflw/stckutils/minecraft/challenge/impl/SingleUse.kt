@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 
 object SingleUse : Challenge() {
+
     override val id: String = "single-use"
     override val name: String = "${KColors.INDIANRED}Single use"
     override val material: Material = Material.WOODEN_PICKAXE
