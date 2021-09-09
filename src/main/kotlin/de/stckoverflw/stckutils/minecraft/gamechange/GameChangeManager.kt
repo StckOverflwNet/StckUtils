@@ -19,7 +19,6 @@ object GameChangeManager {
             Difficulty,
             KeepInventory,
             DamageMultiplier,
-            MobMagnet,
         )
     }
 

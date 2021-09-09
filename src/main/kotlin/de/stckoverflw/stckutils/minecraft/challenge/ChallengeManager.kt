@@ -33,6 +33,7 @@ object ChallengeManager {
             JackHammer,
             RandomItem,
             MobDuplicator,
+            MobMagnet,
         )
     }
 
