@@ -8,12 +8,12 @@ import de.stckoverflw.stckutils.user.goBackItem
 import de.stckoverflw.stckutils.user.placeHolderItemGray
 import de.stckoverflw.stckutils.user.placeHolderItemWhite
 import de.stckoverflw.stckutils.user.settingsGUI
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
-import net.axay.kspigot.main.KSpigotMainInstance
 import net.axay.kspigot.runnables.sync
 import org.bukkit.Effect
 import org.bukkit.Material
@@ -166,8 +166,9 @@ object ChunkFlattener : Challenge() {
     override fun update() {
         time++
         if (time % period != 0) return
+        time = 0
 
-        KSpigotMainInstance.server.onlinePlayers.forEach { player ->
+        onlinePlayers.forEach { player ->
             if (!player.isPlaying()) return@forEach
             for (i in 0..15) {
                 for (j in 0..15) {

@@ -34,6 +34,7 @@ object ChallengeManager {
             RandomItem,
             MobDuplicator,
             MobMagnet,
+            InventorySwap,
         )
     }
 
