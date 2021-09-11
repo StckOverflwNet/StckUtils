@@ -1,7 +1,6 @@
 package de.stckoverflw.stckutils.command
 
 import com.mojang.brigadier.arguments.StringArgumentType
-import com.mojang.brigadier.builder.RequiredArgumentBuilder.argument
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.config.data.PositionData
