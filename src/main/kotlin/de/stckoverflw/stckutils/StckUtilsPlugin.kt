@@ -9,6 +9,7 @@ import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.listener.ConnectionListener
 import de.stckoverflw.stckutils.listener.InteractListener
 import de.stckoverflw.stckutils.listener.ProtectionListener
+import de.stckoverflw.stckutils.listener.RespawnListener
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
@@ -61,6 +62,7 @@ class StckUtilsPlugin : KSpigot() {
         pluginManager.registerEvents(ConnectionListener(), this)
         pluginManager.registerEvents(InteractListener(), this)
         pluginManager.registerEvents(ProtectionListener(), this)
+        pluginManager.registerEvents(RespawnListener(), this)
 
         TimerCommand().register()
         SettingsCommand().register()
@@ -91,9 +93,11 @@ class StckUtilsPlugin : KSpigot() {
     }
 
     override fun shutdown() {
-        onlinePlayers.forEach {
-            it.saveInventory()
-            it.inventory.clear()
+        if (Timer.running) {
+            onlinePlayers.forEach {
+                it.saveInventory()
+                it.inventory.clear()
+            }
         }
     }
 
