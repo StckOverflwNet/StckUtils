@@ -10,6 +10,7 @@ import de.stckoverflw.stckutils.listener.RespawnListener
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
+import de.stckoverflw.stckutils.minecraft.goal.impl.AllItems
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
@@ -64,6 +65,7 @@ class StckUtilsPlugin : KSpigot() {
         SettingsCommand().register()
         HideCommand().register()
         PositionCommand().register()
+        AllItemsCommand().register(AllItems.COMMAND_NAME)
 
         val pluginDescription = this.description
         logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")

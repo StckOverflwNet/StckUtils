@@ -16,8 +16,11 @@ object GoalManager {
             GoToNether,
             FindDiamond,
             BakeCake,
-            Survive
+            Survive,
+//            AllMobs,
+            AllItems,
         )
+        // TODO: ALL (mobs, entities, items, achievements, blocks breaken, blocks placen, death messages)
     }
 
     fun registerActiveGoal() {

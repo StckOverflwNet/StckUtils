@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.goal
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.extensions.onlinePlayers
 import net.kyori.adventure.text.Component

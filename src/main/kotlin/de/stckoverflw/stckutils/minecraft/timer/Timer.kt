@@ -33,6 +33,7 @@ object Timer {
 
     var time: Long = 0
     var running = false
+    var additionalInfo: ArrayList<String> = arrayListOf()
 
     operator fun invoke(startTime: Long) {
         require(!initialized) { "Timer has been initialized already" }
@@ -61,7 +62,7 @@ object Timer {
 
     private fun broadcastTimer() {
         Bukkit.getOnlinePlayers().forEach {
-            it.sendActionBar(Component.text(this.formatTime()))
+            it.sendActionBar(Component.text(this.formatTime() + if (additionalInfo.isNotEmpty()) " (${additionalInfo.joinToString(" ")})" else ""))
         }
     }
 
