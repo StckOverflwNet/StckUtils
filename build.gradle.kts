@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.30"
-    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+    kotlin("jvm") version "1.5.31"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
 ktlint {
@@ -28,10 +28,10 @@ dependencies {
     ) // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.17.3")
+    implementation("net.axay", "kspigot", "1.17.4")
 
     // Gson dependency
-    implementation("com.google.code.gson", "gson", "2.8.7")
+    implementation("com.google.code.gson", "gson", "2.8.8")
 
     // Brigadier dependency
     compileOnly("com.mojang", "brigadier", "1.0.18")

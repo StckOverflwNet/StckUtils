@@ -6,4 +6,4 @@ authors:
 main: de.stckoverflw.stckutils.StckUtilsPlugin
 version: 1.0.0
 libraries:
-  - "net.axay:kspigot:1.17.3"
+  - "net.axay:kspigot:1.17.4"
