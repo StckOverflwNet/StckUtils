@@ -12,8 +12,8 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent
 object AdvancementDamage : Challenge() {
 
     private var damage: Double
-        get() = Config.gameChangeConfig.getSetting(id, "damage") as Double? ?: 2.0
-        set(value) = Config.gameChangeConfig.setSetting(id, "damage", value)
+        get() = Config.challengeSettings.getSetting(id, "damage") as Double? ?: 2.0
+        set(value) = Config.challengeSettings.setSetting(id, "damage", value)
 
     override val id: String = "advancement-damage"
     override val name: String = "§bAdvancement Damage"

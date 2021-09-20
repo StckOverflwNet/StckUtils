@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.user.settingsGUI
-import de.stckoverflw.stckutils.user.settingsItem
+import de.stckoverflw.stckutils.util.settingsGUI
+import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.gui.openGUI
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.user.settingsItem
+import de.stckoverflw.stckutils.util.settingsItem
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.user
+package de.stckoverflw.stckutils.util
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
@@ -322,12 +322,24 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 generateItemForGoal(it)
             },
             onClick = { clickEvent, goal ->
+                val player = clickEvent.player
                 clickEvent.bukkitEvent.isCancelled = true
-                if (GoalManager.activeGoal != goal) {
-                    GoalManager.activeGoal = goal
-                } else {
-                    GoalManager.activeGoal = null
+                if (clickEvent.bukkitEvent.isLeftClick) {
+                    if (Timer.running) {
+                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                    } else {
+                        if (GoalManager.activeGoal != goal) {
+                            goal.active = true
+                            GoalManager.activeGoal = goal
+                        } else {
+                            GoalManager.goals.forEach {
+                                it.active = false
+                            }
+                            GoalManager.activeGoal = null
+                        }
+                    }
                 }
+
                 clickEvent.guiInstance.reloadCurrentPage()
             }
         )

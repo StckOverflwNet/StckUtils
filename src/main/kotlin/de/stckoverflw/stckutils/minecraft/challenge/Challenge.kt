@@ -8,7 +8,6 @@ import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.Listener
@@ -70,7 +69,7 @@ abstract class Challenge : Listener {
 
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7You §cfailed §7the Challenge!"))
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
-        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time wasted: ${ChatColor.stripColor(Timer.formatTime())}"))
+        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time wasted: $Timer"))
     }
 }
 

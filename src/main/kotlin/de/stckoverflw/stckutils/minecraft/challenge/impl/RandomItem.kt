@@ -4,11 +4,10 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.minecraft.timer.Timer.time
-import de.stckoverflw.stckutils.user.goBackItem
-import de.stckoverflw.stckutils.user.placeHolderItemGray
-import de.stckoverflw.stckutils.user.placeHolderItemWhite
-import de.stckoverflw.stckutils.user.settingsGUI
+import de.stckoverflw.stckutils.util.goBackItem
+import de.stckoverflw.stckutils.util.placeHolderItemGray
+import de.stckoverflw.stckutils.util.placeHolderItemWhite
+import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.extensions.bukkit.give
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.*
@@ -25,25 +24,25 @@ import org.bukkit.inventory.ItemStack
 object RandomItem : Challenge() {
 
     private var isDistance
-        get() = (Config.gameChangeConfig.getSetting(id, "isDistance") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isDistance", value)
+        get() = (Config.challengeSettings.getSetting(id, "isDistance") ?: true) as Boolean
+        set(value) = Config.challengeSettings.setSetting(id, "isDistance", value)
     private var distanceUnit
-        get() = (Config.gameChangeConfig.getSetting(id, "distanceUnit") ?: 500) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "distanceUnit", value)
+        get() = (Config.challengeSettings.getSetting(id, "distanceUnit") ?: 500) as Int
+        set(value) = Config.challengeSettings.setSetting(id, "distanceUnit", value)
     private var distance
-        get() = (Config.gameChangeConfig.getSetting(id, "distance") ?: 0) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "distance", value)
+        get() = (Config.challengeSettings.getSetting(id, "distance") ?: 0) as Int
+        set(value) = Config.challengeSettings.setSetting(id, "distance", value)
     private var minDistance: Int = 50
 
     private var isTime
-        get() = (Config.gameChangeConfig.getSetting(id, "isTime") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isTime", value)
+        get() = (Config.challengeSettings.getSetting(id, "isTime") ?: true) as Boolean
+        set(value) = Config.challengeSettings.setSetting(id, "isTime", value)
     private var timeUnit
-        get() = (Config.gameChangeConfig.getSetting(id, "timeUnit") ?: 300) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "timeUnit", value)
+        get() = (Config.challengeSettings.getSetting(id, "timeUnit") ?: 300) as Int
+        set(value) = Config.challengeSettings.setSetting(id, "timeUnit", value)
     private var time
-        get() = (Config.gameChangeConfig.getSetting(id, "time") ?: 0) as Int
-        set(value) = Config.gameChangeConfig.setSetting(id, "time", value)
+        get() = (Config.challengeSettings.getSetting(id, "time") ?: 0) as Int
+        set(value) = Config.challengeSettings.setSetting(id, "time", value)
     private var minTime: Int = 10
 
     private val materials = Material.values().filter { material -> material.isItem }

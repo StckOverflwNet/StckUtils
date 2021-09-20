@@ -1,9 +1,6 @@
 package de.stckoverflw.stckutils
 
-import de.stckoverflw.stckutils.command.HideCommand
-import de.stckoverflw.stckutils.command.PositionCommand
-import de.stckoverflw.stckutils.command.SettingsCommand
-import de.stckoverflw.stckutils.command.TimerCommand
+import de.stckoverflw.stckutils.command.*
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.listener.ConnectionListener
@@ -14,8 +11,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.user.settingsItem
-import net.axay.kspigot.extensions.bukkit.register
+import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot

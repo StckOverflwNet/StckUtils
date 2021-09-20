@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.user
+package de.stckoverflw.stckutils.util
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge

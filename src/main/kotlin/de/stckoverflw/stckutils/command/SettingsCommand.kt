@@ -1,6 +1,6 @@
 package de.stckoverflw.stckutils.command
 
-import de.stckoverflw.stckutils.user.settingsGUI
+import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.commands.command
 import net.axay.kspigot.commands.requiresPermission
 import net.axay.kspigot.commands.runs

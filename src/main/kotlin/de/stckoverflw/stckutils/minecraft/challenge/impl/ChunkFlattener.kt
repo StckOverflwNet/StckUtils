@@ -3,11 +3,10 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import de.stckoverflw.stckutils.minecraft.timer.Timer.time
-import de.stckoverflw.stckutils.user.goBackItem
-import de.stckoverflw.stckutils.user.placeHolderItemGray
-import de.stckoverflw.stckutils.user.placeHolderItemWhite
-import de.stckoverflw.stckutils.user.settingsGUI
+import de.stckoverflw.stckutils.util.goBackItem
+import de.stckoverflw.stckutils.util.placeHolderItemGray
+import de.stckoverflw.stckutils.util.placeHolderItemWhite
+import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore

@@ -6,7 +6,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
-import de.stckoverflw.stckutils.user.settingsItem
+import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
@@ -109,6 +109,8 @@ object Timer {
     fun reset() {
         time = 0
     }
+
+    override fun toString() = formatTime()
 
     @OptIn(ExperimentalTime::class)
     fun formatTime(seconds: Long = time): String {
