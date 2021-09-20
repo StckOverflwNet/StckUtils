@@ -6,6 +6,7 @@ object Config {
     lateinit var challengeSettings: ChallengeSettings
     lateinit var gameChangeConfig: GameChangeConfig
     lateinit var positionConfig: PositionConfig
+    lateinit var timerConfig: TimerConfig
 
     operator fun invoke() {
         reloadConfig()

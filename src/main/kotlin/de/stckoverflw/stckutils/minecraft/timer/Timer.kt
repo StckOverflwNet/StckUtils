@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
+import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
@@ -18,6 +19,17 @@ import kotlin.time.ExperimentalTime
 object Timer {
 
     private var initialized = false
+
+    private var color: String
+        get() {
+            var col = Config.timerConfig.getSetting("color")
+            if (col == null) {
+                Config.timerConfig.setSetting("color", "§c")
+                col = "§c"
+            }
+            return col as String
+        }
+        set(value) = Config.timerConfig.setSetting("color", value)
 
     var time: Long = 0
     var running = false
@@ -55,7 +67,7 @@ object Timer {
 
     private fun broadcastIdle() {
         Bukkit.getOnlinePlayers().forEach {
-            it.sendActionBar(Component.text("§c§lTimer paused"))
+            it.sendActionBar(Component.text("$color§lTimer paused"))
         }
     }
 
@@ -118,7 +130,7 @@ object Timer {
         duration.toComponents(
             action = { days, hours, min, sec, _ ->
                 return (
-                    "§c§l" + (if (days != 0) "${days}d " else "") +
+                    "$color§l" + (if (days != 0) "${days}d " else "") +
                         (if (hours != 0) "${hours}h " else "") +
                         (if (min != 0) "${min}m " else "") +
                         if (sec != 0) "$sec" + if (days + hours + min == 0) " second" + if (sec != 1) "s" else "" else "s" else ""
