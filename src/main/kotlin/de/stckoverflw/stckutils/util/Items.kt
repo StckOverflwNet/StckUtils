@@ -5,6 +5,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.goal.Goal
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
+import de.stckoverflw.stckutils.minecraft.goal.active
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.items.*
@@ -75,7 +76,8 @@ fun generateItemForGoal(goal: Goal) = itemStack(goal.material) {
                 +it
             }
             +" "
-            if (GoalManager.activeGoal == goal) {
+            if (GoalManager.activeGoal == goal || goal.active) {
+                GoalManager.activeGoal = goal
                 +"§aThis Goal is currently activated,"
                 +"§7click to §cdeactivate §7it"
             } else {

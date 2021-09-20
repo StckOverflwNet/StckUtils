@@ -23,6 +23,9 @@ object GoalManager {
     fun registerActiveGoal() {
         goals.forEach {
             it.unregister()
+            if (it.active) {
+                activeGoal = it
+            }
         }
         if (activeGoal != null) {
             pluginManager.registerEvents(activeGoal!!, KSpigotMainInstance)

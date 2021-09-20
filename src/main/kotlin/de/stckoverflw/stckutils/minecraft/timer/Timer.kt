@@ -91,7 +91,8 @@ object Timer {
                 it.inventory.clear()
                 it.setSavedInventory()
             }
-            running = !running
+            running = true
+            GoalManager.activeGoal?.onTimerToggle()
             true
         }
     }
@@ -102,7 +103,8 @@ object Timer {
         } else {
             ChallengeManager.unregisterChallengeListeners()
             GameChangeManager.unregisterGameChangeListeners()
-            running = !running
+            running = false
+            GoalManager.activeGoal?.onTimerToggle()
             onlinePlayers.forEach { player ->
                 player.saveInventory()
                 player.inventory.clear()

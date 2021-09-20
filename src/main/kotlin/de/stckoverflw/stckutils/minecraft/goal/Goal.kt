@@ -31,7 +31,20 @@ sealed class Goal : Listener {
      * the item of the goal, this is used in the challenge inventory
      */
     abstract val material: Material
+
+    open fun onTimerToggle() {
+    }
+
+    open fun onToggle() {
+    }
 }
+
+var Goal.active: Boolean
+    get() = Config.goalConfig.getActive(this.id)
+    set(value) {
+        Config.goalConfig.setActive(this.id, value)
+        this.onToggle()
+    }
 
 abstract class TeamGoal : Goal() {
     fun win(reason: String) {
