@@ -31,15 +31,15 @@ object Timer {
         }
         set(value) = Config.timerConfig.setSetting("color", value)
 
-    var time: Long = 0
+    var time: Long
+        get() = (Config.timerConfig.getSetting("time") ?: 0).toString().toLong()
+        set(value) = Config.timerConfig.setSetting("time", value)
     var running = false
     var additionalInfo: ArrayList<String> = arrayListOf()
 
-    operator fun invoke(startTime: Long) {
+    operator fun invoke() {
         require(!initialized) { "Timer has been initialized already" }
         initialized = true
-
-        time = startTime
 
         task(
             sync = false,

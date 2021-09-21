@@ -51,7 +51,7 @@ class StckUtilsPlugin : KSpigot() {
             wasReset = false
         }
 
-        Timer(0)
+        Timer()
         ChallengeManager()
         GoalManager()
         GoalManager.registerActiveGoal()
