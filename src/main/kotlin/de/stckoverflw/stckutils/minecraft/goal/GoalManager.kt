@@ -34,4 +34,8 @@ object GoalManager {
             pluginManager.registerEvents(activeGoal!!, KSpigotMainInstance)
         }
     }
+
+    fun unregisterActiveGoal() {
+        activeGoal?.unregister()
+    }
 }

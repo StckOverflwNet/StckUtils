@@ -103,6 +103,7 @@ fun Material.isObtainableInSurvival(): Boolean {
         Material.KNOWLEDGE_BOOK,
         Material.LAVA,
         Material.LAVA_CAULDRON,
+        Material.LIGHT,
         Material.LIGHT_BLUE_CANDLE_CAKE,
         Material.LIGHT_BLUE_WALL_BANNER,
         Material.LIGHT_GRAY_CANDLE_CAKE,

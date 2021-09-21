@@ -104,6 +104,7 @@ object Timer {
         } else {
             ChallengeManager.unregisterChallengeListeners()
             GameChangeManager.unregisterGameChangeListeners()
+            GoalManager.unregisterActiveGoal()
             running = false
             GoalManager.activeGoal?.onTimerToggle()
             onlinePlayers.forEach { player ->

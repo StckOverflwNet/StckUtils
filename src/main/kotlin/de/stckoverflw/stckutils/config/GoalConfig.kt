@@ -17,7 +17,7 @@ class GoalConfig : AbstractConfig("goals.yml") {
         save()
     }
 
-    fun setSetting(goalId: String, setting: String, value: Any) {
+    fun setSetting(goalId: String, setting: String, value: Any?) {
         yaml.set("$goalId.$setting", value)
         save()
     }

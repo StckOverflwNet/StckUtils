@@ -14,15 +14,17 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.InventoryMoveItemEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object AllItems : TeamGoal() {
 
-    const val COMMAND_NAME = "allitems"
+    const val COMMAND_NAME = "allItems"
     private var allItems: ArrayList<Material>
         get() {
             val list: MutableList<*>? = Config.goalConfig.getSettingList(id, "allItems")
@@ -43,7 +45,7 @@ object AllItems : TeamGoal() {
         }
         set(value) = Config.goalConfig.setSetting(id, "nextMaterial", value.name)
 
-    private var filter: Pair<Filter, Filter> = Pair(Filter.ALL, Filter.ASCENDING)
+    private var filter: HashMap<UUID, Pair<Filter, Filter>> = HashMap()
 
     private enum class Filter {
         COLLECTED,
@@ -62,9 +64,13 @@ object AllItems : TeamGoal() {
     override val material: Material = Material.ENDER_CHEST
     override fun onTimerToggle() {
         if (Timer.running) {
-            if (!Timer.additionalInfo.contains("collect ${formatMaterial(nextMaterial)}"))
+            if (!isWon() && !Timer.additionalInfo.contains("collect ${formatMaterial(nextMaterial)}"))
                 Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
         }
+    }
+
+    fun resetFilter(player: Player) {
+        filter[player.uniqueId] = Pair(Filter.ALL, Filter.ASCENDING)
     }
 
     fun gui() = kSpigotGUI(GUIType.FIVE_BY_NINE) {
@@ -78,7 +84,7 @@ object AllItems : TeamGoal() {
                 Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
                 iconGenerator = {
                     generateAllItemsItem(it)
-                }, onClick = { clickEvent, material ->
+                }, onClick = { clickEvent, _ ->
                 clickEvent.bukkitEvent.isCancelled = true
             }
             )
@@ -92,51 +98,68 @@ object AllItems : TeamGoal() {
             }
 
             // Filter Button (Filter only collected/only not collected/all)
-            button(Slots.RowFourSlotNine, filterItem(filter)) {
-                if (it.bukkitEvent.isLeftClick) {
-                    when (filter.first) {
+            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
+                clickEvent.bukkitEvent.isCancelled = true
+                val player = clickEvent.player
+                if (filter[player.uniqueId] == null) resetFilter(player)
+                if (clickEvent.bukkitEvent.isLeftClick) {
+                    when (filter[player.uniqueId]!!.first) {
                         Filter.COLLECTED -> {
-                            compound.setContent(materials.minus(allItems))
-                            filter = filter.copy(
+                            filter[player.uniqueId] = filter[player.uniqueId]!!.copy(
                                 first = Filter.NOT_COLLECTED
                             )
                         }
                         Filter.NOT_COLLECTED -> {
-                            compound.setContent(allItems)
-                            filter = filter.copy(
+                            filter[player.uniqueId] = filter[player.uniqueId]!!.copy(
                                 first = Filter.ALL
                             )
                         }
                         else -> {
-                            compound.setContent(materials)
-                            filter = filter.copy(
+                            filter[player.uniqueId] = filter[player.uniqueId]!!.copy(
                                 first = Filter.COLLECTED
                             )
                         }
                     }
-                } else {
-                    filter = when (filter.second) {
+                }
+                if (clickEvent.bukkitEvent.isRightClick) {
+                    filter[player.uniqueId] = when (filter[player.uniqueId]!!.second) {
                         Filter.ASCENDING -> {
-                            compound.sortContentBy(false) { mat -> mat.name }
-                            filter.copy(
+                            filter[player.uniqueId]!!.copy(
                                 second = Filter.DESCENDING
                             )
                         }
                         else -> {
-                            compound.sortContentBy(true) { mat -> mat.name }
-                            filter.copy(
+                            filter[player.uniqueId]!!.copy(
                                 second = Filter.ASCENDING
                             )
                         }
                     }
                 }
-                it.bukkitEvent.currentItem = filterItem(filter)
-                println("${filter.first} - ${filter.second}")
+                compound.sortContentBy(filter[player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
+                compound.setContent(getContent(filter[player.uniqueId]!!))
+                clickEvent.guiInstance.reloadCurrentPage()
 
-                it.guiInstance.reloadCurrentPage()
+                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
+            })
+            if (!isWon()) {
+                button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
+                    if (clickEvent.bukkitEvent.isLeftClick) {
+                        collected(StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${formatMaterial(nextMaterial)}", false)
+                    } else if (clickEvent.bukkitEvent.isRightClick) {
+                        collected(StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${formatMaterial(nextMaterial)} as collected")
+                    }
+                    compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
+                    compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))
+                    clickEvent.guiInstance.reloadCurrentPage()
+                    if (!isWon()) {
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem()
+                    } else {
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = placeHolderItemGray
+                    }
+                })
             }
-
-            compound.addContent(materials.sortedBy { it.name })
+            compound.addContent(getContent(Pair(Filter.ALL, Filter.ASCENDING)))
+            compound.sortContentBy(false) { it.name }
 
             compoundScroll(
                 Slots.RowOneSlotNine,
@@ -146,6 +169,36 @@ object AllItems : TeamGoal() {
                 Slots.RowFiveSlotNine,
                 ItemStack(Material.PAPER), compound, scrollTimes = 1, reverse = true
             )
+        }
+        onClose {
+            resetFilter(it.player)
+        }
+    }
+
+    private fun getContent(filter: Pair<Filter, Filter>): List<Material> {
+        return if (filter.second == Filter.ASCENDING) {
+            when (filter.first) {
+                Filter.COLLECTED -> allItems.sortedBy { it.name }
+                Filter.NOT_COLLECTED -> materials.minus(allItems).sortedBy { it.name }
+                else -> materials.sortedBy { it.name }
+            }
+        } else {
+            when (filter.first) {
+                Filter.COLLECTED -> allItems.sortedBy { it.name }.asReversed()
+                Filter.NOT_COLLECTED -> materials.minus(allItems).sortedBy { it.name }.asReversed()
+                else -> materials.sortedBy { it.name }.asReversed()
+            }
+        }
+    }
+
+    private fun skipItem() = itemStack(Material.BEDROCK) {
+        meta {
+            name = "§eSkip current Item (${formatMaterial(nextMaterial)})"
+            addLore {
+                +" "
+                +"§7LMB -> Skips §f${formatMaterial(nextMaterial)}"
+                +"§7RMB -> Marks §f${formatMaterial(nextMaterial)}§7 as collected"
+            }
         }
     }
 
@@ -160,16 +213,23 @@ object AllItems : TeamGoal() {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
                 flag(ItemFlag.HIDE_ENCHANTS)
             }
+            flag(ItemFlag.HIDE_ATTRIBUTES)
+            flag(ItemFlag.HIDE_DESTROYS)
+            flag(ItemFlag.HIDE_DYE)
+            flag(ItemFlag.HIDE_PLACED_ON)
+            flag(ItemFlag.HIDE_POTION_EFFECTS)
+            flag(ItemFlag.HIDE_UNBREAKABLE)
         }
     }
 
-    private fun filterItem(setting: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
+    private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
         meta {
             name = "§8Filter"
             addLore {
                 +" "
-                +"§7LMB - ${setting.first}"
-                +"§7RMB - ${setting.second}"
+                +"§7LMB - ".plus(if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.COLLECTED) "§a" else "§c")
+                    .plus(filter.first.name)
+                +"§7RMB - ".plus(if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
             }
         }
     }
@@ -184,29 +244,47 @@ object AllItems : TeamGoal() {
         }
     }
 
-    private fun formatMaterial(material: Material) = material.name.lowercase()
+    private fun formatMaterial(material: Material): String {
+        return material.name.lowercase().replace('_', ' ').split(' ').joinToString(" ", transform = { s ->
+            s.replaceFirstChar { it.titlecase(Locale.getDefault()) }
+        })
+    }
 
-    private fun randomMaterial() = materials.filter { !allItems.contains(it) }.random()
+    private fun randomMaterial(): Material {
+        if (!isWon()) {
+            return materials.filter { !isCollected(it) }.random()
+        } else {
+            error("Goal already finished")
+        }
+    }
 
-    private fun collected(player: Player) {
-        broadcast(StckUtilsPlugin.prefix + "§a${player.name} collected ${formatMaterial(nextMaterial)}")
-        allItems = ArrayList(allItems.plus(nextMaterial))
+    private fun isWon() = materials.none { !isCollected(it) }
+
+    private fun collected(message: String, markCollected: Boolean = true) {
+        broadcast(message)
         Timer.additionalInfo.remove("collect ${formatMaterial(nextMaterial)}")
-        nextMaterial = randomMaterial()
-        Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
+        if (markCollected)
+            allItems = ArrayList(allItems.plus(nextMaterial))
+        if (isWon()) {
+            Config.goalConfig.setSetting(id, "nextMaterial", null)
+            win("You collected all Items!")
+        } else {
+            nextMaterial = randomMaterial()
+            Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
+        }
     }
 
     private fun isCollected(material: Material) = allItems.contains(material)
 
     @EventHandler
-    fun onCollectMove(event: InventoryMoveItemEvent) {
-        if (event.item.type == nextMaterial && event.initiator.viewers.isNotEmpty() && event.initiator.viewers[0] is Player && (event.initiator.viewers[0] as Player).isPlaying())
-            collected(event.initiator.viewers[0] as Player)
+    fun onCollectMove(event: InventoryClickEvent) {
+        if (event.currentItem?.type == nextMaterial && (event.whoClicked as Player).isPlaying())
+            collected(StckUtilsPlugin.prefix + "§a${event.whoClicked.name} collected ${formatMaterial(nextMaterial)}")
     }
 
     @EventHandler
     fun onCollectPickup(event: PlayerAttemptPickupItemEvent) {
         if (event.item.itemStack.type == nextMaterial && event.player.isPlaying())
-            collected(event.player)
+            collected(StckUtilsPlugin.prefix + "§a${event.player.name} collected ${formatMaterial(nextMaterial)}")
     }
 }

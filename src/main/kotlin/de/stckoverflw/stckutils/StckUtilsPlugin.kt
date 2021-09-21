@@ -54,6 +54,8 @@ class StckUtilsPlugin : KSpigot() {
         Timer(0)
         ChallengeManager()
         GoalManager()
+        GoalManager.registerActiveGoal()
+        GoalManager.unregisterActiveGoal()
         GameChangeManager()
 
         pluginManager.registerEvents(ConnectionListener(), this)
