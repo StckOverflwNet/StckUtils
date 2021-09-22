@@ -20,7 +20,7 @@ object Timer {
 
     private var initialized = false
 
-    private var color: String
+    var color: String
         get() {
             var col = Config.timerConfig.getSetting("color")
             if (col == null) {

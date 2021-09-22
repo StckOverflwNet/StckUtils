@@ -22,8 +22,10 @@ import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 /**
  * The Method to generate a new Instance of the Settings GUI
@@ -400,8 +402,8 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         // If the Timer is not running display an Item for Starting the Timer
         if (!Timer.running) {
             button(
-                Slots.RowThreeSlotThree,
-                itemStack(Material.GREEN_DYE) {
+                Slots.RowFourSlotThree,
+                itemStack(Material.EMERALD) {
                     meta {
                         name = "§aStart the Timer"
                         addLore {
@@ -418,7 +420,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             // If Timer is Running display Item for stopping the Timer
         } else {
             button(
-                Slots.RowThreeSlotThree,
+                Slots.RowFourSlotThree,
                 itemStack(Material.REDSTONE) {
                     meta {
                         name = "§6Stop the Timer"
@@ -450,7 +452,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
 
         // Item for resetting the Timer
         button(
-            Slots.RowThreeSlotSeven,
+            Slots.RowTwoSlotThree,
             itemStack(Material.BARRIER) {
                 meta {
                     name = "§cReset the Timer"
@@ -468,6 +470,81 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §creset"))
             it.player.closeInventory()
         }
+
+        // Item for changing to the Timer color page
+        pageChanger(
+            Slots.RowThreeSlotSeven,
+            itemStack(Material.ORANGE_DYE) {
+                meta {
+                    name = "§aChange the Color"
+                    addLore {
+                        +" "
+                        +"§7Change the display color"
+                    }
+                }
+            },
+            -3,
+            null,
+            null
+        )
+    }
+
+    // Settings Page for the Timer color
+    page(-3) {
+
+        // Transitions
+        this.transitionTo = PageChangeEffect.INSTANT
+        this.transitionFrom = PageChangeEffect.INSTANT
+
+        // Placeholders
+        placeholder(Slots.Border, placeHolderItemGray)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+
+        // go back Item
+        pageChanger(Slots.RowFiveSlotFive, goBackItem, -1, null, null)
+
+        // Color compound
+        val compound = createRectCompound<ChatColor>(
+            Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
+            iconGenerator = { chatColor ->
+                itemStack(
+                    when (chatColor) {
+                        ChatColor.DARK_RED -> Material.RED_DYE
+                        ChatColor.RED -> Material.RED_DYE
+                        ChatColor.GOLD -> Material.ORANGE_DYE
+                        ChatColor.YELLOW -> Material.YELLOW_DYE
+                        ChatColor.DARK_GREEN -> Material.GREEN_DYE
+                        ChatColor.GREEN -> Material.GREEN_DYE
+                        ChatColor.AQUA -> Material.CYAN_DYE
+                        ChatColor.DARK_AQUA -> Material.CYAN_DYE
+                        ChatColor.DARK_BLUE -> Material.BLUE_DYE
+                        ChatColor.BLUE -> Material.LIGHT_BLUE_DYE
+                        ChatColor.LIGHT_PURPLE -> Material.PURPLE_DYE
+                        ChatColor.DARK_PURPLE -> Material.PURPLE_DYE
+                        ChatColor.WHITE -> Material.WHITE_DYE
+                        ChatColor.GRAY -> Material.LIGHT_GRAY_DYE
+                        ChatColor.DARK_GRAY -> Material.GRAY_DYE
+                        else -> Material.BLACK_DYE
+                    }
+                ) {
+                    meta {
+                        name = "$chatColor${chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
+
+                        addLore {
+                            +" "
+                            +"§7LMB - Change the color to $chatColor${chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
+                            +"§7Example Timer: $chatColor§l${ChatColor.stripColor(Timer.formatTime(90061.toLong()))}" // 1d 1h 1m 1s
+                        }
+                    }
+                }
+            },
+            onClick = { clickEvent, chatColor ->
+                clickEvent.bukkitEvent.isCancelled = true
+                Timer.color = "§${chatColor.char}"
+            }
+        )
+
+        compound.addContent(ChatColor.values().filter { it.isColor })
     }
 
     // Settings Page for World reset

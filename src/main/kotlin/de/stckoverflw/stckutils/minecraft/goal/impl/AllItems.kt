@@ -196,8 +196,8 @@ object AllItems : TeamGoal() {
             name = "§eSkip current Item (${formatMaterial(nextMaterial)})"
             addLore {
                 +" "
-                +"§7LMB -> Skips §f${formatMaterial(nextMaterial)}"
-                +"§7RMB -> Marks §f${formatMaterial(nextMaterial)}§7 as collected"
+                +"§7LMB - Skips §f${formatMaterial(nextMaterial)}"
+                +"§7RMB - Marks §f${formatMaterial(nextMaterial)}§7 as collected"
             }
         }
     }
