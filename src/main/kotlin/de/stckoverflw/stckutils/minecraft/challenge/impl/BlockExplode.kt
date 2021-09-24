@@ -73,7 +73,9 @@ object BlockExplode : Challenge() {
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
         if ((1..100).random() <= chance) {
             event.block.location.world.createExplosion(event.block.location, 3.3F, isFire)
         }

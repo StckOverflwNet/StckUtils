@@ -24,7 +24,10 @@ object JackHammer : Challenge() {
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
+
         for (i in (event.block.y - 1) downTo 0) {
             val block = event.block.world.getBlockAt(event.block.x, i, event.block.z)
             if (block.type.blastResistance > 1200.0F) return

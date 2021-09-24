@@ -23,7 +23,9 @@ object NoBlockBreak : Challenge() {
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
         lose("${event.player.name} broke a Block.")
     }
 }

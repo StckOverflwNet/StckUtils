@@ -146,7 +146,8 @@ object InventorySwap : Challenge() {
             return
         }
 
-        val inventories: Map<Player, Array<ItemStack?>> = players.zip(players.map { player -> player.inventory.contents }.shuffled()).toMap()
+        val inventories: Map<Player, Array<ItemStack?>> =
+            players.zip(players.map { player -> player.inventory.contents }.shuffled()).toMap()
 
         players.forEach { player ->
             if (!player.inventory.contents.contentEquals(inventories[player])) {

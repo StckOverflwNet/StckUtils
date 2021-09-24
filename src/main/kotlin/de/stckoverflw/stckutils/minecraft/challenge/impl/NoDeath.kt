@@ -23,7 +23,9 @@ object NoDeath : Challenge() {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        if (!event.entity.isPlaying()) return
+        if (!event.entity.isPlaying()) {
+            return
+        }
         lose("${event.entity.name} died.")
     }
 }

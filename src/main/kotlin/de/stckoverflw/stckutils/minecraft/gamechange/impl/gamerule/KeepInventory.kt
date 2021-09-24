@@ -19,13 +19,13 @@ object KeepInventory : GameRule() {
         meta {
             name = "§6Keep Inventory"
             addLore {
-                + " "
+                +" "
                 if (keepInventory) {
-                    + "§7You currently §akeep your Inventory§7,"
+                    +"§7You currently §akeep your Inventory§7,"
                 } else {
-                    + "§7You currently §ckeep your inventory §c§lnot§7,"
+                    +"§7You currently §ckeep your inventory §c§lnot§7,"
                 }
-                + "§7when you die"
+                +"§7when you die"
             }
         }
     }

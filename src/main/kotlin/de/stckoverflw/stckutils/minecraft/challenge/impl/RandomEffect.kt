@@ -27,23 +27,27 @@ object RandomEffect : Challenge() {
 
     @EventHandler
     fun onDamage(event: EntityDamageEvent) {
-        if (event.entity !is Player) return
-        if (!(event.entity as Player).isPlaying()) return
+        if (event.entity !is Player) {
+            return
+        }
+        val player = event.entity as Player
+        if (!player.isPlaying()) {
+            return
+        }
 
-        if (event.cause == EntityDamageEvent.DamageCause.POISON ||
-            event.cause == EntityDamageEvent.DamageCause.WITHER
-        ) return
+        if (event.cause == EntityDamageEvent.DamageCause.POISON || event.cause == EntityDamageEvent.DamageCause.WITHER) {
+            return
+        }
 
         val potionTypes = PotionEffectType.values()
         val potionEffectType = potionTypes.random()
-        val eventPlayer = event.entity as Player
 
-        for (player in Bukkit.getOnlinePlayers()) {
-            player.addPotionEffect(
+        Bukkit.getOnlinePlayers().forEach {
+            it.addPotionEffect(
                 PotionEffect(
                     potionEffectType,
                     Integer.MAX_VALUE,
-                    eventPlayer.getPotionEffect(potionEffectType)?.amplifier?.plus(1) ?: 0
+                    player.getPotionEffect(potionEffectType)?.amplifier?.plus(1) ?: 0
                 )
             )
         }

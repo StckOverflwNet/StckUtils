@@ -28,7 +28,9 @@ object AdvancementDamage : Challenge() {
 
     @EventHandler
     fun onAchievement(event: PlayerAdvancementDoneEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
         event.player.damage(damage)
     }
 }

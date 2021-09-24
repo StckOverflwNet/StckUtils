@@ -26,7 +26,21 @@ object MobMagnet : Challenge() {
 
     @EventHandler
     fun onDeath(event: EntityDamageByEntityEvent) {
-        if (event.entity !is Mob || event.damager !is Player || !(event.damager as Player).isPlaying() || (event.entity as Mob).health - event.damage > 0) return
+        if (event.entity !is Mob && event.damager !is Player) {
+            return
+        }
+        val mob = event.entity as Mob
+        val player = event.damager as Player
+
+        // ignore players that are currently not playing
+        if (!player.isPlaying()) {
+            return
+        }
+
+        // ignore mobs that do not die after the damage is applied
+        if (mob.health - event.damage > 0) {
+            return
+        }
 
         event.entity.getNearbyEntities(48.0, 48.0, 48.0).forEach { entity ->
             if (entity.type == event.entity.type) {

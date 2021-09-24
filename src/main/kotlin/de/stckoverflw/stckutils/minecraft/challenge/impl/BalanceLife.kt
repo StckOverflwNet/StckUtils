@@ -42,9 +42,14 @@ object BalanceLife : Challenge() {
     }
 
     @EventHandler
-    fun onHealtRegain(event: EntityRegainHealthEvent) {
-        if (event.entity is Player && (event.entity as Player).isPlaying() && (event.entity as Player).health + event.amount >= (event.entity as Player).getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value!!) {
-            lose("${event.entity.name} hit ${(event.entity as Player).getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value?.toInt() ?: "full"} hp.")
+    fun onHealthRegain(event: EntityRegainHealthEvent) {
+        if (event.entity !is Player) {
+            return
+        }
+        val player = event.entity as Player
+        val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
+        if (player.isPlaying() && player.health + event.amount >= maxHealth?.value!!) {
+            lose("${player.name} hit ${maxHealth.value.toInt()} hp.")
             isFirstRun = true
         }
     }

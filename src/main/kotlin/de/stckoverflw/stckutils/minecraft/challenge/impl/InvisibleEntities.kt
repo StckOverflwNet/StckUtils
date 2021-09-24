@@ -23,7 +23,9 @@ object InvisibleEntities : Challenge() {
 
     @EventHandler
     fun onCreatureSpawn(event: CreatureSpawnEvent) {
-        if (event.entity.type == EntityType.PLAYER) return
+        if (event.entity.type == EntityType.PLAYER) {
+            return
+        }
         event.entity.isInvisible = true
     }
 }

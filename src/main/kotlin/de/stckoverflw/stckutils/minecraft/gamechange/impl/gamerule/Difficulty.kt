@@ -20,10 +20,10 @@ object Difficulty : GameRule() {
         meta {
             name = "§bDifficulty"
             addLore {
-                + " "
-                + "§7Sets the Difficulty of the Server"
-                + " "
-                + "§7Current Difficulty: §b${difficulty.name}"
+                +" "
+                +"§7Sets the Difficulty of the Server"
+                +" "
+                +"§7Current Difficulty: §b${difficulty.name}"
             }
         }
     }

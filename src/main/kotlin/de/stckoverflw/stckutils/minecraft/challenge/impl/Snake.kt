@@ -31,7 +31,8 @@ object Snake : Challenge() {
 
     private val materials = ArrayList(
         Material.values().filter { material ->
-            material.name.lowercase().contains("concrete") && !material.name.lowercase().contains("powder") && material != Material.WHITE_CONCRETE
+            material.name.lowercase().contains("concrete") && !material.name.lowercase()
+                .contains("powder") && material != Material.WHITE_CONCRETE
         }
     )
     private val playerMaterials = HashMap<Player, Material>()
@@ -151,8 +152,12 @@ object Snake : Challenge() {
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
-        if (!event.player.isPlaying()) return
-        if (!event.hasChangedBlock()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
+        if (!event.hasChangedBlock()) {
+            return
+        }
         var block = event.to.block
         while (!block.isSolid || block.type.hardness <= 0.2) {
             block = block.getRelative(BlockFace.DOWN)
@@ -164,11 +169,11 @@ object Snake : Challenge() {
                     val player = playerMaterials.getKey(block.type) as Player
                     lose(
                         "${event.player.name} touched " +
-                            player.name +
-                            if (player.name.endsWith('s') || player.name.endsWith('x'))
-                                "' snake trail."
-                            else
-                                "'s snake trail."
+                                player.name +
+                                if (player.name.endsWith('s') || player.name.endsWith('x'))
+                                    "' snake trail."
+                                else
+                                    "'s snake trail."
                     )
                     return
                 }
