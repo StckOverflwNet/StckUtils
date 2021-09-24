@@ -56,7 +56,9 @@ object BalanceLife : Challenge() {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        if (!event.entity.isPlaying()) return
+        if (!event.entity.isPlaying()) {
+            return
+        }
         lose("${event.entity.name} hit 0 hp.")
         isFirstRun = true
     }
