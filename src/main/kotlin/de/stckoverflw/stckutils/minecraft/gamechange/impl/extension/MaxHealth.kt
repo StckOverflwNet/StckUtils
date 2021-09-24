@@ -19,12 +19,12 @@ object MaxHealth : GameExtension() {
         meta {
             name = "§aMax Health"
             addLore {
-                + " "
-                + "§7Current value: §6$health"
-                + "§7Default: §620"
-                + " "
-                + "§7Left-click to higher"
-                + "§7Right-click to lower"
+                +" "
+                +"§7Current value: §6$health"
+                +"§7Default: §620"
+                +" "
+                +"§7Left-click to higher"
+                +"§7Right-click to lower"
             }
         }
     }

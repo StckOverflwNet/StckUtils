@@ -25,7 +25,9 @@ object NoVillagerTrade : Challenge() {
 
     @EventHandler
     fun onVillagerTrade(event: PlayerTradeEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
         lose("${event.player.name} traded with a ${event.villager.name}.")
     }
 }

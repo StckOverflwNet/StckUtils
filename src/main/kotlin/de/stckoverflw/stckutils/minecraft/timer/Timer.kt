@@ -62,7 +62,15 @@ object Timer {
 
     private fun broadcastTimer() {
         Bukkit.getOnlinePlayers().forEach {
-            it.sendActionBar(Component.text(this.formatTime() + if (additionalInfo.isNotEmpty()) " (${additionalInfo.joinToString(" ")})" else ""))
+            it.sendActionBar(
+                Component.text(
+                    this.formatTime() + if (additionalInfo.isNotEmpty()) " (${
+                    additionalInfo.joinToString(
+                        " "
+                    )
+                    })" else ""
+                )
+            )
         }
     }
 

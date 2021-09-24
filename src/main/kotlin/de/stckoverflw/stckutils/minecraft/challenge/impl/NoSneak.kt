@@ -23,8 +23,11 @@ object NoSneak : Challenge() {
 
     @EventHandler
     fun onSneak(event: PlayerToggleSneakEvent) {
-        if (!event.player.isPlaying()) return
-        if (event.isSneaking)
+        if (!event.player.isPlaying()) {
+            return
+        }
+        if (event.isSneaking) {
             lose("${event.player.name} sneaked.")
+        }
     }
 }

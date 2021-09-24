@@ -8,7 +8,9 @@ import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import net.axay.kspigot.extensions.broadcast
-import net.axay.kspigot.gui.*
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.items.*
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -19,8 +21,6 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 object AllItems : TeamGoal() {
 
@@ -144,9 +144,22 @@ object AllItems : TeamGoal() {
             if (!isWon()) {
                 button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
                     if (clickEvent.bukkitEvent.isLeftClick) {
-                        collected(StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${formatMaterial(nextMaterial)}", false)
+                        collected(
+                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${
+                            formatMaterial(
+                                nextMaterial
+                            )
+                            }",
+                            false
+                        )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
-                        collected(StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${formatMaterial(nextMaterial)} as collected")
+                        collected(
+                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${
+                            formatMaterial(
+                                nextMaterial
+                            )
+                            } as collected"
+                        )
                     }
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
                     compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))

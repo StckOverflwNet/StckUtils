@@ -24,7 +24,9 @@ object NoCrafting : Challenge() {
 
     @EventHandler
     fun onCraft(event: CraftItemEvent) {
-        if (!(event.whoClicked as Player).isPlaying()) return
+        if (!(event.whoClicked as Player).isPlaying()) {
+            return
+        }
         lose("${event.whoClicked.name} crafted ${event.recipe.result.type.name}.")
     }
 }

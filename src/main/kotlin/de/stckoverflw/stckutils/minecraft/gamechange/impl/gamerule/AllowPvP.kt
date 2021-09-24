@@ -17,19 +17,20 @@ object AllowPvP : GameRule() {
         meta {
             name = "§aPvP"
             addLore {
-                + " "
-                + "§7Sets if Players can damage"
-                + "§7each other"
-                + " "
+                +" "
+                +"§7Sets if Players can damage"
+                +"§7each other"
+                +" "
                 if (pvp) {
-                    + "§7Players §acan attack each other"
+                    +"§7Players §acan attack each other"
                 } else {
-                    + "§7Players §ccannot attack each other"
+                    +"§7Players §ccannot attack each other"
                 }
-                + "§7at the moment"
+                +"§7at the moment"
             }
         }
     }
+
     override val usesEvents: Boolean = false
 
     private var pvp: Boolean

@@ -23,7 +23,9 @@ object NoXP : Challenge() {
 
     @EventHandler
     fun onXP(event: PlayerPickupExperienceEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
         lose("${event.player.name} picked up XP.")
     }
 }

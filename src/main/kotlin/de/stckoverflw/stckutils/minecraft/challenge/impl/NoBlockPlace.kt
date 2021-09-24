@@ -23,7 +23,9 @@ object NoBlockPlace : Challenge() {
 
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
-        if (!event.player.isPlaying()) return
+        if (!event.player.isPlaying()) {
+            return
+        }
         lose("${event.player.name} placed a Block.")
     }
 }

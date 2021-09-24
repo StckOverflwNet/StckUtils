@@ -79,7 +79,22 @@ object MobDuplicator : Challenge() {
 
     @EventHandler
     fun onDeath(event: EntityDamageByEntityEvent) {
-        if (event.entity !is Mob || event.damager !is Player || !(event.damager as Player).isPlaying() || event.entity is EnderDragon || (event.entity as Mob).health - event.damage > 0) return
+        if (event.entity !is Mob && event.damager !is Player) {
+            return
+        }
+        val mob = event.entity as Mob
+        val player = event.damager as Player
+
+        // ignore players that are currently not playing
+        if (!player.isPlaying()) {
+            return
+        }
+
+        // ignore the EnderDragon and mobs that do not die after the damage is applied
+        if (mob is EnderDragon || mob.health - event.damage > 0) {
+            return
+        }
+
         for (i in 1..exponentialAmount) {
             event.entity.world.spawnEntity(event.entity.location, event.entity.type)
         }

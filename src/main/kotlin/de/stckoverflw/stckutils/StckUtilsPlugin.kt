@@ -18,9 +18,8 @@ import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
-import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
+import kotlin.io.path.div
 
 class StckUtilsPlugin : KSpigot() {
 
@@ -102,19 +101,20 @@ class StckUtilsPlugin : KSpigot() {
     }
 
     private fun deleteWorld(world: String) {
-        val worldFile = File(Bukkit.getWorldContainer(), world)
+        val worldPath = Bukkit.getWorldContainer().toPath() / world
         try {
-            Files.walk(worldFile.toPath()).sorted(Comparator.reverseOrder()).map { obj: Path -> obj.toFile() }
-                .forEach { obj: File -> obj.delete() }
+            Files.walk(worldPath).sorted(Comparator.reverseOrder()).forEach {
+                Files.delete(it)
+            }
         } catch (e: Exception) {
             logger.warning("An Error occured while trying to delete the world files ($world)")
             logger.warning(e.stackTraceToString())
         }
-        worldFile.mkdirs()
-        File(worldFile, "data").mkdirs()
-        File(worldFile, "datapacks").mkdirs()
-        File(worldFile, "playerdata").mkdirs()
-        File(worldFile, "poi").mkdirs()
-        File(worldFile, "region").mkdirs()
+        Files.createDirectories(worldPath)
+        Files.createDirectories(worldPath / "data")
+        Files.createDirectories(worldPath / "datapacks")
+        Files.createDirectories(worldPath / "playerdata")
+        Files.createDirectories(worldPath / "poi")
+        Files.createDirectories(worldPath / "region")
     }
 }

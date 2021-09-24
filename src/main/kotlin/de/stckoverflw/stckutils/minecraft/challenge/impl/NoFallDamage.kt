@@ -24,8 +24,17 @@ object NoFallDamage : Challenge() {
 
     @EventHandler
     fun onFallDamage(event: EntityDamageEvent) {
-        if (!(event.entity as Player).isPlaying()) return
-        if (event.cause == EntityDamageEvent.DamageCause.FALL && event.entity is Player)
-            lose("${event.entity.name} took fall damage.")
+        if (event.entity !is Player) {
+            return
+        }
+
+        val player = event.entity as Player
+        if (!player.isPlaying()) {
+            return
+        }
+
+        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
+            lose("${player.name} took fall damage.")
+        }
     }
 }

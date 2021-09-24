@@ -253,15 +253,25 @@ object RandomItem : Challenge() {
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
-        if (!isDistance) return
-        if (!event.player.isPlaying()) return
-        if (!event.hasChangedBlock()) return
+        if (!isDistance) {
+            return
+        }
+
+        if (!event.player.isPlaying()) {
+            return
+        }
+
+        if (!event.hasChangedBlock()) {
+            return
+        }
+
         distance++
         if (distance >= distanceUnit) {
             distance = 0
             onlinePlayers.forEach { player ->
-                if (!player.isPlaying()) return
-                player.give(ItemStack(materials.random()))
+                if (player.isPlaying()) {
+                    player.give(ItemStack(materials.random()))
+                }
             }
         }
     }
@@ -272,8 +282,9 @@ object RandomItem : Challenge() {
         if (time >= timeUnit) {
             time = 0
             onlinePlayers.forEach { player ->
-                if (!player.isPlaying()) return
-                player.give(ItemStack(materials.random()))
+                if (player.isPlaying()) {
+                    player.give(ItemStack(materials.random()))
+                }
             }
         }
     }

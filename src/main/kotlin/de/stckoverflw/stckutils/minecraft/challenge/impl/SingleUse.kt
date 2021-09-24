@@ -29,7 +29,15 @@ object SingleUse : Challenge() {
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (!(event.whoClicked as Player).isPlaying()) return
+        if (event.whoClicked !is Player) {
+            return
+        }
+
+        val player = event.whoClicked as Player
+        if (!player.isPlaying()) {
+            return
+        }
+
         if (event.currentItem != null) {
             setOneDurability(event.currentItem!!)
         }
@@ -37,8 +45,12 @@ object SingleUse : Challenge() {
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        if (!(event.player as Player).isPlaying()) return
-        event.player.inventory.contents.forEach {
+        if (event.player !is Player) {
+            return
+        }
+
+        val player = event.player as Player
+        player.inventory.contents.forEach {
             if (it != null) {
                 setOneDurability(it)
             }
