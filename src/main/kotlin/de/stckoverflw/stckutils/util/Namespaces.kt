@@ -19,7 +19,7 @@ fun <T, Z> PersistentDataContainer.has(typedNamespace: TypedNamespace<T, Z>): Bo
 }
 
 fun <T, Z> PersistentDataContainer.set(typedNamespace: TypedNamespace<T, Z>, value: Z) {
-    this.set(typedNamespace.namespace, typedNamespace.type, value)
+    this.set(typedNamespace.namespace, typedNamespace.type, value!!)
 }
 
 fun <T, Z> PersistentDataContainer.remove(typedNamespace: TypedNamespace<T, Z>) {
@@ -34,5 +34,4 @@ object Namespaces {
     val DEATH_LOCATION_X = TypedNamespace("death_location_x", PersistentDataType.DOUBLE)
     val DEATH_LOCATION_Y = TypedNamespace("death_location_y", PersistentDataType.DOUBLE)
     val DEATH_LOCATION_Z = TypedNamespace("death_location_z", PersistentDataType.DOUBLE)
-
 }

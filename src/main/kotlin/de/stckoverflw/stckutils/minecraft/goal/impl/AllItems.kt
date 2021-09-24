@@ -85,8 +85,8 @@ object AllItems : TeamGoal() {
                 iconGenerator = {
                     generateAllItemsItem(it)
                 }, onClick = { clickEvent, _ ->
-                    clickEvent.bukkitEvent.isCancelled = true
-                }
+                clickEvent.bukkitEvent.isCancelled = true
+            }
             )
 
             // Reset Item
@@ -146,17 +146,18 @@ object AllItems : TeamGoal() {
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
                             StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${
-                                formatMaterial(
-                                    nextMaterial
-                                )
-                            }", false
+                            formatMaterial(
+                                nextMaterial
+                            )
+                            }",
+                            false
                         )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
                             StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${
-                                formatMaterial(
-                                    nextMaterial
-                                )
+                            formatMaterial(
+                                nextMaterial
+                            )
                             } as collected"
                         )
                     }

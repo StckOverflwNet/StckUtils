@@ -272,7 +272,6 @@ object RandomItem : Challenge() {
                 if (player.isPlaying()) {
                     player.give(ItemStack(materials.random()))
                 }
-
             }
         }
     }

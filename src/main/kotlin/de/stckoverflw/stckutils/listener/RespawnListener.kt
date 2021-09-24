@@ -44,7 +44,6 @@ class RespawnListener : Listener {
                 player.gameMode = GameMode.SPECTATOR
                 player.teleportAsync(location)
             }
-
         }
     }
 }

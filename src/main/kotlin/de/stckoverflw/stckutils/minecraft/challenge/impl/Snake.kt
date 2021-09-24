@@ -169,11 +169,11 @@ object Snake : Challenge() {
                     val player = playerMaterials.getKey(block.type) as Player
                     lose(
                         "${event.player.name} touched " +
-                                player.name +
-                                if (player.name.endsWith('s') || player.name.endsWith('x'))
-                                    "' snake trail."
-                                else
-                                    "'s snake trail."
+                            player.name +
+                            if (player.name.endsWith('s') || player.name.endsWith('x'))
+                                "' snake trail."
+                            else
+                                "'s snake trail."
                     )
                     return
                 }

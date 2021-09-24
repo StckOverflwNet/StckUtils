@@ -29,7 +29,7 @@ fun Player.setSavedInventory() {
         inventory.clear()
         inventory.contents =
             persistentDataContainer.get(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
-                ?.let { fromBase64(it) } as Array<out ItemStack?>
+            ?.let { fromBase64(it) } as Array<out ItemStack?>
         persistentDataContainer.remove(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
     }
 }
@@ -53,7 +53,6 @@ fun Player.hide() {
             player.showPlayer(KSpigotMainInstance, this)
         } else {
             player.hidePlayer(KSpigotMainInstance, this)
-
         }
         this.showPlayer(KSpigotMainInstance, player)
     }

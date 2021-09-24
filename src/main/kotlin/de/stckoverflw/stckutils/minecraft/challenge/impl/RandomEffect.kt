@@ -47,7 +47,7 @@ object RandomEffect : Challenge() {
                 PotionEffect(
                     potionEffectType,
                     Integer.MAX_VALUE,
-                    player.getPotionEffect(potionEffectType)?.amplifier?.plus(1) ?: 0
+                    it.getPotionEffect(potionEffectType)?.amplifier?.plus(1) ?: 0
                 )
             )
         }
