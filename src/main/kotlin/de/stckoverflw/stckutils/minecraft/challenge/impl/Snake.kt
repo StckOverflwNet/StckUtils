@@ -38,14 +38,14 @@ object Snake : Challenge() {
     private val playerMaterials = HashMap<Player, Material>()
     private val temporaryBlocks = HashMap<Player, LinkedList<Block>>()
     private var isVisible
-        get() = (Config.gameChangeConfig.getSetting(id, "isVisible") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isVisible", value)
+        get() = (Config.challengeConfig.getSetting(id, "isVisible") ?: true) as Boolean
+        set(value) = Config.challengeConfig.setSetting(id, "isVisible", value)
     private var isBreakable
-        get() = (Config.gameChangeConfig.getSetting(id, "isBreakable") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isBreakable", value)
+        get() = (Config.challengeConfig.getSetting(id, "isBreakable") ?: true) as Boolean
+        set(value) = Config.challengeConfig.setSetting(id, "isBreakable", value)
     private var isColored: Boolean
-        get() = (Config.gameChangeConfig.getSetting(id, "isColored") ?: true) as Boolean
-        set(value) = Config.gameChangeConfig.setSetting(id, "isColored", value)
+        get() = (Config.challengeConfig.getSetting(id, "isColored") ?: true) as Boolean
+        set(value) = Config.challengeConfig.setSetting(id, "isColored", value)
 
     override val id: String = "snake"
     override val name: String = "§aSnake"

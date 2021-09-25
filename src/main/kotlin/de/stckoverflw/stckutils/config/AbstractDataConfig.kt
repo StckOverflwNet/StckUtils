@@ -5,10 +5,10 @@ import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.IOException
 
-abstract class AbstractConfig(name: String) {
+abstract class AbstractDataConfig(name: String, path: String) {
 
     private val file: File
-    private val dir: File = File(KSpigotMainInstance.dataFolder.path + "/Settings")
+    private val dir: File = File(KSpigotMainInstance.dataFolder.path + "/Data/$path")
     val yaml: YamlConfiguration
 
     init {
@@ -17,7 +17,7 @@ abstract class AbstractConfig(name: String) {
         }
         file = File(dir, name)
         if (!file.exists()) {
-            KSpigotMainInstance.saveResource("Settings/$name", false)
+            KSpigotMainInstance.saveResource("Data/$path/$name", false)
         }
         yaml = YamlConfiguration()
         try {

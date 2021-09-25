@@ -22,11 +22,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 object MobDuplicator : Challenge() {
 
     private var exponentialAmount: Int
-        get() = Config.gameChangeConfig.getSetting(id, "exponentialAmount") as Int? ?: 2
-        set(value) = Config.gameChangeConfig.setSetting(id, "exponentialAmount", value)
+        get() = Config.challengeDataConfig.getSetting(id, "exponentialAmount") as Int? ?: 2
+        set(value) = Config.challengeDataConfig.setSetting(id, "exponentialAmount", value)
     private var isExponential: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "isExponential") as Boolean? ?: false
-        set(value) = Config.gameChangeConfig.setSetting(id, "isExponential", value)
+        get() = Config.challengeConfig.getSetting(id, "isExponential") as Boolean? ?: false
+        set(value) = Config.challengeConfig.setSetting(id, "isExponential", value)
 
     override val id: String = "mob-duplicator"
     override val name: String = "§dMob Duplicator"

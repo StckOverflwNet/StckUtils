@@ -1,6 +1,8 @@
-package de.stckoverflw.stckutils.config
+package de.stckoverflw.stckutils.config.impl
 
-class ChallengeSettings : AbstractConfig("challenges.yml") {
+import de.stckoverflw.stckutils.config.AbstractConfig
+
+class ChallengeConfig : AbstractConfig("challenges.yml") {
 
     fun getActive(challengeId: String): Boolean {
         return if (yaml.contains("$challengeId.active")) {

@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
 
+import de.stckoverflw.stckutils.config.Config
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import org.bukkit.event.Listener
@@ -32,6 +33,10 @@ sealed class GameChange : Listener {
      */
     abstract fun run()
 }
+
+var GameChange.active: Boolean
+    get() = Config.gameChangeConfig.getActive(this.id)
+    set(value) = Config.gameChangeConfig.setActive(this.id, value)
 
 abstract class GameExtension : GameChange()
 

@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
+import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.util.goBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
@@ -163,10 +164,9 @@ object DamageMultiplier : GameExtension() {
 
     private var minMultiplier: Double = 0.1
     private var maxMultiplier: Double = 100.0
-    private var multiplier: Double = 1.0
-    private var active: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "active") as Boolean? ?: true
-        set(value) = Config.gameChangeConfig.setSetting(id, "active", value)
+    private var multiplier: Double
+        get() = (Config.gameChangeConfig.getSetting(id, "multiplier") ?: 1.0) as Double
+        set(value) = Config.gameChangeConfig.setSetting(id, "multiplier", value)
 
     @EventHandler
     fun onDamage(event: EntityDamageByEntityEvent) {

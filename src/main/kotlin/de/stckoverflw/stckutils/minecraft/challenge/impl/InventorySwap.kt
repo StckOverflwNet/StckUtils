@@ -24,15 +24,11 @@ import org.bukkit.inventory.ItemStack
 
 object InventorySwap : Challenge() {
 
-    private var minPeriod: Int
-        get() = Config.gameChangeConfig.getSetting(ChunkFlattener.id, "minPeriod") as Int? ?: 1
-        set(value) = Config.gameChangeConfig.setSetting(ChunkFlattener.id, "minPeriod", value)
-    private var period: Int
-        get() = Config.gameChangeConfig.getSetting(id, "period") as Int? ?: 60
-        set(value) = Config.gameChangeConfig.setSetting(id, "period", value)
+    private var minPeriod: Int = 1
+    private var period: Int = 60
     private var time: Int
-        get() = Config.gameChangeConfig.getSetting(id, "time") as Int? ?: 0
-        set(value) = Config.gameChangeConfig.setSetting(id, "time", value)
+        get() = Config.challengeDataConfig.getSetting(id, "time") as Int? ?: 0
+        set(value) = Config.challengeDataConfig.setSetting(id, "time", value)
 
     override val id: String = "inventory-swap"
     override val name: String = "§2Inventory Swap"

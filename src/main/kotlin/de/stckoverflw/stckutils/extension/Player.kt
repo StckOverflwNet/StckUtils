@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 fun Player.resetWorlds() {
-    Config.resetSettings.shouldReset = true
+    Config.resetSettingsConfig.shouldReset = true
     onlinePlayers.forEach {
         it.kick(
             Component.join(

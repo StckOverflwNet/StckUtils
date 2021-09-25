@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
-import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
+import de.stckoverflw.stckutils.minecraft.gamechange.active
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -20,7 +20,7 @@ object KeepInventory : GameRule() {
             name = "§6Keep Inventory"
             addLore {
                 +" "
-                if (keepInventory) {
+                if (active) {
                     +"§7You currently §akeep your Inventory§7,"
                 } else {
                     +"§7You currently §ckeep your inventory §c§lnot§7,"
@@ -32,19 +32,15 @@ object KeepInventory : GameRule() {
 
     override val usesEvents: Boolean = false
 
-    private var keepInventory: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "keep") as Boolean? ?: false
-        set(value) = Config.gameChangeConfig.setSetting(id, "keep", value)
-
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
-        keepInventory = !keepInventory
+        active = !active
         run()
         event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
     }
 
     override fun run() {
         Bukkit.getWorlds().forEach {
-            it.setGameRule(org.bukkit.GameRule.KEEP_INVENTORY, keepInventory)
+            it.setGameRule(org.bukkit.GameRule.KEEP_INVENTORY, active)
         }
     }
 }

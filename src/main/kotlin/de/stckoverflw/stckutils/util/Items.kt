@@ -110,7 +110,7 @@ fun generateVillageSpawnItem() = itemStack(Material.VILLAGER_SPAWN_EGG) {
         name = "${KColors.SANDYBROWN}Village Spawn"
         addLore {
             +" "
-            if (Config.resetSettings.villageSpawn) {
+            if (Config.resetSettingsConfig.villageSpawn) {
                 +"§7Currently §aactivated"
                 +" "
                 +"§7Click to §cdeactivate"

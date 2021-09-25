@@ -1,11 +1,12 @@
-package de.stckoverflw.stckutils.config
+package de.stckoverflw.stckutils.config.impl
 
+import de.stckoverflw.stckutils.config.AbstractDataConfig
 import de.stckoverflw.stckutils.config.data.PositionData
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import java.util.*
 
-class PositionConfig : AbstractConfig("positions.yml") {
+class PositionDataConfig : AbstractDataConfig("positions.yml", "Positions") {
 
     val positions = ArrayList<PositionData>()
 

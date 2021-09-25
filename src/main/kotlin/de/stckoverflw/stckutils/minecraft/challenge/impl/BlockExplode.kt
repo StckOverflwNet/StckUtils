@@ -20,11 +20,11 @@ import org.bukkit.event.block.BlockBreakEvent
 object BlockExplode : Challenge() {
 
     private var isFire: Boolean
-        get() = Config.challengeSettings.getSetting(id, "isFire") as Boolean? ?: false
-        set(value) = Config.challengeSettings.setSetting(id, "isFire", value)
+        get() = Config.challengeConfig.getSetting(id, "isFire") as Boolean? ?: false
+        set(value) = Config.challengeConfig.setSetting(id, "isFire", value)
     private var chance: Int
-        get() = Config.challengeSettings.getSetting(id, "chance") as Int? ?: 50
-        set(value) = Config.challengeSettings.setSetting(id, "chance", value)
+        get() = Config.challengeConfig.getSetting(id, "chance") as Int? ?: 50
+        set(value) = Config.challengeConfig.setSetting(id, "chance", value)
 
     override val id: String = "block-explode"
     override val name: String = "§cBlock Explode"

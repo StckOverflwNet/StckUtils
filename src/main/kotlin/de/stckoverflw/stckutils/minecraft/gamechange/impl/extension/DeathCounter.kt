@@ -1,8 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
+import de.stckoverflw.stckutils.minecraft.gamechange.active
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -57,9 +57,6 @@ object DeathCounter : GameExtension() {
     }
 
     private val bossbar = Bukkit.createBossBar("§9Deaths: 0", BarColor.BLUE, BarStyle.SOLID)
-    private var active: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "active") as Boolean? ?: true
-        set(value) = Config.gameChangeConfig.setSetting(id, "active", value)
     private var deaths = 0
 
     override fun run() {

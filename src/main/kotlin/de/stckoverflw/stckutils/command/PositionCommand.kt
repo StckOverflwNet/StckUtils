@@ -12,16 +12,16 @@ class PositionCommand {
     fun register() = command("position", true) {
         argument("name", StringArgumentType.string()) {
             suggestListSuspending { suggest ->
-                Config.positionConfig.positions.map { it.name }.filter {
+                Config.positionDataConfig.positions.map { it.name }.filter {
                     if (suggest.input != null && suggest.input.substring(suggest.input.length - 1) != " ")
                         it.startsWith(suggest.getArgument<String>("name"), true) else
                         true
                 }.sorted()
             }
             runs {
-                if (!Config.positionConfig.positions.any { it.name == getArgument<String>("name").lowercase() }) {
+                if (!Config.positionDataConfig.positions.any { it.name == getArgument<String>("name").lowercase() }) {
                     val location = player.location
-                    Config.positionConfig.addPosition(
+                    Config.positionDataConfig.addPosition(
                         PositionData(
                             getArgument<String>("name").lowercase(),
                             player.uniqueId,
@@ -30,7 +30,7 @@ class PositionCommand {
                     )
                     broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${getArgument<String>("name").lowercase()} §7at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
                 } else {
-                    val position = Config.positionConfig.positions.find {
+                    val position = Config.positionDataConfig.positions.find {
                         it.name == getArgument<String>("name")
                     }
                     if (position != null) {

@@ -74,5 +74,5 @@ abstract class Challenge : Listener {
 }
 
 var Challenge.active: Boolean
-    get() = Config.challengeSettings.getActive(this.id)
-    set(value) = Config.challengeSettings.setActive(this.id, value)
+    get() = Config.challengeConfig.getActive(this.id)
+    set(value) = Config.challengeConfig.setActive(this.id, value)

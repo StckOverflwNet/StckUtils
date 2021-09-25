@@ -247,9 +247,9 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             iconGenerator = {
                 it.item()
             },
-            onClick = { clickEvent, extension ->
+            onClick = { clickEvent, rule ->
                 clickEvent.bukkitEvent.isCancelled = true
-                extension.click(clickEvent)
+                rule.click(clickEvent)
             }
         )
         gameExtensionCompound
@@ -562,7 +562,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
 
         // Item for activating/deactivating Village Spawn
         button(Slots.RowThreeSlotThree, generateVillageSpawnItem()) {
-            Config.resetSettings.villageSpawn = !Config.resetSettings.villageSpawn
+            Config.resetSettingsConfig.villageSpawn = !Config.resetSettingsConfig.villageSpawn
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateVillageSpawnItem())
         }
 

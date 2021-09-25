@@ -27,23 +27,23 @@ object AllItems : TeamGoal() {
     const val COMMAND_NAME = "allItems"
     private var allItems: ArrayList<Material>
         get() {
-            val list: MutableList<*>? = Config.goalConfig.getSettingList(id, "allItems")
+            val list: MutableList<*>? = Config.allItemsDataConfig.getSettingList("allItems")
             return if (list == null || list.isEmpty()) ArrayList()
             else ArrayList(list.filterNotNull().map { Material.valueOf(it as String) })
         }
-        set(value) = Config.goalConfig.setSetting(id, "allItems", value.map { it.name })
+        set(value) = Config.allItemsDataConfig.setSetting("allItems", value.map { it.name })
     private val materials: List<Material> = Material.values().filter { it.isObtainableInSurvival() }
     private var nextMaterial: Material
         get() {
             val mat = randomMaterial().toString()
-            var material = Config.goalConfig.getSetting(id, "nextMaterial")
+            var material = Config.allItemsDataConfig.getSetting("nextMaterial")
             if (material == null) {
-                Config.goalConfig.setSetting(id, "nextMaterial", mat)
+                Config.allItemsDataConfig.setSetting("nextMaterial", mat)
                 material = mat
             }
             return Material.valueOf(material as String)
         }
-        set(value) = Config.goalConfig.setSetting(id, "nextMaterial", value.name)
+        set(value) = Config.allItemsDataConfig.setSetting("nextMaterial", value.name)
 
     private var filter: HashMap<UUID, Pair<Filter, Filter>> = HashMap()
 
@@ -279,7 +279,7 @@ object AllItems : TeamGoal() {
         if (markCollected)
             allItems = ArrayList(allItems.plus(nextMaterial))
         if (isWon()) {
-            Config.goalConfig.setSetting(id, "nextMaterial", null)
+            Config.allItemsDataConfig.setSetting("nextMaterial", null)
             win("You collected all Items!")
         } else {
             nextMaterial = randomMaterial()

@@ -1,4 +1,6 @@
-package de.stckoverflw.stckutils.config
+package de.stckoverflw.stckutils.config.impl
+
+import de.stckoverflw.stckutils.config.AbstractConfig
 
 class GoalConfig : AbstractConfig("goals.yml") {
 
@@ -24,9 +26,5 @@ class GoalConfig : AbstractConfig("goals.yml") {
 
     fun getSetting(goalId: String, setting: String): Any? {
         return yaml.get("$goalId.$setting")
-    }
-
-    fun getSettingList(goalId: String, setting: String): MutableList<*>? {
-        return yaml.getList("$goalId.$setting")
     }
 }

@@ -23,21 +23,17 @@ import org.bukkit.inventory.Inventory
 
 object ChunkFlattener : Challenge() {
 
-    private var minPeriod: Int
-        get() = Config.gameChangeConfig.getSetting(id, "minPeriod") as Int? ?: 1
-        set(value) = Config.gameChangeConfig.setSetting(id, "minPeriod", value)
-    private var maxPeriod: Int
-        get() = Config.gameChangeConfig.getSetting(id, "maxPeriod") as Int? ?: 60
-        set(value) = Config.gameChangeConfig.setSetting(id, "maxPeriod", value)
+    private var minPeriod: Int = 1
+    private var maxPeriod: Int = 60
     private var period: Int
-        get() = Config.gameChangeConfig.getSetting(id, "period") as Int? ?: 10
-        set(value) = Config.gameChangeConfig.setSetting(id, "period", value)
+        get() = Config.challengeConfig.getSetting(id, "period") as Int? ?: 10
+        set(value) = Config.challengeConfig.setSetting(id, "period", value)
     private var doDrop: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "doDrop") as Boolean? ?: false
-        set(value) = Config.gameChangeConfig.setSetting(id, "doDrop", value)
+        get() = Config.challengeConfig.getSetting(id, "doDrop") as Boolean? ?: false
+        set(value) = Config.challengeConfig.setSetting(id, "doDrop", value)
     private var time: Int
-        get() = Config.gameChangeConfig.getSetting(id, "time") as Int? ?: 0
-        set(value) = Config.gameChangeConfig.setSetting(id, "time", value)
+        get() = Config.challengeDataConfig.getSetting(id, "time") as Int? ?: 0
+        set(value) = Config.challengeDataConfig.setSetting(id, "time", value)
 
     override val id: String = "chunk-flattener"
     override val name: String = "§aChunk Flattener"

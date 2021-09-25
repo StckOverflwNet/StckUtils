@@ -1,6 +1,8 @@
-package de.stckoverflw.stckutils.config
+package de.stckoverflw.stckutils.config.impl
 
-class TimerConfig : AbstractConfig("timer.yml") {
+import de.stckoverflw.stckutils.config.AbstractDataConfig
+
+class TimerDataConfig : AbstractDataConfig("timer.yml", "Timer") {
 
     fun setSetting(setting: String, value: Any) {
         yaml.set(setting, value)

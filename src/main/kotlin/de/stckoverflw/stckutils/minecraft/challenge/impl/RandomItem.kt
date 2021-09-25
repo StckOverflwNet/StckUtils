@@ -24,25 +24,25 @@ import org.bukkit.inventory.ItemStack
 object RandomItem : Challenge() {
 
     private var isDistance
-        get() = (Config.challengeSettings.getSetting(id, "isDistance") ?: true) as Boolean
-        set(value) = Config.challengeSettings.setSetting(id, "isDistance", value)
+        get() = (Config.challengeConfig.getSetting(id, "isDistance") ?: true) as Boolean
+        set(value) = Config.challengeConfig.setSetting(id, "isDistance", value)
     private var distanceUnit
-        get() = (Config.challengeSettings.getSetting(id, "distanceUnit") ?: 500) as Int
-        set(value) = Config.challengeSettings.setSetting(id, "distanceUnit", value)
+        get() = (Config.challengeDataConfig.getSetting(id, "distanceUnit") ?: 500) as Int
+        set(value) = Config.challengeDataConfig.setSetting(id, "distanceUnit", value)
     private var distance
-        get() = (Config.challengeSettings.getSetting(id, "distance") ?: 0) as Int
-        set(value) = Config.challengeSettings.setSetting(id, "distance", value)
+        get() = (Config.challengeDataConfig.getSetting(id, "distance") ?: 0) as Int
+        set(value) = Config.challengeDataConfig.setSetting(id, "distance", value)
     private var minDistance: Int = 50
 
     private var isTime
-        get() = (Config.challengeSettings.getSetting(id, "isTime") ?: true) as Boolean
-        set(value) = Config.challengeSettings.setSetting(id, "isTime", value)
+        get() = (Config.challengeConfig.getSetting(id, "isTime") ?: true) as Boolean
+        set(value) = Config.challengeConfig.setSetting(id, "isTime", value)
     private var timeUnit
-        get() = (Config.challengeSettings.getSetting(id, "timeUnit") ?: 300) as Int
-        set(value) = Config.challengeSettings.setSetting(id, "timeUnit", value)
+        get() = (Config.challengeDataConfig.getSetting(id, "timeUnit") ?: 300) as Int
+        set(value) = Config.challengeDataConfig.setSetting(id, "timeUnit", value)
     private var time
-        get() = (Config.challengeSettings.getSetting(id, "time") ?: 0) as Int
-        set(value) = Config.challengeSettings.setSetting(id, "time", value)
+        get() = (Config.challengeDataConfig.getSetting(id, "time") ?: 0) as Int
+        set(value) = Config.challengeDataConfig.setSetting(id, "time", value)
     private var minTime: Int = 10
 
     private val materials = Material.values().filter { material -> material.isItem }

@@ -32,8 +32,8 @@ object Timer {
         set(value) = Config.timerConfig.setSetting("color", value)
 
     var time: Long
-        get() = (Config.timerConfig.getSetting("time") ?: 0).toString().toLong()
-        set(value) = Config.timerConfig.setSetting("time", value)
+        get() = (Config.timerDataConfig.getSetting("time") ?: 0).toString().toLong()
+        set(value) = Config.timerDataConfig.setSetting("time", value)
     var running = false
     var additionalInfo: ArrayList<String> = arrayListOf()
 

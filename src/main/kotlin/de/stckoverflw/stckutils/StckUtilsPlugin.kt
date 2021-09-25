@@ -31,19 +31,19 @@ class StckUtilsPlugin : KSpigot() {
 
     override fun load() {
         Config()
-        if (Config.resetSettings.shouldReset) {
+        if (Config.resetSettingsConfig.shouldReset) {
             deleteWorld("world")
             deleteWorld("world_nether")
             deleteWorld("world_the_end")
             wasReset = true
-            Config.resetSettings.shouldReset = false
+            Config.resetSettingsConfig.shouldReset = false
         }
     }
 
     override fun startup() {
         Config.reloadPositions()
 
-        if (Config.resetSettings.villageSpawn && wasReset) {
+        if (Config.resetSettingsConfig.villageSpawn && wasReset) {
             val world = Bukkit.getWorld("world")!!
             val nearestVillage = world.locateNearestStructure(world.spawnLocation, StructureType.VILLAGE, 10000, true)
             world.spawnLocation = nearestVillage!!

@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
-import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
+import de.stckoverflw.stckutils.minecraft.gamechange.active
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -21,7 +21,7 @@ object AllowPvP : GameRule() {
                 +"§7Sets if Players can damage"
                 +"§7each other"
                 +" "
-                if (pvp) {
+                if (!active) {
                     +"§7Players §acan attack each other"
                 } else {
                     +"§7Players §ccannot attack each other"
@@ -33,19 +33,15 @@ object AllowPvP : GameRule() {
 
     override val usesEvents: Boolean = false
 
-    private var pvp: Boolean
-        get() = Config.gameChangeConfig.getSetting(id, "pvp") as Boolean? ?: true
-        set(value) = Config.gameChangeConfig.setSetting(id, "pvp", value)
-
     override fun click(event: GUIClickEvent<ForInventoryFiveByNine>) {
-        pvp = !pvp
+        active = !active
         run()
         event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
     }
 
     override fun run() {
         Bukkit.getWorlds().forEach {
-            it.pvp = pvp
+            it.pvp = !active
         }
     }
 }

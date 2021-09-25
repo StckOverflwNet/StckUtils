@@ -1,6 +1,8 @@
-package de.stckoverflw.stckutils.config
+package de.stckoverflw.stckutils.config.impl
 
-class ResetSettings : AbstractConfig("resetsettings.yml") {
+import de.stckoverflw.stckutils.config.AbstractConfig
+
+class ResetSettingsConfig : AbstractConfig("resetsettings.yml") {
 
     var shouldReset: Boolean
         get() = yaml.getBoolean("shouldReset")
