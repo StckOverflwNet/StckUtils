@@ -1,5 +1,7 @@
 package de.stckoverflw.stckutils
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import de.stckoverflw.stckutils.command.*
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.saveInventory
@@ -24,6 +26,8 @@ class StckUtilsPlugin : KSpigot() {
 
     companion object {
         const val prefix: String = "§f§lStckUtils §7| §r"
+        var protocolManager: ProtocolManager? = null
+        var isProtocolLib: Boolean = false
     }
 
     private var wasReset = false
@@ -40,6 +44,11 @@ class StckUtilsPlugin : KSpigot() {
     }
 
     override fun startup() {
+        if (server.pluginManager.getPlugin("ProtocolLib") != null) {
+            protocolManager = ProtocolLibrary.getProtocolManager()
+            isProtocolLib = true
+        }
+
         Config.reloadPositions()
 
         if (Config.resetSettingsConfig.villageSpawn && wasReset) {

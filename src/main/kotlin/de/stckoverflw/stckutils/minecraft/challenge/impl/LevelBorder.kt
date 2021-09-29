@@ -1,6 +1,9 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import com.comphenix.protocol.PacketType
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.isInArea
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.util.goBackItem
@@ -14,43 +17,100 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigotMainInstance
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerExpChangeEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLevelChangeEvent
+import org.bukkit.event.player.PlayerRespawnEvent
+import java.lang.reflect.InvocationTargetException
 
 object LevelBorder : Challenge() {
 
     private var xpLevel: Int
         get() = (Config.challengeDataConfig.getSetting(id, "xpLevel") ?: 0) as Int
-        set(value) = Config.challengeDataConfig.setSetting(id, "xpLevel", value)
+        set(value) {
+            var level = 1
+            if (value > 1) level = value
+            Config.challengeDataConfig.setSetting(id, "xpLevel", level)
+        }
     private var xpProgress: Float
         get() = (Config.challengeDataConfig.getSetting(id, "xpProgress") ?: 0F) as Float
         set(value) = Config.challengeDataConfig.setSetting(id, "xpProgress", value)
     private var isFirstRun
-        get() = (Config.challengeConfig.getSetting(MobDuplicator.id, "isFirstRun") ?: true) as Boolean
-        set(value) = Config.challengeConfig.setSetting(MobDuplicator.id, "isFirstRun", value)
+        get() = (Config.challengeDataConfig.getSetting(MobDuplicator.id, "isFirstRun") ?: true) as Boolean
+        set(value) = Config.challengeDataConfig.setSetting(MobDuplicator.id, "isFirstRun", value)
 
     override val id: String = "level-border"
     override val name: String = "§eLevel Border"
     override val material: Material = Material.EXPERIENCE_BOTTLE
     override val description: List<String> = listOf(
         " ",
-        "§7You start with a worldborder of 1.",
+        "§7You start with a world border of 1.",
         "§7It will increase and decrease",
         "§7as your xp level changes."
     )
     override val usesEvents: Boolean = true
 
+    private fun borderCenter(player: Player, location: Location) {
+        val packet = StckUtilsPlugin.protocolManager!!.createPacket(PacketType.Play.Server.SET_BORDER_CENTER)
+
+        packet.doubles
+            .write(0, location.blockX.toDouble())
+            .write(1, location.blockY.toDouble())
+
+        try {
+            StckUtilsPlugin.protocolManager!!.sendServerPacket(player, packet)
+        } catch (e: InvocationTargetException) {
+            throw RuntimeException("Cannot send packet $packet", e)
+        }
+    }
+
+    private fun border(player: Player, size: Double) {
+        val packet = StckUtilsPlugin.protocolManager!!.createPacket(PacketType.Play.Server.SET_BORDER_SIZE)
+
+        packet.doubles
+            .write(0, size)
+
+        try {
+            StckUtilsPlugin.protocolManager!!.sendServerPacket(player, packet)
+        } catch (e: InvocationTargetException) {
+            throw RuntimeException("Cannot send packet $packet", e)
+        }
+    }
+
+    private fun moveBorder(player: Player, fromSize: Double, toSize: Double, time: Long) {
+        val packet = StckUtilsPlugin.protocolManager!!.createPacket(PacketType.Play.Server.SET_BORDER_LERP_SIZE)
+
+        packet.doubles
+            .write(0, fromSize)
+            .write(1, toSize)
+
+        packet.longs
+            .write(0, time)
+
+        try {
+            StckUtilsPlugin.protocolManager!!.sendServerPacket(player, packet)
+        } catch (e: InvocationTargetException) {
+            throw RuntimeException("Cannot send packet $packet", e)
+        }
+    }
+
+    private fun resetBorder(player: Player) {
+        border(player, 30000000.0)
+    }
+
     override fun onToggle() {
         if (!active) {
-            KSpigotMainInstance.server.worlds.forEach {
-                it.worldBorder.reset()
+            onlinePlayers.forEach {
+                resetBorder(it)
             }
         } else {
-            val worlds = KSpigotMainInstance.server.worlds
-            val overWorld = worlds.first {
+            val overWorld = KSpigotMainInstance.server.worlds.first {
                 it.environment == World.Environment.NORMAL
             }
             onlinePlayers.forEach { player ->
@@ -59,12 +119,10 @@ object LevelBorder : Challenge() {
                     player.level = 0
                     player.exp = 0F
                 }
+                xpLevel = xpLevel
+                border(player, xpLevel.toDouble())
             }
             isFirstRun = false
-            worlds.forEach {
-                it.worldBorder.center = it.spawnLocation
-                it.worldBorder.size = xpLevel.toDouble()
-            }
         }
     }
 
@@ -102,19 +160,53 @@ object LevelBorder : Challenge() {
 
     @EventHandler
     fun onXpProgress(event: PlayerExpChangeEvent) {
-        xpProgress = event.player.exp - event.amount / onlinePlayers.size
-        event.amount = 0
+        xpProgress = event.player.exp
+        xpLevel = event.player.level
         onlinePlayers.forEach {
             it.exp = xpProgress
+            it.level = xpLevel
         }
     }
 
     @EventHandler
     fun onXpLevel(event: PlayerLevelChangeEvent) {
+        xpProgress = event.player.exp
         xpLevel = event.player.level
         onlinePlayers.forEach {
+            it.exp = xpProgress
             it.level = xpLevel
+            moveBorder(it, xpLevel.toDouble(), (xpLevel + 1).toDouble(), 1000L)
         }
-        event.player.world.worldBorder.size = (xpLevel + 1).toDouble()
+    }
+
+    @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        xpLevel = event.newLevel
+        xpProgress = 0F
+        event.droppedExp = 0
+        event.newExp = 0
+        onlinePlayers.forEach {
+            it.exp = xpProgress
+            it.level = xpLevel
+            moveBorder(it, xpLevel.toDouble(), (xpLevel + 1).toDouble(), 1000L)
+        }
+    }
+
+    @EventHandler
+    fun onRespawn(event: PlayerRespawnEvent) {
+        event.player.level = xpLevel
+        event.player.exp = 0F
+        event.player.teleportAsync(event.player.world.spawnLocation)
+        border(event.player, xpLevel.toDouble())
+    }
+
+    @EventHandler
+    fun onJoin(event: PlayerJoinEvent) {
+        event.player.level = xpLevel
+        event.player.exp = xpProgress
+        if (!event.player.isInArea(event.player.world.spawnLocation, xpLevel.toDouble())) {
+            event.player.teleportAsync(event.player.world.spawnLocation)
+        }
+        border(event.player, xpLevel.toDouble())
     }
 }

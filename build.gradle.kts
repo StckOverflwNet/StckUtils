@@ -17,6 +17,7 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
     maven("https://libraries.minecraft.net")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -29,6 +30,9 @@ dependencies {
 
     // KSpigot dependency
     implementation("net.axay", "kspigot", "1.17.4")
+
+    // ProtocolLib
+    compileOnly("com.comphenix.protocol", "ProtocolLib", "4.7.0")
 
     // Gson dependency
     implementation("com.google.code.gson", "gson", "2.8.8")

@@ -2,11 +2,13 @@ package de.stckoverflw.stckutils.extension
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.util.*
+import net.axay.kspigot.extensions.geometry.LocationArea
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -74,3 +76,9 @@ fun Player.reveal() {
 }
 
 fun Player.isPlaying() = !this.isHidden() && this.gameMode == GameMode.SURVIVAL
+
+fun Player.isInArea(location: Location, radius: Double): Boolean =
+    LocationArea(location.add(radius, radius, radius), location.add(-radius, -radius, -radius)).isInArea(this.location, false, 0)
+
+fun Player.isInArea(location: Location, location2: Location): Boolean =
+    LocationArea(location, location2).isInArea(this.location, false, 0)
