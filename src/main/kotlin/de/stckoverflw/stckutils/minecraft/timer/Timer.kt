@@ -86,21 +86,22 @@ object Timer {
         } else {
             GameChangeManager.registerGameChangeListeners()
             ChallengeManager.registerChallengeListeners()
+            running = true
             GameChangeManager.gameChanges.forEach { change ->
                 change.run()
+                change.onTimerToggle()
             }
-            ChallengeManager.registerChallengeListeners()
             ChallengeManager.challenges.forEach { challenge ->
                 if (challenge.active) {
                     challenge.prepareChallenge()
                 }
+                challenge.onTimerToggle()
             }
             GoalManager.registerActiveGoal()
             onlinePlayers.forEach {
                 it.inventory.clear()
                 it.setSavedInventory()
             }
-            running = true
             GoalManager.activeGoal?.onTimerToggle()
             true
         }
@@ -114,6 +115,12 @@ object Timer {
             GameChangeManager.unregisterGameChangeListeners()
             GoalManager.unregisterActiveGoal()
             running = false
+            ChallengeManager.challenges.forEach {
+                it.onTimerToggle()
+            }
+            GameChangeManager.gameChanges.forEach {
+                it.onTimerToggle()
+            }
             GoalManager.activeGoal?.onTimerToggle()
             onlinePlayers.forEach { player ->
                 player.saveInventory()

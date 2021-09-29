@@ -52,6 +52,9 @@ abstract class Challenge : Listener {
         KSpigotMainInstance.logger.info("§aPreparing Challenge")
     }
 
+    open fun onTimerToggle() {
+    }
+
     open fun onToggle() {
     }
 

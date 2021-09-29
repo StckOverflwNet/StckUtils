@@ -32,6 +32,9 @@ sealed class GameChange : Listener {
      * This method is run everytime someone joins the server and when the gamechange gets updated
      */
     abstract fun run()
+
+    open fun onTimerToggle() {
+    }
 }
 
 var GameChange.active: Boolean

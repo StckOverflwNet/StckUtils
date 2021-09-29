@@ -6,6 +6,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isInArea
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
+import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.goBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
@@ -33,13 +34,9 @@ object LevelBorder : Challenge() {
 
     private var xpLevel: Int
         get() = (Config.challengeDataConfig.getSetting(id, "xpLevel") ?: 0) as Int
-        set(value) {
-            var level = 1
-            if (value > 1) level = value
-            Config.challengeDataConfig.setSetting(id, "xpLevel", level)
-        }
-    private var xpProgress: Float
-        get() = (Config.challengeDataConfig.getSetting(id, "xpProgress") ?: 0F) as Float
+        set(value) = Config.challengeDataConfig.setSetting(id, "xpLevel", value)
+    private var xpProgress: Double
+        get() = (Config.challengeDataConfig.getSetting(id, "xpProgress") ?: 0.0) as Double
         set(value) = Config.challengeDataConfig.setSetting(id, "xpProgress", value)
     private var isFirstRun
         get() = (Config.challengeDataConfig.getSetting(MobDuplicator.id, "isFirstRun") ?: true) as Boolean
@@ -119,10 +116,26 @@ object LevelBorder : Challenge() {
                     player.level = 0
                     player.exp = 0F
                 }
-                xpLevel = xpLevel
-                border(player, xpLevel.toDouble())
+                border(player, (xpLevel + 1).toDouble())
             }
             isFirstRun = false
+        }
+    }
+
+    override fun onTimerToggle() {
+        if (!Timer.running) {
+            onlinePlayers.forEach { player ->
+                resetBorder(player)
+            }
+        } else {
+            onlinePlayers.forEach { player ->
+                player.level = xpLevel
+                player.exp = xpProgress.toFloat()
+                if (!player.isInArea(player.world.spawnLocation, xpLevel.toDouble())) {
+                    player.teleportAsync(player.world.spawnLocation)
+                }
+                border(player, (xpLevel + 1).toDouble())
+            }
         }
     }
 
@@ -142,7 +155,7 @@ object LevelBorder : Challenge() {
                 it.bukkitEvent.isCancelled = true
                 isFirstRun = true
                 xpLevel = 0
-                xpProgress = 0F
+                xpProgress = 0.0
                 onToggle()
             }
         }
@@ -160,35 +173,35 @@ object LevelBorder : Challenge() {
 
     @EventHandler
     fun onXpProgress(event: PlayerExpChangeEvent) {
-        xpProgress = event.player.exp
+        xpProgress = event.player.exp.toDouble()
         xpLevel = event.player.level
         onlinePlayers.forEach {
-            it.exp = xpProgress
+            it.exp = xpProgress.toFloat()
             it.level = xpLevel
         }
     }
 
     @EventHandler
     fun onXpLevel(event: PlayerLevelChangeEvent) {
-        xpProgress = event.player.exp
+        xpProgress = event.player.exp.toDouble()
         xpLevel = event.player.level
         onlinePlayers.forEach {
-            it.exp = xpProgress
+            it.exp = xpProgress.toFloat()
             it.level = xpLevel
-            moveBorder(it, xpLevel.toDouble(), (xpLevel + 1).toDouble(), 1000L)
+            moveBorder(it, (xpLevel + 1).toDouble(), (xpLevel + 2).toDouble(), 1000L)
         }
     }
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         xpLevel = event.newLevel
-        xpProgress = 0F
+        xpProgress = 0.0
         event.droppedExp = 0
         event.newExp = 0
         onlinePlayers.forEach {
-            it.exp = xpProgress
+            it.exp = xpProgress.toFloat()
             it.level = xpLevel
-            moveBorder(it, xpLevel.toDouble(), (xpLevel + 1).toDouble(), 1000L)
+            moveBorder(it, (xpLevel + 1).toDouble(), (xpLevel + 2).toDouble(), 1000L)
         }
     }
 
@@ -197,16 +210,16 @@ object LevelBorder : Challenge() {
         event.player.level = xpLevel
         event.player.exp = 0F
         event.player.teleportAsync(event.player.world.spawnLocation)
-        border(event.player, xpLevel.toDouble())
+        border(event.player, (xpLevel + 1).toDouble())
     }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         event.player.level = xpLevel
-        event.player.exp = xpProgress
+        event.player.exp = xpProgress.toFloat()
         if (!event.player.isInArea(event.player.world.spawnLocation, xpLevel.toDouble())) {
             event.player.teleportAsync(event.player.world.spawnLocation)
         }
-        border(event.player, xpLevel.toDouble())
+        border(event.player, (xpLevel + 1).toDouble())
     }
 }
