@@ -73,6 +73,7 @@ object DeathCounter : GameExtension() {
     }
 
     @EventHandler
+    @Suppress("unused_parameter")
     fun onDeath(event: PlayerDeathEvent) {
         deaths++
         run()

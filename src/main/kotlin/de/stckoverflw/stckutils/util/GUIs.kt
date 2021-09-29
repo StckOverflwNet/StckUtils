@@ -332,7 +332,9 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                         player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
                     } else {
                         if (GoalManager.activeGoal != goal) {
-                            goal.active = true
+                            GoalManager.goals.forEach {
+                                it.active = it == goal
+                            }
                             GoalManager.activeGoal = goal
                         } else {
                             GoalManager.goals.forEach {
@@ -532,7 +534,9 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
 
                         addLore {
                             +" "
-                            +"§7LMB - Change the color to $chatColor${chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
+                            +"§7LMB - Change the color to $chatColor${
+                            chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+                            }"
                             +"§7Example Timer: $chatColor§l${ChatColor.stripColor(Timer.formatTime(90061.toLong()))}" // 1d 1h 1m 1s
                         }
                     }

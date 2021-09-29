@@ -8,6 +8,7 @@ import org.bukkit.Material
  * @return true if this material is an obtainable in survival mode
  */
 fun Material.isObtainableInSurvival(): Boolean {
+    @Suppress("DEPRECATION")
     if (this.isLegacy) return false
     return when (this) {
         // <editor-fold defaultstate="collapsed" desc="isObtainableInSurvival">

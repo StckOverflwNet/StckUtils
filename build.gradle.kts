@@ -37,6 +37,12 @@ dependencies {
     compileOnly("com.mojang", "brigadier", "1.0.18")
 }
 
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(16))
+    }
+}
+
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
