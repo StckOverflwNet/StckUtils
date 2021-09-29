@@ -2,7 +2,6 @@ package de.stckoverflw.stckutils.minecraft.goal.impl
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.isObtainableInSurvival
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -14,59 +13,67 @@ import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.items.*
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-object AllItems : TeamGoal() {
+object AllMobs : TeamGoal() {
 
-    private var allItems: List<Material>
+    private var allMobs: List<EntityType>
         get() {
-            val list: MutableList<*>? = Config.allItemsDataConfig.getSettingList("allItems")
+            val list: MutableList<*>? = Config.allMobsDataConfig.getSettingList("allMobs")
             return if (list == null || list.isEmpty()) listOf()
-            else list.filterNotNull().map { Material.valueOf(it as String) }
+            else list.filterNotNull().map { EntityType.valueOf(it as String) }
         }
-        set(value) = Config.allItemsDataConfig.setSetting("allItems", value.map { it.name })
-    private val materials: List<Material> = Material.values().filter { it.isObtainableInSurvival() }
-    private var nextMaterial: Material
+        set(value) = Config.allMobsDataConfig.setSetting("allMobs", value.map { it.name })
+    private val mobs: List<EntityType> = EntityType.values().filter {
+        it.isAlive && when (it) {
+            EntityType.ILLUSIONER,
+            EntityType.GIANT,
+            EntityType.PLAYER,
+            EntityType.ARMOR_STAND -> false
+            else -> true
+        }
+    }
+    private var nextMob: EntityType
         get() {
-            var material = Config.allItemsDataConfig.getSetting("nextMaterial")
-            if (material == null) {
-                val mat = randomMaterial().toString()
-                Config.allItemsDataConfig.setSetting("nextMaterial", mat)
-                material = mat
+            var entity = Config.allMobsDataConfig.getSetting("nextMob")
+            if (entity == null) {
+                val e = randomMob().toString()
+                Config.allMobsDataConfig.setSetting("nextMob", e)
+                entity = e
             }
-            return Material.valueOf(material as String)
+            return EntityType.valueOf(entity as String)
         }
-        set(value) = Config.allItemsDataConfig.setSetting("nextMaterial", value.name)
+        set(value) = Config.allMobsDataConfig.setSetting("nextMob", value.name)
 
     private var filter: HashMap<UUID, Pair<Filter, Filter>> = HashMap()
 
     private enum class Filter {
-        COLLECTED,
-        NOT_COLLECTED,
+        KILLED,
+        NOT_KILLED,
         ALL,
         ASCENDING,
         DESCENDING;
     }
 
-    override val id: String = "all-items"
-    override val name: String = "§aAll Items"
-    override val description: List<String> = listOf(
+    override val id: String = "all-mobs"
+    override val name: String = "§dAll Mobs"
+    override val description = listOf(
         " ",
-        "§7Collect all Items",
+        "§7Kill all Mobs",
     )
-    override val material: Material = Material.ENDER_CHEST
+    override val material = Material.SPAWNER
 
     override fun onTimerToggle() {
         if (Timer.running) {
-            if (!isWon() && !Timer.additionalInfo.contains("collect ${formatMaterial(nextMaterial)}")) {
+            if (!isWon() && !Timer.additionalInfo.contains("kill ${formatMob(nextMob)}")) {
                 Timer.additionalInfo.clear()
-                Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
+                Timer.additionalInfo.add("kill ${formatMob(nextMob)}")
             }
         }
     }
@@ -82,10 +89,10 @@ object AllItems : TeamGoal() {
             // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
 
-            val compound = createRectCompound<Material>(
+            val compound = createRectCompound<EntityType>(
                 Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
                 iconGenerator = {
-                    generateAllItemsItem(it)
+                    generateAllMobsItem(it)
                 }, onClick = { clickEvent, _ ->
                 clickEvent.bukkitEvent.isCancelled = true
             }
@@ -93,10 +100,10 @@ object AllItems : TeamGoal() {
 
             // Reset Item
             button(Slots.RowTwoSlotNine, resetItem()) {
-                allItems = listOf()
-                nextMaterial = randomMaterial()
+                allMobs = listOf()
+                nextMob = randomMob()
                 it.guiInstance.reloadCurrentPage()
-                broadcast(StckUtilsPlugin.prefix + "§4${it.bukkitEvent.whoClicked.name} reset the progress of All Items")
+                broadcast(StckUtilsPlugin.prefix + "§4${it.bukkitEvent.whoClicked.name} reset the progress of All Mobs")
             }
 
             // Filter Button (Filter only collected/only not collected/all)
@@ -106,19 +113,19 @@ object AllItems : TeamGoal() {
                 if (filter[player.uniqueId] == null) resetFilter(player)
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     when (filter[player.uniqueId]!!.first) {
-                        Filter.COLLECTED -> {
+                        Filter.KILLED -> {
                             filter[player.uniqueId] = filter[player.uniqueId]!!.copy(
-                                first = Filter.NOT_COLLECTED
+                                first = Filter.NOT_KILLED
                             )
                         }
-                        Filter.NOT_COLLECTED -> {
+                        Filter.NOT_KILLED -> {
                             filter[player.uniqueId] = filter[player.uniqueId]!!.copy(
                                 first = Filter.ALL
                             )
                         }
                         else -> {
                             filter[player.uniqueId] = filter[player.uniqueId]!!.copy(
-                                first = Filter.COLLECTED
+                                first = Filter.KILLED
                             )
                         }
                     }
@@ -148,8 +155,8 @@ object AllItems : TeamGoal() {
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
                             StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${
-                            formatMaterial(
-                                nextMaterial
+                            formatMob(
+                                nextMob
                             )
                             }",
                             false
@@ -157,8 +164,8 @@ object AllItems : TeamGoal() {
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
                             StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${
-                            formatMaterial(
-                                nextMaterial
+                            formatMob(
+                                nextMob
                             )
                             } as collected"
                         )
@@ -190,41 +197,50 @@ object AllItems : TeamGoal() {
         }
     }
 
-    private fun getContent(filter: Pair<Filter, Filter>): List<Material> {
+    private fun getContent(filter: Pair<Filter, Filter>): List<EntityType> {
         return if (filter.second == Filter.ASCENDING) {
             when (filter.first) {
-                Filter.COLLECTED -> allItems.sortedBy { it.name }
-                Filter.NOT_COLLECTED -> materials.minus(allItems).sortedBy { it.name }
-                else -> materials.sortedBy { it.name }
+                Filter.KILLED -> allMobs.sortedBy { it.name }
+                Filter.NOT_KILLED -> mobs.minus(allMobs).sortedBy { it.name }
+                else -> mobs.sortedBy { it.name }
             }
         } else {
             when (filter.first) {
-                Filter.COLLECTED -> allItems.sortedBy { it.name }.asReversed()
-                Filter.NOT_COLLECTED -> materials.minus(allItems).sortedBy { it.name }.asReversed()
-                else -> materials.sortedBy { it.name }.asReversed()
+                Filter.KILLED -> allMobs.sortedBy { it.name }.asReversed()
+                Filter.NOT_KILLED -> mobs.minus(allMobs).sortedBy { it.name }.asReversed()
+                else -> mobs.sortedBy { it.name }.asReversed()
             }
         }
     }
 
     private fun skipItem() = itemStack(Material.BEDROCK) {
         meta {
-            name = "§eSkip current Item (${formatMaterial(nextMaterial)})"
+            name = "§eSkip current Mob (${formatMob(nextMob)})"
             addLore {
                 +" "
-                +"§7LMB - Skips §f${formatMaterial(nextMaterial)}"
-                +"§7RMB - Marks §f${formatMaterial(nextMaterial)}§7 as collected"
+                +"§7LMB - Skips §f${formatMob(nextMob)}"
+                +"§7RMB - Marks §f${formatMob(nextMob)}§7 as killed"
             }
         }
     }
 
-    private fun generateAllItemsItem(material: Material) = itemStack(material) {
+    private fun generateAllMobsItem(entity: EntityType) = itemStack(
+        when (entity) {
+            EntityType.SNOWMAN -> Material.SNOW_BLOCK
+            EntityType.IRON_GOLEM -> Material.IRON_BLOCK
+            EntityType.WITHER -> Material.WITHER_SKELETON_SKULL
+            EntityType.ENDER_DRAGON -> Material.DRAGON_HEAD
+            EntityType.MUSHROOM_COW -> Material.MOOSHROOM_SPAWN_EGG
+            else -> Material.valueOf(entity.name + "_SPAWN_EGG")
+        }
+    ) {
         meta {
-            name = "§7${formatMaterial(material)}"
+            name = "§7${formatMob(entity)}"
             addLore {
                 +" "
-                +if (isCollected(material)) "§7[§a+§7] §aCollected" else "§7[§c~§7] §cNot Collected"
+                +if (isKilled(entity)) "§7[§a+§7] §aKilled" else "§7[§c~§7] §cNot Killed"
             }
-            if (isCollected(material)) {
+            if (isKilled(entity)) {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
                 flag(ItemFlag.HIDE_ENCHANTS)
             }
@@ -242,7 +258,7 @@ object AllItems : TeamGoal() {
             name = "§8Filter"
             addLore {
                 +" "
-                +"§7LMB - ".plus(if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.COLLECTED) "§a" else "§c")
+                +"§7LMB - ".plus(if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.KILLED) "§a" else "§c")
                     .plus(filter.first.name)
                 +"§7RMB - ".plus(if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
             }
@@ -254,52 +270,53 @@ object AllItems : TeamGoal() {
             name = "§4Reset"
             addLore {
                 +" "
-                +"§7Reset the progress of All Items"
+                +"§7Reset the progress of All Mobs"
             }
         }
     }
 
-    private fun formatMaterial(material: Material): String {
-        return material.name.lowercase().replace('_', ' ').split(' ').joinToString(" ", transform = { s ->
+    private fun formatMob(entity: EntityType): String {
+        return entity.name.lowercase().replace('_', ' ').split(' ').joinToString(" ", transform = { s ->
             s.replaceFirstChar { it.titlecase(Locale.getDefault()) }
         })
     }
 
-    private fun randomMaterial(): Material {
+    private fun randomMob(): EntityType {
         if (!isWon()) {
-            return materials.filter { !isCollected(it) }.random()
+            return mobs.filter { !isKilled(it) }.random()
         } else {
             error("Goal already finished")
         }
     }
 
-    private fun isWon() = materials.none { !isCollected(it) }
+    private fun isWon() = mobs.none { !isKilled(it) }
 
     private fun collected(message: String, markCollected: Boolean = true) {
         broadcast(message)
         Timer.additionalInfo.clear()
         if (markCollected)
-            allItems = ArrayList(allItems.plus(nextMaterial))
+            allMobs = ArrayList(allMobs.plus(nextMob))
         if (isWon()) {
-            Config.allItemsDataConfig.setSetting("nextMaterial", null)
-            win("You collected all Items!")
+            Config.allMobsDataConfig.setSetting("nextMob", null)
+            win("You killed all Mobs!")
         } else {
-            nextMaterial = randomMaterial()
-            Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
+            nextMob = randomMob()
+            Timer.additionalInfo.add("kill ${formatMob(nextMob)}")
         }
     }
 
-    private fun isCollected(material: Material) = allItems.contains(material)
+    private fun isKilled(entity: EntityType) = allMobs.contains(entity)
 
     @EventHandler
-    fun onCollectMove(event: InventoryClickEvent) {
-        if (event.currentItem?.type == nextMaterial && (event.whoClicked as Player).isPlaying())
-            collected(StckUtilsPlugin.prefix + "§a${event.whoClicked.name} collected ${formatMaterial(nextMaterial)}")
-    }
-
-    @EventHandler
-    fun onCollectPickup(event: PlayerAttemptPickupItemEvent) {
-        if (event.item.itemStack.type == nextMaterial && event.player.isPlaying())
-            collected(StckUtilsPlugin.prefix + "§a${event.player.name} collected ${formatMaterial(nextMaterial)}")
+    fun onEntityDeath(event: EntityDeathEvent) {
+        if (event.entity.type == nextMob &&
+            event.entity.killer != null &&
+            event.entity.killer!!.isPlaying()
+        ) {
+            collected(
+                StckUtilsPlugin.prefix +
+                    "§a${event.entity.killer!!.name} killed ${formatMob(nextMob)}"
+            )
+        }
     }
 }

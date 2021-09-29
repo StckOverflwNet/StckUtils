@@ -14,6 +14,8 @@ object Config {
     lateinit var timerConfig: TimerConfig
     lateinit var timerDataConfig: TimerDataConfig
     lateinit var allItemsDataConfig: AllItemsDataConfig
+    lateinit var allMobsDataConfig: AllMobsDataConfig
+    lateinit var allAdvancementsDataConfig: AllAdvancementsDataConfig
 
     operator fun invoke() {
         reloadConfig()
@@ -29,6 +31,8 @@ object Config {
         timerDataConfig = TimerDataConfig()
         goalConfig = GoalConfig()
         allItemsDataConfig = AllItemsDataConfig()
+        allMobsDataConfig = AllMobsDataConfig()
+        allAdvancementsDataConfig = AllAdvancementsDataConfig()
     }
 
     fun reloadPositions() {

@@ -17,10 +17,11 @@ object GoalManager {
             FindDiamond,
             BakeCake,
             Survive,
-//            AllMobs,
+            AllMobs,
             AllItems,
+            AllAdvancements,
         )
-        // TODO: ALL (mobs, entities, items, achievements, blocks breaken, blocks placen, death messages)
+        // TODO: ALL death messages +  adjustments to AllAdvancements gui
     }
 
     fun registerActiveGoal() {
