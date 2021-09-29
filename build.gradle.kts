@@ -10,7 +10,7 @@ ktlint {
 }
 
 group = "de.stckoverflw"
-version = "1.2.1"
+version = "1.2.1.1"
 
 repositories {
     mavenCentral()
