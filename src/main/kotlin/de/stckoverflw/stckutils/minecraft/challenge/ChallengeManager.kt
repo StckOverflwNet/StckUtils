@@ -35,6 +35,7 @@ object ChallengeManager {
             MobDuplicator,
             MobMagnet,
             InventorySwap,
+            LevelBorder,
         )
     }
 

@@ -16,7 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 object BalanceLife : Challenge() {
 
     private var isFirstRun
-        get() = Config.challengeConfig.getSetting(MobDuplicator.id, "isFirstRun") as Boolean? ?: true
+        get() = (Config.challengeConfig.getSetting(MobDuplicator.id, "isFirstRun") ?: true) as Boolean
         set(value) = Config.challengeConfig.setSetting(MobDuplicator.id, "isFirstRun", value)
 
     override val id: String = "balance-life"

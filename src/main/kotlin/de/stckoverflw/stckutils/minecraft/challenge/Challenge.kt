@@ -52,6 +52,9 @@ abstract class Challenge : Listener {
         KSpigotMainInstance.logger.info("§aPreparing Challenge")
     }
 
+    open fun onToggle() {
+    }
+
     /**
      * Is run every second synchronously with the timer
      */
