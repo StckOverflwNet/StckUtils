@@ -17,6 +17,7 @@ import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
+import net.axay.kspigot.main.KSpigotMainInstance
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
 import java.nio.file.Files
@@ -38,6 +39,7 @@ class StckUtilsPlugin : KSpigot() {
             deleteWorld("world")
             deleteWorld("world_nether")
             deleteWorld("world_the_end")
+            KSpigotMainInstance.saveResource("Data/Positions/positions.yml", true)
             wasReset = true
             Config.resetSettingsConfig.shouldReset = false
         }
