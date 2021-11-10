@@ -31,7 +31,7 @@ import java.lang.reflect.InvocationTargetException
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-object LevelBorder : Challenge() {
+object LevelBorder : Challenge(true) {
 
     private var xpLevel: Int
         get() = (Config.challengeDataConfig.getSetting(id, "xpLevel") ?: 0) as Int

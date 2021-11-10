@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.Listener
 
-abstract class Challenge : Listener {
+abstract class Challenge(val requriesProtocolLib: Boolean = false) : Listener {
 
     /**
      * this is the id of the challenge, it has to be unique

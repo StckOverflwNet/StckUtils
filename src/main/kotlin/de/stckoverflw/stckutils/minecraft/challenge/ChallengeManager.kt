@@ -1,6 +1,5 @@
 package de.stckoverflw.stckutils.minecraft.challenge
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.minecraft.challenge.impl.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
@@ -16,7 +15,7 @@ object ChallengeManager {
             SingleUse,
             GamerChallenge,
             BlockExplode,
-            ChunkSync,
+            // ChunkSync,
             ChunkFlattener,
             NoXP,
             NoBlockBreak,
@@ -36,10 +35,9 @@ object ChallengeManager {
             MobDuplicator,
             MobMagnet,
             InventorySwap,
+            Randomizer,
+            LevelBorder,
         )
-        if (StckUtilsPlugin.isProtocolLib) {
-            challenges.add(LevelBorder)
-        }
     }
 
     fun registerChallengeListeners() {

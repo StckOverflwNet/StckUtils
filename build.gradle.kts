@@ -10,7 +10,7 @@ ktlint {
 }
 
 group = "de.stckoverflw"
-version = "1.2.1.1"
+version = "1.2.1.2"
 
 repositories {
     mavenCentral()
@@ -51,7 +51,7 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "16"
-            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
         }
     }
     withType<JavaCompile> {

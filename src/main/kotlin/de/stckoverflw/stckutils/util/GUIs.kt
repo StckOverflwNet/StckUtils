@@ -183,10 +183,14 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                     if (Timer.running) {
                         player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
                     } else {
-                        challenge.active = !challenge.active
-                        challenge.onToggle()
-                        clickEvent.bukkitEvent.clickedInventory!!
-                            .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge))
+                        if (!(challenge.requriesProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
+                            challenge.active = !challenge.active
+                            challenge.onToggle()
+                            clickEvent.bukkitEvent.clickedInventory!!
+                                .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge))
+                        } else {
+                            player.sendMessage(StckUtilsPlugin.prefix + "§cInstall ProtocolLib to use this Challenge")
+                        }
                     }
                 } else if (clickEvent.bukkitEvent.isRightClick) {
                     val configGUI = challenge.configurationGUI()

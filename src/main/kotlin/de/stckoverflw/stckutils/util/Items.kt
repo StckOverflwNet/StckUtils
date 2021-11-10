@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.util
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
@@ -55,13 +56,18 @@ fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.materia
                 +it
             }
             +" "
-            if (challenge.active) {
-                +"§aActivated§7, Click to deactivate"
+            if (!(challenge.requriesProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
+                if (challenge.active) {
+                    +"§aActivated§7, Click to deactivate"
+                } else {
+                    +"§cDeactivated§7, Click to activate"
+                }
+                if (challenge.configurationGUI() != null) {
+                    +"§7Right Click to open the Configuration for ${challenge.name}"
+                }
             } else {
-                +"§cDeactivated§7, Click to activate"
-            }
-            if (challenge.configurationGUI() != null) {
-                +"§7Right Click to open the Configuration for ${challenge.name}"
+                + "§c§lYou need to install ProtocolLib on this server"
+                + "§c§lto use this Challenge"
             }
         }
     }

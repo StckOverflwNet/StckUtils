@@ -4,11 +4,12 @@ import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
-import net.axay.kspigot.runnables.sync
+import org.bukkit.Bukkit.getServer
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
@@ -32,69 +33,74 @@ object ChunkSync : Challenge() {
 
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
-        blockActions[event.blockPlaced] = arrayListOf()
-        runInLoadedChunks()
+        // blockActions[event.blockPlaced] = arrayListOf()
+        placeBlocks(event.block, getChunks(event.player))
     }
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        blockActions[event.block] = arrayListOf()
-        runInLoadedChunks()
+        // blockActions[event.block] = arrayListOf()
+        placeBlocks(event.block, getChunks(event.player))
     }
 
-    private fun runInLoadedChunks() {
-        onlinePlayers.forEach {
-            around(it.chunk, 3).forEach { chunk ->
-                blockActions.forEach { (block, chunks) ->
-                    if (!chunks.contains(chunk)) {
-                        val location: Location = if (chunk.x != 0 && chunk.z != 0) {
-                            block.location.clone().add(
-                                (block.location.blockX * chunk.x).toDouble(),
-                                0.0,
-                                (block.location.blockZ * chunk.z).toDouble()
-                            )
-                        } else if (chunk.x != 0) {
-                            block.location.clone().set(
-                                (block.location.blockX * chunk.x).toDouble(),
-                                block.location.blockY.toDouble(),
-                                (block.location.blockZ).toDouble()
-                            )
-                        } else if (chunk.z != 0) {
-                            block.location.clone().set(
-                                (block.location.blockX).toDouble(),
-                                block.location.blockY.toDouble(),
-                                (block.location.blockZ * chunk.z).toDouble()
-                            )
-                        } else {
-                            block.location.clone().set(
-                                (block.location.blockX).toDouble(),
-                                block.location.blockY.toDouble(),
-                                (block.location.blockZ).toDouble()
-                            )
+    private fun placeBlocks(block: Block, chunks: List<Chunk>) {
+
+        val newLocations = arrayListOf(
+            Location(
+                block.world,
+                block.location.clone().x + 16,
+                block.location.clone().y,
+                block.location.clone().z,
+            ),
+            Location(
+                block.world,
+                block.location.clone().x - 16,
+                block.location.clone().y,
+                block.location.clone().z,
+            ),
+            Location(
+                block.world,
+                block.location.clone().x,
+                block.location.clone().y,
+                block.location.clone().z + 16,
+            ),
+            Location(
+                block.world,
+                block.location.clone().x,
+                block.location.clone().y,
+                block.location.clone().z - 16,
+            )
+        )
+        val placedChunks = ArrayList<Chunk>()
+        newLocations.forEach {
+            if (it.chunk.isLoaded) {
+                if (it.block != block) {
+                    if (!placedChunks.contains(it.chunk)) {
+                        placedChunks.add(it.chunk)
+                        onlinePlayers.forEach { player ->
+                            player.sendBlockChange(it, block.blockData)
                         }
-                        sync {
-                            location.block.setType(block.type, true)
-                        }
-                        chunks.add(chunk)
                     }
                 }
             }
         }
+        val chunksWithoutPlaced = chunks.filter { chunk -> !placedChunks.contains(chunk) }
+        if (chunksWithoutPlaced.isNotEmpty()) {
+            placeBlocks(block, chunksWithoutPlaced)
+        }
     }
 
-    private fun around(origin: Chunk, radius: Int): Collection<Chunk> {
-        val world = origin.world
-        val length = radius * 2 + 1
-        val chunks: MutableSet<Chunk> = HashSet(length * length)
-        val cX = origin.x
-        val cZ = origin.z
-
-        for (x in -radius..radius) {
-            for (z in -radius..radius) {
-                chunks.add(world.getChunkAt(cX + x, cZ + z))
+    fun getChunks(entity: Player): ArrayList<Chunk> {
+        val chunks = ArrayList<Chunk>()
+        val c: Chunk = entity.world.getChunkAt(entity.location)
+        val renderDistance = getServer().viewDistance
+        for (x in c.x - renderDistance..c.x + renderDistance) {
+            for (z in c.z - renderDistance..c.z + renderDistance) {
+                if (!chunks.contains(entity.world.getChunkAt(x, z))) {
+                    chunks.add(entity.world.getChunkAt(x, z))
+                }
             }
         }
-
         return chunks
     }
 }
