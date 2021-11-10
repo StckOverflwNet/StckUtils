@@ -4,7 +4,7 @@ authors:
   - StckOverflw
   - l4zs
 main: de.stckoverflw.stckutils.StckUtilsPlugin
-version: 1.2.1.1
+version: 1.2.2
 libraries:
   - "net.axay:kspigot:1.17.4"
 
