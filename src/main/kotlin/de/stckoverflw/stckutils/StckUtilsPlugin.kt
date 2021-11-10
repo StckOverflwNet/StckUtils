@@ -40,6 +40,7 @@ class StckUtilsPlugin : KSpigot() {
             deleteWorld("world_nether")
             deleteWorld("world_the_end")
             KSpigotMainInstance.saveResource("Data/Positions/positions.yml", true)
+            KSpigotMainInstance.saveResource("Data/Timer/timer.yml", true)
             wasReset = true
             Config.resetSettingsConfig.shouldReset = false
         }
