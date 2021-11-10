@@ -1,11 +1,13 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.extension.*
+import de.stckoverflw.stckutils.extension.hide
+import de.stckoverflw.stckutils.extension.reveal
+import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Namespaces
 import de.stckoverflw.stckutils.util.get
-import de.stckoverflw.stckutils.util.set
 import de.stckoverflw.stckutils.util.settingsItem
 import net.kyori.adventure.text.Component
 import org.bukkit.GameMode
@@ -14,7 +16,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.inventory.ItemStack
 
 class ConnectionListener : Listener {
 
@@ -41,15 +42,8 @@ class ConnectionListener : Listener {
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         val player = event.player
-        if (!Timer.running && player.isPlaying()) {
+        if (!Timer.running) {
             event.quitMessage(Component.text("§7[§c-§7]§7 ${player.name}"))
-        } else if (Timer.running && player.isPlaying()) {
-            player.persistentDataContainer.set(
-                Namespaces.CHALLENGE_INVENTORY_CONTENTS,
-                toBase64(player.inventory.contents as Array<ItemStack>)
-            )
-            player.inventory.clear()
-            event.quitMessage(null)
         } else {
             player.saveInventory()
             player.inventory.clear()

@@ -6,6 +6,7 @@ import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
@@ -84,24 +85,22 @@ object Timer {
         return if (running) {
             false
         } else {
-            GameChangeManager.registerGameChangeListeners()
-            ChallengeManager.registerChallengeListeners()
-            running = true
-            GameChangeManager.gameChanges.forEach { change ->
-                change.run()
-                change.onTimerToggle()
-            }
-            ChallengeManager.challenges.forEach { challenge ->
-                if (challenge.active) {
-                    challenge.prepareChallenge()
-                }
-                challenge.onTimerToggle()
-            }
-            GoalManager.registerActiveGoal()
             onlinePlayers.forEach {
                 it.inventory.clear()
                 it.setSavedInventory()
             }
+            GameChangeManager.registerGameChangeListeners()
+            ChallengeManager.registerChallengeListeners()
+            running = true
+            GameChangeManager.gameChanges.filter { it.active }.forEach { change ->
+                change.run()
+                change.onTimerToggle()
+            }
+            ChallengeManager.challenges.filter { it.active }.forEach { challenge ->
+                challenge.prepareChallenge()
+                challenge.onTimerToggle()
+            }
+            GoalManager.registerActiveGoal()
             GoalManager.activeGoal?.onTimerToggle()
             true
         }
@@ -111,17 +110,6 @@ object Timer {
         return if (!running) {
             false
         } else {
-            ChallengeManager.unregisterChallengeListeners()
-            GameChangeManager.unregisterGameChangeListeners()
-            GoalManager.unregisterActiveGoal()
-            running = false
-            ChallengeManager.challenges.forEach {
-                it.onTimerToggle()
-            }
-            GameChangeManager.gameChanges.forEach {
-                it.onTimerToggle()
-            }
-            GoalManager.activeGoal?.onTimerToggle()
             onlinePlayers.forEach { player ->
                 player.saveInventory()
                 player.inventory.clear()
@@ -133,6 +121,17 @@ object Timer {
                     player.inventory.setItem(8, settingsItem)
                 }
             }
+            ChallengeManager.unregisterChallengeListeners()
+            GameChangeManager.unregisterGameChangeListeners()
+            GoalManager.unregisterActiveGoal()
+            running = false
+            ChallengeManager.challenges.filter { it.active }.forEach { challenge ->
+                challenge.onTimerToggle()
+            }
+            GameChangeManager.gameChanges.filter { it.active }.forEach { change ->
+                change.onTimerToggle()
+            }
+            GoalManager.activeGoal?.onTimerToggle()
             true
         }
     }

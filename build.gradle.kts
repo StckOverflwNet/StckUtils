@@ -29,13 +29,13 @@ dependencies {
     ) // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.17.4")
+    compileOnly("net.axay", "kspigot", "1.17.4")
 
     // ProtocolLib
     compileOnly("com.comphenix.protocol", "ProtocolLib", "4.7.0")
 
     // Gson dependency
-    implementation("com.google.code.gson", "gson", "2.8.8")
+    compileOnly("com.google.code.gson", "gson", "2.8.8")
 
     // Brigadier dependency
     compileOnly("com.mojang", "brigadier", "1.0.18")

@@ -48,7 +48,6 @@ fun Player.isHidden() = this.persistentDataContainer.get(Namespaces.CHALLENGE_FU
 fun Player.hide() {
     this.persistentDataContainer.set(Namespaces.CHALLENGE_FUNCTION_HIDDEN, 1.toByte())
 
-    println(onlinePlayers.joinToString { player -> player.name })
     onlinePlayers.forEach { player ->
         if (player == this) return@forEach
         if (player.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) == 1.toByte()) {
@@ -63,7 +62,6 @@ fun Player.hide() {
 fun Player.reveal() {
     this.persistentDataContainer.set(Namespaces.CHALLENGE_FUNCTION_HIDDEN, 0.toByte())
 
-    println(onlinePlayers.joinToString { player -> player.name })
     onlinePlayers.forEach { player ->
         if (player == this) return@forEach
         if (player.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) == 1.toByte()) {
@@ -77,8 +75,12 @@ fun Player.reveal() {
 
 fun Player.isPlaying() = !this.isHidden() && this.gameMode == GameMode.SURVIVAL
 
-fun Player.isInArea(location: Location, radius: Double): Boolean =
-    LocationArea(location.add(radius, radius, radius), location.add(-radius, -radius, -radius)).isInArea(this.location, false, 0)
+fun Player.isInArea(location: Location, radius: Double): Boolean {
+    val add = Location(location.world, location.x - radius, 0.0, location.z + radius)
+    val sub = Location(location.world, location.x + radius, 0.0, location.z - radius)
+
+    return LocationArea(add.toBlockLocation(), sub.toBlockLocation()).isInArea(this.location, false, 0)
+}
 
 fun Player.isInArea(location: Location, location2: Location): Boolean =
     LocationArea(location, location2).isInArea(this.location, false, 0)

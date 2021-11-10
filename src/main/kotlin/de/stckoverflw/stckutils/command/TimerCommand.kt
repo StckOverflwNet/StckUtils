@@ -25,7 +25,6 @@ class TimerCommand {
                 }.sorted()
             }
             runs {
-                println(getArgument<String>("action").lowercase())
                 when (getArgument<String>("action").lowercase()) {
                     "resume" -> {
                         Timer.start()
