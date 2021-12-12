@@ -43,18 +43,18 @@ dependencies {
 
 kotlin {
     jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(16))
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "16"
+            jvmTarget = "17"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
         }
     }
     withType<JavaCompile> {
-        options.release.set(16)
+        options.release.set(17)
     }
 }
