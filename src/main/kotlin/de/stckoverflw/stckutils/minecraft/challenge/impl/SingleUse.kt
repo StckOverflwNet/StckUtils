@@ -50,7 +50,7 @@ object SingleUse : Challenge() {
         }
 
         val player = event.player as Player
-        player.inventory.contents.forEach {
+        player.inventory.contents?.forEach {
             if (it != null) {
                 setOneDurability(it)
             }

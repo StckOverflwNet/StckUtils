@@ -6,6 +6,7 @@ import net.axay.kspigot.extensions.geometry.LocationArea
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -17,6 +18,7 @@ fun Player.resetWorlds() {
     onlinePlayers.forEach {
         it.kick(
             Component.join(
+                JoinConfiguration.separator(Component.text("\n")),
                 Component.newline(),
                 Component.text("§7The Worlds are §cresetting"),
                 Component.text("§7Reset started by §9$name"),
@@ -29,9 +31,10 @@ fun Player.resetWorlds() {
 fun Player.setSavedInventory() {
     if (persistentDataContainer.has(Namespaces.CHALLENGE_INVENTORY_CONTENTS)) {
         inventory.clear()
-        inventory.contents =
+        inventory.setContents(
             persistentDataContainer.get(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
-            ?.let { fromBase64(it) } as Array<out ItemStack?>
+                ?.let { fromBase64(it) } as Array<out ItemStack>
+        )
         persistentDataContainer.remove(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
     }
 }

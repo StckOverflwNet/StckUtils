@@ -143,12 +143,12 @@ object InventorySwap : Challenge() {
         }
 
         val inventories: Map<Player, Array<ItemStack?>> =
-            players.zip(players.map { player -> player.inventory.contents }.shuffled()).toMap()
+            players.zip(players.map { player -> player.inventory.contents as Array<ItemStack?> }.shuffled()).toMap()
 
         players.forEach { player ->
             if (!player.inventory.contents.contentEquals(inventories[player])) {
                 player.inventory.clear()
-                player.inventory.contents = inventories[player]!!
+                player.inventory.setContents(inventories[player]!! as Array<out ItemStack>)
                 player.saveInventory()
             }
         }

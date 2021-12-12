@@ -4,9 +4,14 @@ authors:
   - StckOverflw
   - l4zs
 main: de.stckoverflw.stckutils.StckUtilsPlugin
-version: 1.2.2
+version: 1.2.3
 libraries:
-  - "net.axay:kspigot:1.17.4"
+  - "net.axay:kspigot:1.18.0"
+  - "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
+  - "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-RC2"
+  - "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0-RC2"
+  - "com.mojang:brigadier:1.0.18"
+  - "com.google.code.gson:gson:2.8.9"
 
 softdepend:
   - ProtocolLib

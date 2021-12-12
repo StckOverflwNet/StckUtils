@@ -1,8 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+    id("io.papermc.paperweight.userdev") version "1.3.2"
 }
 
 ktlint {
@@ -10,35 +11,32 @@ ktlint {
 }
 
 group = "de.stckoverflw"
-version = "1.2.2"
+version = "1.2.3"
 
 repositories {
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://repo.codemc.io/repository/maven-snapshots/")
-    maven("https://libraries.minecraft.net")
     maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
     // PaperMC Dependency
-    compileOnly(
-        "io.papermc.paper",
-        "paper-api",
-        "1.17.1-R0.1-SNAPSHOT"
-    ) // Only used on compile time because we have a PaperMC Server so we don't need it in the final jar
+    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 
     // KSpigot dependency
-    compileOnly("net.axay", "kspigot", "1.17.4")
+    implementation("net.axay", "kspigot", "1.18.0")
 
     // ProtocolLib
-    compileOnly("com.comphenix.protocol", "ProtocolLib", "4.7.0")
+    implementation("com.comphenix.protocol", "ProtocolLib", "4.7.0")
 
     // Gson dependency
-    compileOnly("com.google.code.gson", "gson", "2.8.8")
+    implementation("com.google.code.gson", "gson", "2.8.9")
 
     // Brigadier dependency
-    compileOnly("com.mojang", "brigadier", "1.0.18")
+    implementation("com.mojang", "brigadier", "1.0.18")
+
+    // Kotlinx.Coroutines dependency
+    api("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.0-RC2")
+    api("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.0-RC2")
 }
 
 kotlin {
@@ -48,6 +46,9 @@ kotlin {
 }
 
 tasks {
+    build {
+        dependsOn(reobfJar)
+    }
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "17"
@@ -55,6 +56,7 @@ tasks {
         }
     }
     withType<JavaCompile> {
+        options.encoding = "UTF-8"
         options.release.set(17)
     }
 }

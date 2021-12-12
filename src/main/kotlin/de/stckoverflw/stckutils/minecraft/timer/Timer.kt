@@ -14,7 +14,7 @@ import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Creature
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 object Timer {
@@ -144,14 +144,14 @@ object Timer {
 
     @OptIn(ExperimentalTime::class)
     fun formatTime(seconds: Long = time): String {
-        val duration = Duration.seconds(seconds)
+        val duration = seconds.seconds
         duration.toComponents(
             action = { days, hours, min, sec, _ ->
                 return (
-                    "$color§l" + (if (days != 0) "${days}d " else "") +
+                    "$color§l" + (if (days != 0L) "${days}d " else "") +
                         (if (hours != 0) "${hours}h " else "") +
                         (if (min != 0) "${min}m " else "") +
-                        if (sec != 0) "$sec" + if (days + hours + min == 0) " second" + if (sec != 1) "s" else "" else "s" else ""
+                        if (sec != 0) "$sec" + if (days + hours + min == 0L) " second" + if (sec != 1) "s" else "" else "s" else ""
                     )
             }
         )
