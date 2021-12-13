@@ -196,7 +196,6 @@ fun Material.isObtainableInSurvival(): Boolean {
         Material.SOUL_WALL_TORCH,
         Material.SPAWNER,
         Material.SPIDER_SPAWN_EGG,
-        Material.SPORE_BLOSSOM,
         Material.SPRUCE_WALL_SIGN,
         Material.SQUID_SPAWN_EGG,
         Material.STRAY_SPAWN_EGG,
