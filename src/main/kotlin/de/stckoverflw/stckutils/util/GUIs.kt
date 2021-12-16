@@ -183,7 +183,7 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                     if (Timer.running) {
                         player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
                     } else {
-                        if (!(challenge.requriesProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
+                        if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
                             challenge.active = !challenge.active
                             challenge.onToggle()
                             clickEvent.bukkitEvent.clickedInventory!!

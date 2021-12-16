@@ -56,7 +56,7 @@ fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.materia
                 +it
             }
             +" "
-            if (!(challenge.requriesProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
+            if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
                 if (challenge.active) {
                     +"§aActivated§7, Click to deactivate"
                 } else {
