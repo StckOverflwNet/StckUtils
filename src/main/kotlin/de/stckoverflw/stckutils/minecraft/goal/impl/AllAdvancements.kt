@@ -39,7 +39,7 @@ object AllAdvancements : TeamGoal() {
             else list.filterNotNull().map { getAdvancement(it as String)!! }
         }
         set(value) = Config.allAdvancementsDataConfig.setSetting("allAdvancements", value.map { it.key.toString() })
-    private val advancements: List<Advancement> = AdvancementIterable.toList()
+    private val advancements: List<Advancement> = AdvancementIterable.toList().filter { it.key.key.split("/")[0] != "recipes" }
     private var nextAdvancement: Advancement
         get() {
             var advancement = Config.allAdvancementsDataConfig.getSetting("nextAdvancement")
@@ -48,8 +48,7 @@ object AllAdvancements : TeamGoal() {
                 Config.allAdvancementsDataConfig.setSetting("nextAdvancement", adv)
                 advancement = adv
             }
-            val r = getAdvancement(advancement as String)!!
-            return r
+            return getAdvancement(advancement as String)!!
         }
         set(value) = Config.allAdvancementsDataConfig.setSetting("nextAdvancement", value.key.toString())
     private var formattedAdvancement = formatAdvancement(nextAdvancement)
@@ -74,9 +73,9 @@ object AllAdvancements : TeamGoal() {
 
     override fun onTimerToggle() {
         if (Timer.running) {
-            if (!isWon() && !Timer.additionalInfo.contains("get $formattedAdvancement")) {
+            if (!isWon() && !Timer.additionalInfo.contains(formattedAdvancement)) {
                 Timer.additionalInfo.clear()
-                Timer.additionalInfo.add("get $formattedAdvancement")
+                Timer.additionalInfo.add(formattedAdvancement)
             }
         }
     }
@@ -200,13 +199,13 @@ object AllAdvancements : TeamGoal() {
         return if (filter.second == Filter.ASCENDING) {
             when (filter.first) {
                 Filter.DONE -> allAdvancements.sortedBy { it.key.toString() }
-                Filter.NOT_DONE -> advancements.minus(allAdvancements).sortedBy { it.key.toString() }
+                Filter.NOT_DONE -> advancements.minus(allAdvancements.toSet()).sortedBy { it.key.toString() }
                 else -> advancements.sortedBy { it.key.toString() }
             }
         } else {
             when (filter.first) {
                 Filter.DONE -> allAdvancements.sortedBy { it.key.toString() }.asReversed()
-                Filter.NOT_DONE -> advancements.minus(allAdvancements).sortedBy { it.key.toString() }.asReversed()
+                Filter.NOT_DONE -> advancements.minus(allAdvancements.toSet()).sortedBy { it.key.toString() }.asReversed()
                 else -> advancements.sortedBy { it.key.toString() }.asReversed()
             }
         }
@@ -226,28 +225,40 @@ object AllAdvancements : TeamGoal() {
         return item
     }
 
-    private fun generateAllAdvancementsItem(advancement: Advancement) = itemStack(
-        Material.WRITABLE_BOOK
-    ) {
-        meta {
-            name = "§7${formatAdvancement(advancement)}"
-            addLore {
-                +" "
-                +"§7Category: §d${formatAdvancementCategory(advancement)}"
-                +" "
-                +if (isDone(advancement)) "§7[§a+§7] §aDone" else "§7[§c~§7] §cNot Done"
+    private fun generateAllAdvancementsItem(advancement: Advancement): ItemStack {
+        val itemStack = itemStack(
+            (advancement.display?.icon()?.type) ?: Material.WRITABLE_BOOK
+        ) {
+            meta {
+                name = "§7${formatAdvancement(advancement)}"
+                addLore {
+                    +" "
+                    +"%description%"
+                    +" "
+                    +"§7Category: §d${formatAdvancementCategory(advancement)}"
+                    +" "
+                    +if (isDone(advancement)) "§7[§a+§7] §aDone" else "§7[§c~§7] §cNot Done"
+                }
+                if (isDone(advancement)) {
+                    addEnchant(Enchantment.ARROW_INFINITE, 1, true)
+                    flag(ItemFlag.HIDE_ENCHANTS)
+                }
+                flag(ItemFlag.HIDE_ATTRIBUTES)
+                flag(ItemFlag.HIDE_DESTROYS)
+                flag(ItemFlag.HIDE_DYE)
+                flag(ItemFlag.HIDE_PLACED_ON)
+                flag(ItemFlag.HIDE_POTION_EFFECTS)
+                flag(ItemFlag.HIDE_UNBREAKABLE)
             }
-            if (isDone(advancement)) {
-                addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-                flag(ItemFlag.HIDE_ENCHANTS)
-            }
-            flag(ItemFlag.HIDE_ATTRIBUTES)
-            flag(ItemFlag.HIDE_DESTROYS)
-            flag(ItemFlag.HIDE_DYE)
-            flag(ItemFlag.HIDE_PLACED_ON)
-            flag(ItemFlag.HIDE_POTION_EFFECTS)
-            flag(ItemFlag.HIDE_UNBREAKABLE)
         }
+
+        val meta = itemStack.itemMeta
+        val lore = meta.lore()
+        lore!![1] = advancement.display!!.description()
+        meta.lore(lore)
+        itemStack.itemMeta = meta
+
+        return itemStack
     }
 
     private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
@@ -285,18 +296,15 @@ object AllAdvancements : TeamGoal() {
             })
     }
 
-    private fun updateNotFound() {
-    }
-
     private fun randomAdvancement(): Advancement {
         if (!isWon()) {
-            return advancements.minus(allAdvancements).random()
+            return advancements.minus(allAdvancements.toSet()).random()
         } else {
             error("Goal already finished")
         }
     }
 
-    private fun isWon() = advancements.minus(allAdvancements).isEmpty()
+    private fun isWon() = advancements.minus(allAdvancements.toSet()).isEmpty()
 
     private fun isDone(advancement: Advancement) = allAdvancements.contains(advancement)
 
@@ -314,7 +322,7 @@ object AllAdvancements : TeamGoal() {
         } else {
             nextAdvancement = randomAdvancement()
             formattedAdvancement = formatAdvancement(nextAdvancement)
-            Timer.additionalInfo.add("get $formattedAdvancement")
+            Timer.additionalInfo.add(formattedAdvancement)
             GlobalScope.launch {
                 onlinePlayers.forEach {
                     if (hasAdvancement(it, nextAdvancement)) {
