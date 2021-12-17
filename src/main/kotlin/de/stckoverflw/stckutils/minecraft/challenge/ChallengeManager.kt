@@ -38,6 +38,7 @@ object ChallengeManager {
             Randomizer,
             LevelBorder,
             IceWalker,
+            Medusa,
         )
     }
 
