@@ -37,6 +37,7 @@ object ChallengeManager {
             InventorySwap,
             Randomizer,
             LevelBorder,
+            IceWalker,
         )
     }
 

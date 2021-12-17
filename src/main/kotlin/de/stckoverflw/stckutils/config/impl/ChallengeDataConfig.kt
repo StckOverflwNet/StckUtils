@@ -43,4 +43,8 @@ class ChallengeDataConfig : AbstractDataConfig("challenges.yml", "Challenges") {
             yaml.getDouble("$path.Pitch").toFloat()
         )
     }
+
+    fun getSettingList(challengeId: String, setting: String): MutableList<*>? {
+        return yaml.getList("$challengeId.$setting")
+    }
 }
