@@ -26,6 +26,7 @@ object NoDeath : Challenge() {
         if (!event.entity.isPlaying()) {
             return
         }
+        event.entity.inventory.clear()
         lose("${event.entity.name} died.")
     }
 }
