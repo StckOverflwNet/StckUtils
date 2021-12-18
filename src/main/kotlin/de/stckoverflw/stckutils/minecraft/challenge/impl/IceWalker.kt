@@ -42,7 +42,7 @@ object IceWalker : Challenge() {
     override val description: List<String> = listOf(
         " ",
         "§7When you walk, a 3x3 ice platform",
-        "will be formed below you.",
+        "§7will be formed below you.",
         "§7You can toggle this ability by sneaking."
     )
     override val usesEvents: Boolean = true

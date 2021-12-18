@@ -39,6 +39,7 @@ object ChallengeManager {
             LevelBorder,
             IceWalker,
             Medusa,
+            DamageSwap,
         )
     }
 
