@@ -10,6 +10,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -21,6 +22,17 @@ object Timer {
 
     private var initialized = false
 
+    var direction: TimerDirection
+        get() = TimerDirection.valueOf((Config.timerConfig.getSetting("direction") ?: TimerDirection.FORWARDS.name) as String)
+        set(value) {
+            Config.timerConfig.setSetting("direction", value.name)
+            if (value == TimerDirection.BACKWARDS) {
+                backwardsStartTime = time
+            }
+        }
+    var joinWhileRunning: AccessLevel
+        get() = AccessLevel.valueOf((Config.timerConfig.getSetting("joinWhileRunning") ?: AccessLevel.OPERATOR.name) as String)
+        set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.name)
     var color: String
         get() {
             var col = Config.timerConfig.getSetting("color")
@@ -31,10 +43,17 @@ object Timer {
             return col as String
         }
         set(value) = Config.timerConfig.setSetting("color", value)
-
     var time: Long
         get() = (Config.timerDataConfig.getSetting("time") ?: 0).toString().toLong()
-        set(value) = Config.timerDataConfig.setSetting("time", value)
+        set(value) {
+            Config.timerDataConfig.setSetting("time", value)
+            if (direction == TimerDirection.BACKWARDS && backwardsStartTime == 0L) {
+                backwardsStartTime = time
+            }
+        }
+    var backwardsStartTime: Long
+        get() = (Config.timerDataConfig.getSetting("startTime") ?: 0).toString().toLong()
+        set(value) = Config.timerDataConfig.setSetting("startTime", value)
     var running = false
     var additionalInfo: ArrayList<String> = arrayListOf()
 
@@ -48,7 +67,20 @@ object Timer {
             period = 20
         ) {
             if (running) {
-                time++
+                when (direction) {
+                    TimerDirection.FORWARDS -> {
+                        time++
+                    }
+                    TimerDirection.BACKWARDS -> {
+                        if (time == 0L) {
+                            sync {
+                                ChallengeManager.challenges.first().lose("Time has run out.")
+                            }
+                        } else {
+                            time--
+                        }
+                    }
+                }
                 ChallengeManager.challenges.forEach { challenge ->
                     if (challenge.active) {
                         challenge.update()
@@ -85,6 +117,11 @@ object Timer {
         return if (running) {
             false
         } else {
+            backwardsStartTime = if (direction == TimerDirection.BACKWARDS && backwardsStartTime == 0L) {
+                time
+            } else {
+                0
+            }
             onlinePlayers.forEach {
                 it.inventory.clear()
                 it.setSavedInventory()
@@ -140,10 +177,17 @@ object Timer {
         time = 0
     }
 
-    override fun toString() = formatTime()
+    override fun toString() = if (direction == TimerDirection.FORWARDS) {
+        formatTime()
+    } else {
+        formatTime(backwardsStartTime)
+    }
 
     @OptIn(ExperimentalTime::class)
-    fun formatTime(seconds: Long = time): String {
+    fun formatTime(
+        seconds: Long = time
+    ): String {
+        println(seconds)
         val duration = seconds.seconds
         duration.toComponents(
             action = { days, hours, min, sec, _ ->

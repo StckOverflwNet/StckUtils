@@ -7,7 +7,9 @@ import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.goal.Goal
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.active
+import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.items.*
 import org.bukkit.Material
@@ -66,8 +68,8 @@ fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.materia
                     +"§7Right Click to open the Configuration for ${challenge.name}"
                 }
             } else {
-                + "§c§lYou need to install ProtocolLib on this server"
-                + "§c§lto use this Challenge"
+                +"§c§lYou need to install ProtocolLib on this server"
+                +"§c§lto use this Challenge"
             }
         }
     }
@@ -124,6 +126,71 @@ fun generateVillageSpawnItem() = itemStack(Material.VILLAGER_SPAWN_EGG) {
                 +"§7Currently §cdeactivated"
                 +" "
                 +"§7Click to §aactivate"
+            }
+        }
+    }
+}
+
+fun generateStartStopTimerItem() = if (Timer.running) {
+    itemStack(Material.REDSTONE) {
+        meta {
+            name = "§6Stop the Timer"
+            addLore {
+                +" "
+                +"§7Click to Stop the Timer"
+            }
+        }
+    }
+} else {
+    itemStack(Material.EMERALD) {
+        meta {
+            name = "§aStart the Timer"
+            addLore {
+                +" "
+                +"§7Click to Start the Timer"
+            }
+        }
+    }
+}
+
+fun generateJoinRunningItem() = itemStack(Material.ENCHANTED_GOLDEN_APPLE) {
+    meta {
+        name = "§aJoining while the Timer is running"
+
+        setLore {
+            +" "
+            when (Timer.joinWhileRunning) {
+                AccessLevel.OPERATOR -> {
+                    +"§7Currently only §4Operators §7can join"
+                }
+                AccessLevel.HIDDEN -> {
+                    +"§7Currently only §bhidden players §7can join"
+                }
+                AccessLevel.EVERYONE -> {
+                    +"§7Currently §aeveryone §7can join"
+                }
+                AccessLevel.NONE -> {
+                    +"§7Currently §cno one §7can join"
+                }
+            }
+            +"§7while the Timer is running."
+        }
+    }
+}
+
+fun generateTimerDirectionItem() = itemStack(Material.REPEATER) {
+    meta {
+        name = "§aChange the direction of the Timer"
+
+        setLore {
+            +" "
+            when (Timer.direction) {
+                TimerDirection.FORWARDS -> {
+                    +"§7The Timer is currently running §aforwards§7."
+                }
+                TimerDirection.BACKWARDS -> {
+                    +"§7The Timer is currently running §dbackwards§7."
+                }
             }
         }
     }

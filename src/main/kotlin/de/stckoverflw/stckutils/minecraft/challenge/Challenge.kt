@@ -76,6 +76,7 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7You §cfailed §7the Challenge!"))
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
         Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time wasted: $Timer"))
+        Timer.backwardsStartTime = 0
     }
 }
 

@@ -13,7 +13,9 @@ import de.stckoverflw.stckutils.minecraft.goal.Battle
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.goal.active
+import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.addLore
@@ -406,46 +408,27 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
         // go back Item
         pageChanger(Slots.RowFiveSlotFive, goBackItem, 0, null, null)
 
-        // If the Timer is not running display an Item for Starting the Timer
-        if (!Timer.running) {
-            button(
-                Slots.RowFourSlotThree,
-                itemStack(Material.EMERALD) {
-                    meta {
-                        name = "§aStart the Timer"
-                        addLore {
-                            +" "
-                            +"§7Click to Start the Timer"
-                        }
-                    }
-                }
-            ) {
-                Timer.start()
-                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
-                it.player.closeInventory()
-            }
-            // If Timer is Running display Item for stopping the Timer
-        } else {
-            button(
-                Slots.RowFourSlotThree,
-                itemStack(Material.REDSTONE) {
-                    meta {
-                        name = "§6Stop the Timer"
-                        addLore {
-                            +" "
-                            +"§7Click to Stop the Timer"
-                        }
-                    }
-                }
-            ) {
+        // Item for starting/stopping the Timer
+        button(
+            Slots.RowFourSlotThree,
+            generateStartStopTimerItem()
+        ) {
+            if (Timer.running) {
                 Timer.stop()
                 Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §6stopped"))
-                it.player.closeInventory()
+            } else {
+                Timer.start()
+                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
             }
+            it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateStartStopTimerItem())
+            it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem())
         }
 
         // Item for changing the Time
-        button(Slots.RowThreeSlotFive, generateTimerItem()) {
+        button(
+            Slots.RowFourSlotFive,
+            generateTimerItem()
+        ) {
             it.bukkitEvent.isCancelled = true
             if (it.bukkitEvent.isLeftClick) {
                 Timer.time += 60
@@ -455,6 +438,28 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
                 }
             }
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateTimerItem())
+        }
+
+        // Item for toggling the only OP join when Timer is running
+        button(
+            Slots.RowTwoSlotFive,
+            generateJoinRunningItem()
+        ) {
+            Timer.joinWhileRunning = when (Timer.joinWhileRunning) {
+                AccessLevel.OPERATOR -> {
+                    AccessLevel.HIDDEN
+                }
+                AccessLevel.HIDDEN -> {
+                    AccessLevel.EVERYONE
+                }
+                AccessLevel.EVERYONE -> {
+                    AccessLevel.NONE
+                }
+                AccessLevel.NONE -> {
+                    AccessLevel.OPERATOR
+                }
+            }
+            it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateJoinRunningItem())
         }
 
         // Item for resetting the Timer
@@ -475,12 +480,12 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             }
             Timer.reset()
             Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §creset"))
-            it.player.closeInventory()
+            it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem())
         }
 
         // Item for changing to the Timer color page
         pageChanger(
-            Slots.RowThreeSlotSeven,
+            Slots.RowFourSlotSeven,
             itemStack(Material.ORANGE_DYE) {
                 meta {
                     name = "§aChange the Color"
@@ -494,6 +499,22 @@ fun settingsGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE
             null,
             null
         )
+
+        // Item for changing the Timer direction
+        button(
+            Slots.RowTwoSlotSeven,
+            generateTimerDirectionItem()
+        ) {
+            Timer.direction = when (Timer.direction) {
+                TimerDirection.FORWARDS -> {
+                    TimerDirection.BACKWARDS
+                }
+                TimerDirection.BACKWARDS -> {
+                    TimerDirection.FORWARDS
+                }
+            }
+            it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateTimerDirectionItem())
+        }
     }
 
     // Settings Page for the Timer color

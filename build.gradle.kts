@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.6.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-    id("io.papermc.paperweight.userdev") version "1.3.2"
+    id("io.papermc.paperweight.userdev") version "1.3.4-SNAPSHOT"
 }
 
 ktlint {

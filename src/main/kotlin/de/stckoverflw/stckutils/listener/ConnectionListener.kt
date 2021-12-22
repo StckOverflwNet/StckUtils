@@ -5,6 +5,7 @@ import de.stckoverflw.stckutils.extension.reveal
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Namespaces
 import de.stckoverflw.stckutils.util.get
@@ -58,15 +59,50 @@ class ConnectionListener : Listener {
     fun onLogin(event: PlayerLoginEvent) {
         val player = event.player
         if (Timer.running) {
-            if (player.isOp || player.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) == 1.toByte()) {
-                player.gameMode = GameMode.SPECTATOR
-                player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
-            } else {
-                event.disallow(
-                    PlayerLoginEvent.Result.KICK_OTHER,
-                    Component.text("§cThe Timer is currently running, you can't join at the moment.")
-                )
+            when (Timer.joinWhileRunning) {
+                AccessLevel.OPERATOR -> {
+                    if (!player.isOp) {
+                        event.disallow(
+                            PlayerLoginEvent.Result.KICK_OTHER,
+                            Component.text(
+                                """§cThe Timer is currently running, you can't join at the moment.
+                                    |Ask an Operator to change the setting if you believe that this isn't intended.
+                            """.trimMargin()
+                            )
+                        )
+                        return
+                    }
+                }
+                AccessLevel.HIDDEN -> {
+                    if (player.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) != 1.toByte()) {
+                        event.disallow(
+                            PlayerLoginEvent.Result.KICK_OTHER,
+                            Component.text(
+                                """§cThe Timer is currently running, you can't join at the moment.
+                                    |Ask an Operator to change the setting if you believe that this isn't intended.
+                            """.trimMargin()
+                            )
+                        )
+                    }
+                    return
+                }
+                AccessLevel.EVERYONE -> {
+                    // allow join
+                }
+                AccessLevel.NONE -> {
+                    event.disallow(
+                        PlayerLoginEvent.Result.KICK_OTHER,
+                        Component.text(
+                            """§cThe Timer is currently running, you can't join at the moment.
+                                    |Ask an Operator to change the setting if you believe that this isn't intended.
+                            """.trimMargin()
+                        )
+                    )
+                    return
+                }
             }
+            player.gameMode = GameMode.SPECTATOR
+            player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
         }
     }
 }
