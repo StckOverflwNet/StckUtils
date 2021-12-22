@@ -38,7 +38,7 @@ object IceWalker : Challenge() {
 
     override val id: String = "ice-walker"
     override val name: String = "§bIceWalker"
-    override val material: Material = Material.ICE
+    override val material: Material = fillMaterial
     override val description: List<String> = listOf(
         " ",
         "§7When you walk, a 3x3 ice platform",

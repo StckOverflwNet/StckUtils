@@ -21,7 +21,7 @@ object GoalManager {
             AllItems,
             AllAdvancements,
         )
-        // TODO: ALL death messages +  adjustments to AllAdvancements gui
+        goals.sortBy { it.id }
     }
 
     fun registerActiveGoal() {

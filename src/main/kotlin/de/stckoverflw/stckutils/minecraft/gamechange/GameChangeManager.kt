@@ -20,6 +20,7 @@ object GameChangeManager {
             KeepInventory,
             DamageMultiplier,
         )
+        gameChanges.sortBy { it.id }
     }
 
     fun registerGameChangeListeners() {

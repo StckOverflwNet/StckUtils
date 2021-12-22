@@ -31,6 +31,7 @@ fun Player.resetWorlds() {
 fun Player.setSavedInventory() {
     if (persistentDataContainer.has(Namespaces.CHALLENGE_INVENTORY_CONTENTS)) {
         inventory.clear()
+        @Suppress("UNCHECKED_CAST")
         inventory.setContents(
             persistentDataContainer.get(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
                 ?.let { fromBase64(it) } as Array<out ItemStack>
@@ -40,6 +41,7 @@ fun Player.setSavedInventory() {
 }
 
 fun Player.saveInventory() {
+    @Suppress("UNCHECKED_CAST")
     persistentDataContainer.set(
         Namespaces.CHALLENGE_INVENTORY_CONTENTS,
         toBase64(inventory.contents as Array<ItemStack>)

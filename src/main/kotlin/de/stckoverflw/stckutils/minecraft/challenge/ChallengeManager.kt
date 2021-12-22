@@ -40,7 +40,9 @@ object ChallengeManager {
             IceWalker,
             Medusa,
             DamageSwap,
+            DamageFreeze,
         )
+        challenges.sortBy { it.id }
     }
 
     fun registerChallengeListeners() {
