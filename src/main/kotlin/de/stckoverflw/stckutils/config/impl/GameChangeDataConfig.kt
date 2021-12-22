@@ -12,4 +12,8 @@ class GameChangeDataConfig : AbstractDataConfig("gamechanges.yml", "GameChanges"
     fun getSetting(gameChangeId: String, setting: String): Any? {
         return yaml.get("$gameChangeId.$setting")
     }
+
+    fun getSettingList(gameChangeId: String, setting: String): MutableList<*>? {
+        return yaml.getList("$gameChangeId.$setting")
+    }
 }

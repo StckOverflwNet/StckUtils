@@ -1,8 +1,11 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
-import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.*
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DamageMultiplier
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DeathCounter
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.MaxHealth
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.AllowPvP
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.Difficulty
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.KeepInventory
+import de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule.SpawnWorld
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
@@ -19,6 +22,7 @@ object GameChangeManager {
             Difficulty,
             KeepInventory,
             DamageMultiplier,
+            SpawnWorld,
         )
         gameChanges.sortBy { it.id }
     }

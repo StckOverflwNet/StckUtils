@@ -29,7 +29,7 @@ sealed class GameChange : Listener {
     abstract fun click(event: GUIClickEvent<ForInventoryFiveByNine>)
 
     /**
-     * This method is run everytime someone joins the server and when the gamechange gets updated
+     * This method is run everytime someone joins or quits the server and when the timer starts
      */
     abstract fun run()
 
