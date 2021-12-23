@@ -148,6 +148,7 @@ object InventorySwap : Challenge() {
         players.forEach { player ->
             if (!player.inventory.contents.contentEquals(inventories[player])) {
                 player.inventory.clear()
+                @Suppress("UNCHECKED_CAST")
                 player.inventory.setContents(inventories[player]!! as Array<out ItemStack>)
                 player.saveInventory()
             }
