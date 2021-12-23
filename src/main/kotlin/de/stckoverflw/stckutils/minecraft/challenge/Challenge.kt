@@ -16,7 +16,7 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
 
     /**
      * this is the id of the challenge, it has to be unique
-     * it is used to get the information about the challenge from the challenges.json
+     * it is used to get the information about the challenge from the (data) configs
      */
     abstract val id: String
 
@@ -52,9 +52,15 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
         KSpigotMainInstance.logger.info("§aPreparing Challenge")
     }
 
+    /**
+     * Is run when the Timer is toggled (start/stop, not reset)
+     */
     open fun onTimerToggle() {
     }
 
+    /**
+     * Is run when the Item in the settings gui is clicked and the state is changed
+     */
     open fun onToggle() {
     }
 

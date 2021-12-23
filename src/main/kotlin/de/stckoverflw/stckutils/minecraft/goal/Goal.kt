@@ -33,9 +33,15 @@ sealed class Goal : Listener {
      */
     abstract val material: Material
 
+    /**
+     * Is run when the Timer is toggled (start/stop, not reset)
+     */
     open fun onTimerToggle() {
     }
 
+    /**
+     * Is run when the Item in the settings gui is clicked and the state is changed
+     */
     open fun onToggle() {
     }
 }

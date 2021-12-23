@@ -33,6 +33,9 @@ sealed class GameChange : Listener {
      */
     abstract fun run()
 
+    /**
+     * Is run when the Timer is toggled (start/stop, not reset)
+     */
     open fun onTimerToggle() {
     }
 }
