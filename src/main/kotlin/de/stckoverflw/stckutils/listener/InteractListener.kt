@@ -1,5 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsGUI
 import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.gui.openGUI
@@ -14,6 +16,9 @@ class InteractListener : Listener {
     fun onInteract(event: PlayerInteractEvent) {
         if (event.action == Action.RIGHT_CLICK_AIR || event.action == Action.RIGHT_CLICK_BLOCK) {
             if (event.player.inventory.itemInMainHand.isSimilar(settingsItem)) {
+                if (!event.player.hasPermission(Permissions.SETTINGS_GUI)) {
+                    return event.player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")
+                }
                 event.player.openGUI(settingsGUI())
             }
         }

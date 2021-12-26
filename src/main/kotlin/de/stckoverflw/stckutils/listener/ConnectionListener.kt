@@ -8,6 +8,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Namespaces
+import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.get
 import de.stckoverflw.stckutils.util.settingsItem
 import net.kyori.adventure.text.Component
@@ -28,7 +29,7 @@ class ConnectionListener : Listener {
         player.inventory.clear()
         if (!Timer.running) {
             event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
-            if (player.hasPermission("stckutils.feature.settings")) {
+            if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
                 player.inventory.setItem(8, settingsItem)
             }
         } else {

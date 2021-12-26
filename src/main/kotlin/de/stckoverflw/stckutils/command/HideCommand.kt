@@ -5,6 +5,7 @@ import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.extension.hide
 import de.stckoverflw.stckutils.extension.isHidden
 import de.stckoverflw.stckutils.extension.reveal
+import de.stckoverflw.stckutils.util.Permissions
 import net.axay.kspigot.commands.*
 import net.axay.kspigot.extensions.onlinePlayers
 import org.bukkit.Bukkit
@@ -13,7 +14,7 @@ class HideCommand {
 
     fun register() =
         command("hide", true) {
-            requiresPermission("stckutils.command.hide")
+            requiresPermission(Permissions.HIDE_COMMAND)
             argument("player", StringArgumentType.string()) {
                 suggestListSuspending { suggest ->
                     onlinePlayers.map { it.name }.filter {
@@ -28,6 +29,14 @@ class HideCommand {
                 runs runs@{
                     val target = Bukkit.getPlayer(getArgument<String>("player"))
                         ?: return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cno Player with that name found.")
+                    val perm = if (player == target) {
+                        Permissions.HIDE_SELF
+                    } else {
+                        Permissions.HIDE_OTHER
+                    }
+                    if (!player.hasPermission(perm)) {
+                        return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: $perm")
+                    }
                     if (target.isHidden()) {
                         target.reveal()
                         target.sendMessage(StckUtilsPlugin.prefix + "§ayou were revealed" + if (player != target) " by ${player.name}" else "")

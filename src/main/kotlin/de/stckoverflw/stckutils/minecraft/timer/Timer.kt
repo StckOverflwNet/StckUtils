@@ -8,6 +8,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
+import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.sync
@@ -154,7 +155,7 @@ object Timer {
                     if (it is Creature)
                         it.target = null
                 }
-                if (player.hasPermission("stckutils.feature.settings")) {
+                if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
                     player.inventory.setItem(8, settingsItem)
                 }
             }

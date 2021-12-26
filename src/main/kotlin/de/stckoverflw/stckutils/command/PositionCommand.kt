@@ -4,12 +4,14 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.config.data.PositionData
+import de.stckoverflw.stckutils.util.Permissions
 import net.axay.kspigot.commands.*
 import net.axay.kspigot.extensions.broadcast
 
 class PositionCommand {
 
     fun register() = command("position", true) {
+        requiresPermission(Permissions.POSITION_COMMAND)
         argument("name", StringArgumentType.string()) {
             suggestListSuspending { suggest ->
                 Config.positionDataConfig.positions.map { it.name }.filter {
@@ -20,6 +22,9 @@ class PositionCommand {
             }
             runs {
                 if (!Config.positionDataConfig.positions.any { it.name == getArgument<String>("name").lowercase() }) {
+                    if (!player.hasPermission(Permissions.POSITION_CREATE)) {
+                        return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.POSITION_CREATE}")
+                    }
                     val location = player.location
                     Config.positionDataConfig.addPosition(
                         PositionData(
@@ -30,6 +35,9 @@ class PositionCommand {
                     )
                     broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${getArgument<String>("name").lowercase()} §7at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
                 } else {
+                    if (!player.hasPermission(Permissions.POSITION_SHOW)) {
+                        return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.POSITION_SHOW}")
+                    }
                     val position = Config.positionDataConfig.positions.find {
                         it.name == getArgument<String>("name")
                     }
