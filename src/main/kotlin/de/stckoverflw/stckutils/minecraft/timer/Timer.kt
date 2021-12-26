@@ -154,7 +154,7 @@ object Timer {
                     if (it is Creature)
                         it.target = null
                 }
-                if (player.isOp) {
+                if (player.hasPermission("stckutils.feature.settings")) {
                     player.inventory.setItem(8, settingsItem)
                 }
             }

@@ -21,6 +21,8 @@ Have a look [here](guide/Features.md)
 4. Place the `stckutils-x.x.x.jar` in the plugins Folder of the server.
 5. Restart the server (please don't reload, genereally reloading is a bad thing and you should always choose a clean
    restart over a messy reload)
+6. Give yourself op by sending `op <your-minecraft-name>` in the console (If you use a permissions plugin have a look
+   [here](guide/Features.md#permissions) for the permissions)
 
 ### For Developers
 

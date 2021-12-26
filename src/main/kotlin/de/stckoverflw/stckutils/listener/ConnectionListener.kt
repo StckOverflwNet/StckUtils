@@ -28,7 +28,7 @@ class ConnectionListener : Listener {
         player.inventory.clear()
         if (!Timer.running) {
             event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
-            if (player.isOp) {
+            if (player.hasPermission("stckutils.feature.settings")) {
                 player.inventory.setItem(8, settingsItem)
             }
         } else {
