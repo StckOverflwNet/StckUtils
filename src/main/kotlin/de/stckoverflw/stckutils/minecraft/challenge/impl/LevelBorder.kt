@@ -284,8 +284,6 @@ object LevelBorder : Challenge(true) {
         } else {
             (325 / 18 + sqrt(1.0 * 2 / 9 * (event.droppedExp - 54215 / 72))).toInt()
         }
-        println(event.droppedExp)
-        println(xpLevel)
         event.newLevel = xpLevel
         event.newExp = 0
         event.droppedExp = 0

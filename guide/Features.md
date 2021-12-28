@@ -4,7 +4,7 @@ StckUtils is a challenge plugin inspired by DerBanko's BUtils. It works in a sim
 StckUtils has a Timer, Challenges, GameChanges and Goals.
 
 If you have ideas for new features or ideas on how to improve something, you can reach us by creating an issue or
-contacting us on Discord
+contacting us on Discord ([StckOverflw](https://discordapp.com/users/816989010836717599), [l4zs](https://discordapp.com/users/275995368733278218))
 
 - [General](#general)
 - [Timer](#timer)
@@ -18,14 +18,14 @@ contacting us on Discord
 
 If you are unable to find some features, please check if you gave yourself the required [permissions](#permissions) for
 the specific feature. If you're still unable to find it, you can reach us by creating an issue or contacting us on
-Discord
+Discord ([StckOverflw](https://discordapp.com/users/816989010836717599), [l4zs](https://discordapp.com/users/275995368733278218))
 
 <br>
 
 Everything is configurable through a gui you can open with
 `/settings` or by right-clicking with the nether star you'll have in your inventory when the Timer is paused.
 
-It looks like this:
+The settings gui looks like this:
 
 ![Settings GUI](img/features/settings-gui.png)
 
@@ -55,7 +55,7 @@ You can also use the Timer command to start, stop and reset the Timer easily (`/
 
 Challenges make it easier or harder to play the game and reach the goal.
 
-The Challege gui looks like this:
+The Challenge gui looks like this:
 
 ![img.png](img/features/challenge-gui.png)
 
@@ -155,12 +155,27 @@ TeamGoal (coop, all win when reached) or a Battle (pvp, first to reach wins).
 
 `/allx` - no permission
 
-`/hide` - stckutils.command.hide
+---
 
-`/position` - no permission
+`/hide` - stckutils.command.hide
+- Hide yourself - stckutils.function.hide.self
+- Hide other Players - stckutils.function.hide.other
+
+---
+
+`/position` - stckutils.command.position
+- Create a position - stckutils.function.position.create
+- Show an already created position: stckutils.function.position.show
+
+---
 
 `/settings` - stckutils.command.settings
+- Being able to open the settings gui - stckutils.function.settings.gui
+- Get the Settings Item while the Timer is paused - stckutils.function.settings.item
+
+---
 
 `/timer` - stckutils.command.timer
-
-Settings item while Timer is paused - stckutils.feature.settings
+- Reset the Timer - stckutils.function.timer.reset
+- Start the Timer - stckutils.function.timer.start
+- Stop the Timer - stckutils.function.timer.stop

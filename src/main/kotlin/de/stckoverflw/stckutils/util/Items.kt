@@ -1,7 +1,10 @@
 package de.stckoverflw.stckutils.util
 
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.hidden
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.goal.Goal
@@ -13,6 +16,13 @@ import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.items.*
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
+import java.util.*
 
 /*
  * GUI Items
@@ -28,6 +38,23 @@ val placeHolderItemWhite = itemStack(Material.WHITE_STAINED_GLASS_PANE) {
         name = "§a "
     }
 }
+
+const val scrollRightb64 =
+    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19"
+const val scrollLeftb64 =
+    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ=="
+const val scrollUpb64 =
+    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzA0MGZlODM2YTZjMmZiZDJjN2E5YzhlYzZiZTUxNzRmZGRmMWFjMjBmNTVlMzY2MTU2ZmE1ZjcxMmUxMCJ9fX0="
+const val scrollDownb64 =
+    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzQzNzM0NmQ4YmRhNzhkNTI1ZDE5ZjU0MGE5NWU0ZTc5ZGFlZGE3OTVjYmM1YTEzMjU2MjM2MzEyY2YifX19"
+
+val scrollRightItem = getTextureHead(scrollRightb64, "§fScroll Right")
+
+val scrollLeftItem = getTextureHead(scrollLeftb64, "§fScroll Left")
+
+val scrollUpItem = getTextureHead(scrollUpb64, "§fScroll Up")
+
+val scrollDownItem = getTextureHead(scrollDownb64, "§fScroll Down")
 
 val goBackItem = itemStack(Material.KNOWLEDGE_BOOK) {
     meta {
@@ -153,31 +180,6 @@ fun generateStartStopTimerItem() = if (Timer.running) {
     }
 }
 
-fun generateJoinRunningItem() = itemStack(Material.ENCHANTED_GOLDEN_APPLE) {
-    meta {
-        name = "§aJoining while the Timer is running"
-
-        setLore {
-            +" "
-            when (Timer.joinWhileRunning) {
-                AccessLevel.OPERATOR -> {
-                    +"§7Currently only §4Operators §7can join"
-                }
-                AccessLevel.HIDDEN -> {
-                    +"§7Currently only §bhidden players §7can join"
-                }
-                AccessLevel.EVERYONE -> {
-                    +"§7Currently §aeveryone §7can join"
-                }
-                AccessLevel.NONE -> {
-                    +"§7Currently §cno one §7can join"
-                }
-            }
-            +"§7while the Timer is running."
-        }
-    }
-}
-
 fun generateTimerDirectionItem() = itemStack(Material.REPEATER) {
     meta {
         name = "§aChange the direction of the Timer"
@@ -194,4 +196,103 @@ fun generateTimerDirectionItem() = itemStack(Material.REPEATER) {
             }
         }
     }
+}
+
+fun generateItemForJoinWhileRunning(accessLevel: AccessLevel): ItemStack {
+    val item = itemStack(
+        if (Timer.joinWhileRunning.contains(accessLevel)) {
+            Material.GREEN_WOOL
+        } else {
+            Material.RED_WOOL
+        }
+    ) {
+        meta {
+            name = accessLevel.name.replace("_", " ").replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+
+            setLore {
+                when (accessLevel) {
+                    AccessLevel.OPERATOR -> {
+                        +"§4Operators §7can join"
+                    }
+                    AccessLevel.HIDDEN -> {
+                        +"§bHidden players §7can join"
+                    }
+                    AccessLevel.EVERYONE -> {
+                        +"§aEveryone §7can join"
+                    }
+                    AccessLevel.NONE -> {
+                        +"§cNo one §7can join"
+                    }
+                }
+                +"§7while the Timer is running."
+                +"§7Click to ${if (Timer.joinWhileRunning.contains(accessLevel)) "§cdeactivate" else "§aactivate"}"
+            }
+        }
+    }
+    return item
+}
+
+fun generateItemForHide(player: Player): ItemStack {
+    val head = getPlayerHead(player)
+    val meta = head.itemMeta
+    meta.setLore {
+        +" "
+        if (player.hidden) {
+            +"§7Currently ${player.name} is §ahidden"
+            +"§7Click to §areveal ${player.name}"
+        } else {
+            +"§7Currently ${player.name} is §arevealed"
+            +"§7Click to §ahide ${player.name}"
+        }
+    }
+    if (player.hidden) {
+        meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+    }
+    head.itemMeta = meta
+    return head
+}
+
+fun getPlayerHead(player: OfflinePlayer): ItemStack {
+    val head = itemStack(Material.PLAYER_HEAD) {
+        meta {
+            name = player.name
+        }
+    }
+    val meta = head.itemMeta
+    (meta as SkullMeta).owningPlayer = player
+    head.itemMeta = meta
+    return head
+}
+
+fun getTextureHead(b64: String, name: String): ItemStack {
+    val head = itemStack(Material.PLAYER_HEAD) {
+        meta {
+            this.name = name
+        }
+    }
+    val meta = head.itemMeta
+    try {
+        val profileField = meta.javaClass.getDeclaredField("profile")
+        profileField.isAccessible = true
+        profileField.set(meta, textureProfile(b64))
+    } catch (exception: NoSuchFieldException) {
+        exception.printStackTrace()
+    } catch (exception: IllegalArgumentException) {
+        exception.printStackTrace()
+    } catch (exception: IllegalAccessException) {
+        exception.printStackTrace()
+    }
+    head.itemMeta = meta
+    return head
+}
+
+private fun textureProfile(b64: String): GameProfile {
+    val id = UUID(
+        b64.substring(b64.length - 20).hashCode().toLong(),
+        b64.substring(b64.length - 10).hashCode().toLong()
+    )
+    val profile = GameProfile(id, "Player")
+    profile.properties.put("textures", Property("textures", b64))
+    return profile
 }

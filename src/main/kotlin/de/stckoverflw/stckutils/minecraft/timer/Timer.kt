@@ -31,9 +31,9 @@ object Timer {
                 backwardsStartTime = time
             }
         }
-    var joinWhileRunning: AccessLevel
-        get() = AccessLevel.valueOf((Config.timerConfig.getSetting("joinWhileRunning") ?: AccessLevel.OPERATOR.name) as String)
-        set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.name)
+    var joinWhileRunning: List<AccessLevel>
+        get() = (Config.timerConfig.getSettingList("joinWhileRunning") ?: listOf(AccessLevel.OPERATOR.name)).map { AccessLevel.valueOf(it as String) }
+        set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.map { it.name })
     var color: String
         get() {
             var col = Config.timerConfig.getSetting("color")
@@ -188,7 +188,6 @@ object Timer {
     fun formatTime(
         seconds: Long = time
     ): String {
-        println(seconds)
         val duration = seconds.seconds
         duration.toComponents(
             action = { days, hours, min, sec, _ ->

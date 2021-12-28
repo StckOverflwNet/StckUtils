@@ -2,12 +2,15 @@ package de.stckoverflw.stckutils.command
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.extension.hidden
 import de.stckoverflw.stckutils.extension.hide
-import de.stckoverflw.stckutils.extension.isHidden
 import de.stckoverflw.stckutils.extension.reveal
+import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.Permissions
+import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.commands.*
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.gui.openGUI
 import org.bukkit.Bukkit
 
 class HideCommand {
@@ -37,7 +40,7 @@ class HideCommand {
                     if (!player.hasPermission(perm)) {
                         return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: $perm")
                     }
-                    if (target.isHidden()) {
+                    if (target.hidden) {
                         target.reveal()
                         target.sendMessage(StckUtilsPlugin.prefix + "§ayou were revealed" + if (player != target) " by ${player.name}" else "")
                         player.sendMessage(StckUtilsPlugin.prefix + "§arevealed ${target.name}")
@@ -47,6 +50,9 @@ class HideCommand {
                         player.sendMessage(StckUtilsPlugin.prefix + "§ahid ${target.name}")
                     }
                 }
+            }
+            runs {
+                player.openGUI(settingsGUI(), GUIPage.hidePageNumber)
             }
         }
 }

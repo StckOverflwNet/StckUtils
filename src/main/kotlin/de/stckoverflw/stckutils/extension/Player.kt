@@ -48,14 +48,16 @@ fun Player.saveInventory() {
     )
 }
 
-fun Player.isHidden() = this.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) == 1.toByte()
+var Player.hidden: Boolean
+    get() = (Config.hideConfig.getSetting(this.uniqueId.toString()) ?: false) as Boolean
+    set(value) = Config.hideConfig.setSetting(this.uniqueId.toString(), value)
 
 fun Player.hide() {
-    this.persistentDataContainer.set(Namespaces.CHALLENGE_FUNCTION_HIDDEN, 1.toByte())
+    this.hidden = true
 
     onlinePlayers.forEach { player ->
         if (player == this) return@forEach
-        if (player.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) == 1.toByte()) {
+        if (player.hidden) {
             player.showPlayer(KSpigotMainInstance, this)
         } else {
             player.hidePlayer(KSpigotMainInstance, this)
@@ -65,11 +67,11 @@ fun Player.hide() {
 }
 
 fun Player.reveal() {
-    this.persistentDataContainer.set(Namespaces.CHALLENGE_FUNCTION_HIDDEN, 0.toByte())
+    this.hidden = false
 
     onlinePlayers.forEach { player ->
         if (player == this) return@forEach
-        if (player.persistentDataContainer.get(Namespaces.CHALLENGE_FUNCTION_HIDDEN) == 1.toByte()) {
+        if (player.hidden) {
             this.hidePlayer(KSpigotMainInstance, player)
         } else {
             this.showPlayer(KSpigotMainInstance, player)
@@ -78,7 +80,7 @@ fun Player.reveal() {
     }
 }
 
-fun Player.isPlaying() = !this.isHidden() && this.gameMode == GameMode.SURVIVAL
+fun Player.isPlaying() = !this.hidden && this.gameMode == GameMode.SURVIVAL
 
 fun Player.isInArea(location: Location, radius: Double): Boolean {
     val add = Location(location.world, location.x - radius, 0.0, location.z + radius)

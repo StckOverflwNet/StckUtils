@@ -10,6 +10,7 @@ object Config {
     lateinit var gameChangeConfig: GameChangeConfig
     lateinit var gameChangeDataConfig: GameChangeDataConfig
     lateinit var goalConfig: GoalConfig
+    lateinit var hideConfig: HideConfig
     lateinit var positionDataConfig: PositionDataConfig
     lateinit var timerConfig: TimerConfig
     lateinit var timerDataConfig: TimerDataConfig
@@ -27,6 +28,7 @@ object Config {
         challengeDataConfig = ChallengeDataConfig()
         gameChangeConfig = GameChangeConfig()
         gameChangeDataConfig = GameChangeDataConfig()
+        hideConfig = HideConfig()
         timerConfig = TimerConfig()
         timerDataConfig = TimerDataConfig()
         goalConfig = GoalConfig()

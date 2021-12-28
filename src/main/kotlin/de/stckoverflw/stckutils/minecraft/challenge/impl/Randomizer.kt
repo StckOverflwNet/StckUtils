@@ -42,7 +42,6 @@ object Randomizer : Challenge() {
         if (drops.isEmpty()) {
             val newValues = Material.values().filter { it.isItem || it.isSolid }.shuffled()
             Material.values().filter { it.isItem || it.isSolid }.zip(newValues).forEach {
-                println(it.first.toString() + " | " + it.second.toString())
                 drops[it.first] = it.second
             }
         }

@@ -2,7 +2,7 @@ package de.stckoverflw.stckutils.config.impl
 
 import de.stckoverflw.stckutils.config.AbstractConfig
 
-class TimerConfig : AbstractConfig("timer.yml") {
+class HideConfig : AbstractConfig("hide.yml") {
 
     fun setSetting(setting: String, value: Any) {
         yaml.set(setting, value)
@@ -11,9 +11,5 @@ class TimerConfig : AbstractConfig("timer.yml") {
 
     fun getSetting(setting: String): Any? {
         return yaml.get(setting)
-    }
-
-    fun getSettingList(setting: String): MutableList<*>? {
-        return yaml.getList(setting)
     }
 }
