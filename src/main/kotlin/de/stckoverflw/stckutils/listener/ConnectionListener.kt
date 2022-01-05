@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.listener
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.extension.*
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
@@ -97,14 +98,22 @@ class ConnectionListener : Listener {
                 event.disallow(
                     PlayerLoginEvent.Result.KICK_OTHER,
                     text(
-                        """§cThe Timer is currently running, you can't join at the moment.
-                                    |Ask an Operator to change the setting if you believe that this isn't intended.
-                            """.trimMargin()
+                        StckUtilsPlugin.translationsProvider.translate(
+                            "connect.disallow",
+                            player.language,
+                            "messages"
+                        )
                     )
                 )
             }
         }
         player.gameMode = GameMode.SPECTATOR
-        player.sendMessage("§cThe Timer is currently running, you were put in spectator mode")
+        player.sendMessage(
+            StckUtilsPlugin.translationsProvider.translate(
+                "connect.spectator",
+                player.language,
+                "messages"
+            )
+        )
     }
 }

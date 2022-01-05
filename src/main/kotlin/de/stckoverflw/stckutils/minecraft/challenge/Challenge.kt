@@ -2,11 +2,11 @@ package de.stckoverflw.stckutils.minecraft.challenge
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -74,15 +74,27 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
     /**
      * Is run once a challenge is lost
      */
-    fun lose(reason: String) {
+    fun lose(reasonKey: String) {
         Timer.stop()
         Bukkit.getOnlinePlayers().forEach {
             it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
+            it.sendMessage(
+                StckUtilsPlugin.translationsProvider.translate(
+                    "challenge.lose",
+                    it.language,
+                    "messages",
+                    arrayOf(
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            reasonKey,
+                            it.language,
+                            "messages"
+                        ),
+                        Timer
+                    )
+                )
+            )
         }
 
-        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7You §cfailed §7the Challenge!"))
-        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + reason))
-        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7Time wasted: $Timer"))
         Timer.backwardsStartTime = 0
     }
 }

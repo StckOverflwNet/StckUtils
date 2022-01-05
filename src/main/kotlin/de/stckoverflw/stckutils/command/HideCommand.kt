@@ -13,8 +13,67 @@ import net.axay.kspigot.commands.*
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.openGUI
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 class HideCommand {
+
+    companion object {
+        fun sendResponse(player: Player, target: Player) {
+            if (target.hidden) {
+                target.reveal()
+                target.sendMessage(
+                    if (player != target) {
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "hide.revealed_by.target",
+                            target.language,
+                            "messages",
+                            arrayOf(player.name)
+                        )
+                    } else {
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "hide.revealed.target",
+                            target.language,
+                            "messages"
+                        )
+                    }
+                )
+                player.sendMessage(
+                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                        "hide.revealed.player",
+                        player.language,
+                        "messages",
+                        arrayOf(target.name)
+                    )
+                )
+            } else {
+                target.hide()
+                target.sendMessage(
+                    if (player != target) {
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "hide.hidden_by.target",
+                            target.language,
+                            "messages",
+                            arrayOf(player.name)
+                        )
+                    } else {
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "hide.hidden.target",
+                            target.language,
+                            "messages"
+                        )
+                    }
+                )
+                player.sendMessage(
+                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                        "hide.hidden.player",
+                        player.language,
+                        "messages",
+                        arrayOf(target.name)
+                    )
+                )
+            }
+        }
+    }
 
     fun register() =
         command("hide", true) {
@@ -32,24 +91,20 @@ class HideCommand {
                 }
                 runs runs@{
                     val target = Bukkit.getPlayer(getArgument<String>("player"))
-                        ?: return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cno Player with that name found.")
+                        ?: return@runs player.sendMessage(
+                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                "general.player_not_found",
+                                player.language,
+                                "messages"
+                            )
+                        )
                     val perm = if (player == target) {
                         Permissions.HIDE_SELF
                     } else {
                         Permissions.HIDE_OTHER
                     }
-                    if (!player.hasPermission(perm)) {
-                        return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: $perm")
-                    }
-                    if (target.hidden) {
-                        target.reveal()
-                        target.sendMessage(StckUtilsPlugin.prefix + "§ayou were revealed" + if (player != target) " by ${player.name}" else "")
-                        player.sendMessage(StckUtilsPlugin.prefix + "§arevealed ${target.name}")
-                    } else {
-                        target.hide()
-                        target.sendMessage(StckUtilsPlugin.prefix + "§ayou were hidden" + if (player != target) " by ${player.name}" else "")
-                        player.sendMessage(StckUtilsPlugin.prefix + "§ahid ${target.name}")
-                    }
+                    requiresPermission(perm)
+                    sendResponse(player, target)
                 }
             }
             runs {

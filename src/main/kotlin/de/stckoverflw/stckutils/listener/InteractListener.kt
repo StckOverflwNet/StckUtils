@@ -22,7 +22,14 @@ class InteractListener : Listener {
             player.inventory.itemInMainHand.isSimilar(getSettingsItem(player.language))
         ) {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
-                return player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")
+                return player.sendMessage(
+                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                        "generic.missing_permission",
+                        player.language,
+                        "general",
+                        arrayOf(Permissions.SETTINGS_GUI)
+                    )
+                )
             }
             player.openGUI(settingsGUI(player.language))
         }

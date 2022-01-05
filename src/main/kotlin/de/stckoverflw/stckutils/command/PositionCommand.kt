@@ -4,9 +4,10 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.config.data.PositionData
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.util.Permissions
 import net.axay.kspigot.commands.*
-import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.extensions.onlinePlayers
 
 class PositionCommand {
 
@@ -22,28 +23,41 @@ class PositionCommand {
             }
             runs {
                 if (!Config.positionDataConfig.positions.any { it.name == getArgument<String>("name").lowercase() }) {
-                    if (!player.hasPermission(Permissions.POSITION_CREATE)) {
-                        return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.POSITION_CREATE}")
-                    }
+                    requiresPermission(Permissions.POSITION_CREATE)
                     val location = player.location
+                    val name = getArgument<String>("name").lowercase()
                     Config.positionDataConfig.addPosition(
                         PositionData(
-                            getArgument<String>("name").lowercase(),
+                            name,
                             player.uniqueId,
                             location
                         )
                     )
-                    broadcast(StckUtilsPlugin.prefix + "§9${player.name} §7found §9${getArgument<String>("name").lowercase()} §7at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
-                } else {
-                    if (!player.hasPermission(Permissions.POSITION_SHOW)) {
-                        return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.POSITION_SHOW}")
+                    onlinePlayers.forEach {
+                        it.sendMessage(
+                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                "position.create",
+                                it.language,
+                                "messages",
+                                arrayOf(player.name, name, location.blockX, location.blockY, location.blockZ)
+                            )
+                        )
                     }
+                } else {
+                    requiresPermission(Permissions.POSITION_SHOW)
                     val position = Config.positionDataConfig.positions.find {
                         it.name == getArgument<String>("name")
                     }
                     if (position != null) {
                         val location = position.location
-                        player.sendMessage(StckUtilsPlugin.prefix + "§9${position.name} §7by §9${player.name} §7is at [§9${location.blockX}§7,§9${location.blockY}§7,§9${location.blockZ}§7]")
+                        player.sendMessage(
+                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                "position.show",
+                                player.language,
+                                "messages",
+                                arrayOf(position.name, player.name, location.blockX, location.blockY, location.blockZ)
+                            )
+                        )
                     }
                 }
             }

@@ -22,7 +22,6 @@ import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
 import java.nio.file.Files
-import java.util.*
 import kotlin.io.path.div
 
 class StckUtilsPlugin : KSpigot() {
@@ -84,8 +83,6 @@ class StckUtilsPlugin : KSpigot() {
         LanguageCommand().register()
 
         val pluginDescription = this.description
-
-        Config.languageConfig.defaultLanguage = Locale.GERMAN
 
         logger.info(
             translationsProvider.translate(

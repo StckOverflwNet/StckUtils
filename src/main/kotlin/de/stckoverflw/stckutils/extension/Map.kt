@@ -1,9 +1,9 @@
 package de.stckoverflw.stckutils.extension
 
-fun HashMap<*, *>.getKey(target: Any): Any? {
-    for ((key, value) in this) {
-        if (target == value) {
-            return key
+fun HashMap<*, *>.getKey(value: Any): Any? {
+    for ((k, v) in this) {
+        if (value == v) {
+            return k
         }
     }
     return null

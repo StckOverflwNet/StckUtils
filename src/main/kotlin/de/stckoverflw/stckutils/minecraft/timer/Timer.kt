@@ -1,6 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.fromKey
 import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
@@ -25,16 +27,16 @@ object Timer {
     private var initialized = false
 
     var direction: TimerDirection
-        get() = TimerDirection.valueOf((Config.timerConfig.getSetting("direction") ?: TimerDirection.FORWARDS.name) as String)
+        get() = fromKey((Config.timerConfig.getSetting("direction") ?: TimerDirection.FORWARDS.key) as String) ?: TimerDirection.FORWARDS
         set(value) {
-            Config.timerConfig.setSetting("direction", value.name)
+            Config.timerConfig.setSetting("direction", value.key)
             if (value == TimerDirection.BACKWARDS) {
                 backwardsStartTime = time
             }
         }
     var joinWhileRunning: List<AccessLevel>
-        get() = (Config.timerConfig.getSettingList("joinWhileRunning") ?: listOf(AccessLevel.OPERATOR.name)).map { AccessLevel.valueOf(it as String) }
-        set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.map { it.name })
+        get() = (Config.timerConfig.getSettingList("joinWhileRunning") ?: listOf(AccessLevel.OPERATOR.key)).map { fromKey(it as String) ?: AccessLevel.OPERATOR }.distinct()
+        set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.map { it.key })
     var color: String
         get() {
             var col = Config.timerConfig.getSetting("color")
@@ -76,7 +78,7 @@ object Timer {
                     TimerDirection.BACKWARDS -> {
                         if (time == 0L) {
                             sync {
-                                ChallengeManager.challenges.first().lose("Time has run out.")
+                                ChallengeManager.challenges.first().lose("timer.backwards.time_up")
                             }
                         } else {
                             time--
@@ -111,7 +113,15 @@ object Timer {
 
     private fun broadcastIdle() {
         Bukkit.getOnlinePlayers().forEach {
-            it.sendActionBar(text("$color§lTimer paused"))
+            it.sendActionBar(
+                text(
+                    color + StckUtilsPlugin.translationsProvider.translate(
+                        "timer.idle",
+                        it.language,
+                        "messages"
+                    )
+                )
+            )
         }
     }
 

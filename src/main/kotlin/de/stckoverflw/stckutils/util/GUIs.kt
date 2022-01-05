@@ -1,8 +1,10 @@
 package de.stckoverflw.stckutils.util
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.*
+import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
@@ -20,7 +22,7 @@ import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.items.*
-import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -243,7 +245,13 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
-                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                        player.sendMessage(
+                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                "gui.timer_not_paused",
+                                player.language,
+                                "messages"
+                            )
+                        )
                     } else {
                         if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
                             challenge.active = !challenge.active
@@ -251,7 +259,13 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                             clickEvent.bukkitEvent.clickedInventory!!
                                 .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge, locale))
                         } else {
-                            player.sendMessage(StckUtilsPlugin.prefix + "§cInstall ProtocolLib to use this Challenge")
+                            player.sendMessage(
+                                StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                    "gui.depend.protocol_lib",
+                                    player.language,
+                                    "messages"
+                                )
+                            )
                         }
                     }
                 } else if (clickEvent.bukkitEvent.isRightClick) {
@@ -261,8 +275,11 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                             player.openGUI(configGUI)
                         } else {
                             player.sendMessage(
-                                StckUtilsPlugin.prefix +
-                                    "§cYou need to activate the Challenge before you can configure it"
+                                StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                    "gui.challenge.config.challenge_not_activated",
+                                    player.language,
+                                    "messages"
+                                )
                             )
                         }
                     }
@@ -412,7 +429,13 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
-                        player.sendMessage(StckUtilsPlugin.prefix + "§cThe Timer has to be paused to do this")
+                        player.sendMessage(
+                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                                "gui.timer_not_paused",
+                                player.language,
+                                "messages"
+                            )
+                        )
                     } else {
                         if (GoalManager.activeGoal != goal) {
                             GoalManager.goals.forEach {
@@ -491,10 +514,26 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         ) {
             if (Timer.running) {
                 Timer.stop()
-                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §6stopped"))
+                Bukkit.broadcast(
+                    text(
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "timer.stopped",
+                            locale,
+                            "messages"
+                        )
+                    )
+                )
             } else {
                 Timer.start()
-                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
+                Bukkit.broadcast(
+                    text(
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "timer.started",
+                            locale,
+                            "messages"
+                        )
+                    )
+                )
             }
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateStartStopTimerItem(locale))
             it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem(locale))
@@ -571,7 +610,15 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 Timer.stop()
             }
             Timer.reset()
-            Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §creset"))
+            Bukkit.broadcast(
+                text(
+                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                        "timer.reset",
+                        locale,
+                        "messages"
+                    )
+                )
+            )
             it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem(locale))
         }
 
@@ -755,26 +802,26 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             iconGenerator = {
                 generateItemForHide(it, locale)
             },
-            onClick = click@{ clickEvent, player ->
+            onClick = click@{ clickEvent, target ->
                 clickEvent.bukkitEvent.isCancelled = true
-                val perm = if (clickEvent.player == player) {
+                val player = clickEvent.player
+                val perm = if (player == target) {
                     Permissions.HIDE_SELF
                 } else {
                     Permissions.HIDE_OTHER
                 }
-                if (!clickEvent.player.hasPermission(perm)) {
-                    return@click player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: $perm")
+                if (!player.hasPermission(perm)) {
+                    return@click player.sendMessage(
+                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            "generic.missing_permission",
+                            player.language,
+                            "general",
+                            arrayOf(perm)
+                        )
+                    )
                 }
-                if (player.hidden) {
-                    player.reveal()
-                    player.sendMessage(StckUtilsPlugin.prefix + "§ayou were revealed" + if (clickEvent.player != player) " by ${player.name}" else "")
-                    player.sendMessage(StckUtilsPlugin.prefix + "§arevealed ${player.name}")
-                } else {
-                    player.hide()
-                    player.sendMessage(StckUtilsPlugin.prefix + "§ayou were hidden" + if (clickEvent.player != player) " by ${player.name}" else "")
-                    player.sendMessage(StckUtilsPlugin.prefix + "§ahid ${player.name}")
-                }
-                clickEvent.bukkitEvent.currentItem = generateItemForHide(player, locale)
+                HideCommand.sendResponse(player, target)
+                clickEvent.bukkitEvent.currentItem = generateItemForHide(target, locale)
             }
         )
         compound.addContent(onlinePlayers)

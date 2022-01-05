@@ -1,11 +1,13 @@
 package de.stckoverflw.stckutils.extension
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.util.*
 import net.axay.kspigot.extensions.geometry.LocationArea
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -19,10 +21,16 @@ fun Player.resetWorlds() {
     onlinePlayers.forEach {
         it.kick(
             Component.join(
-                JoinConfiguration.separator(Component.text("\n")),
+                JoinConfiguration.separator(text("\n")),
                 Component.newline(),
-                Component.text("§7The Worlds are §cresetting"),
-                Component.text("§7Reset started by §9$name"),
+                text(
+                    StckUtilsPlugin.translationsProvider.translate(
+                        "player.reset_worlds",
+                        it.language,
+                        "messages",
+                        arrayOf(name)
+                    )
+                )
             )
         )
     }

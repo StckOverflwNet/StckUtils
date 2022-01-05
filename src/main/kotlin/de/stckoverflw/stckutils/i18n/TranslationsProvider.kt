@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.i18n
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import java.text.MessageFormat
 import java.util.*
 
@@ -43,5 +44,9 @@ class TranslationsProvider {
         } catch (exception: MissingResourceException) {
             key
         }
+    }
+
+    fun translateWithPrefix(key: String, locale: Locale, bundleName: String, replacements: Array<Any?> = arrayOf()): String {
+        return StckUtilsPlugin.prefix + translate(key, locale, bundleName, replacements)
     }
 }
