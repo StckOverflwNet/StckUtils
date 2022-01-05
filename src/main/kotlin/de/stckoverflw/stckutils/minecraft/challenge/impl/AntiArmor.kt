@@ -41,21 +41,21 @@ object AntiArmor : Challenge() {
             Material.DIAMOND_HELMET -> 4
             else -> 0
         }
-        toRemovingHealth += when(inventory.chestplate?.type) {
+        toRemovingHealth += when (inventory.chestplate?.type) {
             Material.LEATHER_CHESTPLATE -> 3
             Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE -> 4
             Material.IRON_CHESTPLATE -> 5
             Material.DIAMOND_CHESTPLATE -> 6
             else -> 0
         }
-        toRemovingHealth += when(inventory.leggings?.type) {
+        toRemovingHealth += when (inventory.leggings?.type) {
             Material.LEATHER_LEGGINGS -> 2
             Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS -> 3
             Material.IRON_LEGGINGS -> 4
             Material.DIAMOND_LEGGINGS -> 5
             else -> 0
         }
-        toRemovingHealth += when(inventory.boots?.type) {
+        toRemovingHealth += when (inventory.boots?.type) {
             Material.LEATHER_BOOTS -> 2
             Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS -> 2
             Material.IRON_BOOTS -> 3
@@ -64,5 +64,4 @@ object AntiArmor : Challenge() {
         }
         player.healthScale = 20.toDouble() - toRemovingHealth
     }
-
 }

@@ -1,6 +1,5 @@
 package de.stckoverflw.stckutils.command
 
-import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Permissions
