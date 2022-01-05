@@ -11,6 +11,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.Listener
+import java.util.*
 
 abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
 
@@ -43,7 +44,7 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
     /**
      * The GUI for changing settings for that challenge
      */
-    abstract fun configurationGUI(): GUI<ForInventoryFiveByNine>?
+    abstract fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>?
 
     /**
      * Is run before the Timer starts to prepare the Challenge

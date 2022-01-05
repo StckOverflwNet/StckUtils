@@ -7,6 +7,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
+import java.util.*
 
 object NoDeath : Challenge() {
 
@@ -19,7 +20,7 @@ object NoDeath : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {

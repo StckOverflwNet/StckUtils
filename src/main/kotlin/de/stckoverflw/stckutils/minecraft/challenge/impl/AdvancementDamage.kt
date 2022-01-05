@@ -8,6 +8,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
+import java.util.*
 
 object AdvancementDamage : Challenge() {
 
@@ -24,7 +25,7 @@ object AdvancementDamage : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
     fun onAchievement(event: PlayerAdvancementDoneEvent) {

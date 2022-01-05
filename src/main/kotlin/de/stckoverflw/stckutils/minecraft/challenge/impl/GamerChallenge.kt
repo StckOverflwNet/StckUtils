@@ -27,7 +27,7 @@ object GamerChallenge : Challenge() {
     )
     override val usesEvents: Boolean = false
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     override fun prepareChallenge() {
         onlinePlayers.forEach { player ->

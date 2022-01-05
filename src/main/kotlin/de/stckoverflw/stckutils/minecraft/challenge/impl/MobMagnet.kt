@@ -9,6 +9,7 @@ import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import java.util.*
 
 object MobMagnet : Challenge() {
 
@@ -22,7 +23,7 @@ object MobMagnet : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
     fun onDeath(event: EntityDamageByEntityEvent) {

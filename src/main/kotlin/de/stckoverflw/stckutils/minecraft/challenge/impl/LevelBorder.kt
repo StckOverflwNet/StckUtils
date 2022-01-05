@@ -8,7 +8,7 @@ import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.util.goBackItem
+import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
@@ -28,6 +28,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.*
 import java.lang.reflect.InvocationTargetException
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -212,7 +213,7 @@ object LevelBorder : Challenge(true) {
         }
     }
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
         title = name
         defaultPage = 0
         page(0) {
@@ -222,7 +223,7 @@ object LevelBorder : Challenge(true) {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 1) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
             button(Slots.RowThreeSlotFive, resetItem()) {
                 it.bukkitEvent.isCancelled = true

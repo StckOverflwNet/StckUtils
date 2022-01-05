@@ -1,9 +1,10 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.minecraft.gamechange.active
-import de.stckoverflw.stckutils.util.goBackItem
+import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
@@ -18,6 +19,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import java.util.*
 import kotlin.math.roundToInt
 
 object DamageMultiplier : GameExtension() {
@@ -43,13 +45,13 @@ object DamageMultiplier : GameExtension() {
         if (event.bukkitEvent.isLeftClick) {
             active = !active
         } else if (event.bukkitEvent.isRightClick) {
-            event.player.openGUI(configurationGUI())
+            event.player.openGUI(configurationGUI(event.player.language))
         }
 
         event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
     }
 
-    fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+    fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
         title = "§6Damage Multiplier"
         defaultPage = 0
         page(0) {
@@ -59,7 +61,7 @@ object DamageMultiplier : GameExtension() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 3) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 3) }
 
             button(Slots.RowThreeSlotSix, plusItem()) {
                 it.bukkitEvent.isCancelled = true

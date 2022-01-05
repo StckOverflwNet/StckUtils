@@ -5,7 +5,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Permissions
-import de.stckoverflw.stckutils.util.settingsItem
+import de.stckoverflw.stckutils.util.getSettingsItem
 import net.kyori.adventure.text.Component
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -32,7 +32,7 @@ class ConnectionListener : Listener {
         if (!Timer.running) {
             event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
             if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
-                player.inventory.setItem(8, settingsItem)
+                player.inventory.setItem(8, getSettingsItem(player.language))
             }
         } else {
             player.setSavedInventory()

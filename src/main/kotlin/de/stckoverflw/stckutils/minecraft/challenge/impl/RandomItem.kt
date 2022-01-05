@@ -4,7 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.util.goBackItem
+import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 object RandomItem : Challenge() {
 
@@ -57,7 +58,7 @@ object RandomItem : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
         title = name
         defaultPage = 0
         page(0) {
@@ -67,7 +68,7 @@ object RandomItem : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, goBackItem) { it.player.openGUI(settingsGUI(), 1) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
             button(Slots.RowThreeSlotFour, distanceItem()) {
                 it.bukkitEvent.isCancelled = true
@@ -97,7 +98,7 @@ object RandomItem : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            pageChanger(Slots.RowThreeSlotOne, goBackItem, 0, null, null)
+            pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), 0, null, null)
 
             button(Slots.RowThreeSlotSix, plusItem("distance", "$distanceUnit§7m", "10§7m", "100§7m")) {
                 it.bukkitEvent.isCancelled = true
@@ -139,7 +140,7 @@ object RandomItem : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            pageChanger(Slots.RowThreeSlotOne, goBackItem, 0, null, null)
+            pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), 0, null, null)
 
             button(Slots.RowThreeSlotSix, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10§7s", "1§7m")) {
                 it.bukkitEvent.isCancelled = true

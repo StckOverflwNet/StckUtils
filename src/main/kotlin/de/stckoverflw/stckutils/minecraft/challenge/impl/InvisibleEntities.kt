@@ -7,6 +7,7 @@ import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
+import java.util.*
 
 object InvisibleEntities : Challenge() {
 
@@ -19,7 +20,7 @@ object InvisibleEntities : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
     fun onCreatureSpawn(event: CreatureSpawnEvent) {

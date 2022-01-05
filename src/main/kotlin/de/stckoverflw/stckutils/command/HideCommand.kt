@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.extension.hidden
 import de.stckoverflw.stckutils.extension.hide
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.reveal
 import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.Permissions
@@ -52,7 +53,7 @@ class HideCommand {
                 }
             }
             runs {
-                player.openGUI(settingsGUI(), GUIPage.hidePageNumber)
+                player.openGUI(settingsGUI(player.language), GUIPage.hidePageNumber)
             }
         }
 }

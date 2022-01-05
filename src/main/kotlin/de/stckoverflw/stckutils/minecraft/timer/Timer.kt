@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
@@ -9,7 +10,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.util.Permissions
-import de.stckoverflw.stckutils.util.settingsItem
+import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.task
@@ -156,7 +157,7 @@ object Timer {
                         it.target = null
                 }
                 if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
-                    player.inventory.setItem(8, settingsItem)
+                    player.inventory.setItem(8, getSettingsItem(player.language))
                 }
             }
             ChallengeManager.unregisterChallengeListeners()

@@ -7,6 +7,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockPlaceEvent
+import java.util.*
 
 object NoBlockPlace : Challenge() {
 
@@ -19,7 +20,7 @@ object NoBlockPlace : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {

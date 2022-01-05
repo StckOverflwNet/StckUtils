@@ -17,6 +17,7 @@ object Config {
     lateinit var allItemsDataConfig: AllItemsDataConfig
     lateinit var allMobsDataConfig: AllMobsDataConfig
     lateinit var allAdvancementsDataConfig: AllAdvancementsDataConfig
+    lateinit var languageConfig: LanguageConfig
 
     operator fun invoke() {
         reloadConfig()
@@ -35,6 +36,7 @@ object Config {
         allItemsDataConfig = AllItemsDataConfig()
         allMobsDataConfig = AllMobsDataConfig()
         allAdvancementsDataConfig = AllAdvancementsDataConfig()
+        languageConfig = LanguageConfig()
     }
 
     fun reloadPositions() {

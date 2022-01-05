@@ -9,6 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerMoveEvent
+import java.util.*
 
 object Medusa : Challenge() {
 
@@ -22,7 +23,7 @@ object Medusa : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {

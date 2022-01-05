@@ -1,7 +1,8 @@
 package de.stckoverflw.stckutils.listener
 
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.util.settingsItem
+import de.stckoverflw.stckutils.util.getSettingsItem
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -18,7 +19,7 @@ class ProtectionListener : Listener {
     @EventHandler
     fun onRespawn(event: PlayerRespawnEvent) {
         if (!Timer.running && event.player.isOp) {
-            event.player.inventory.setItem(8, settingsItem)
+            event.player.inventory.setItem(8, getSettingsItem(event.player.language))
         }
     }
 
@@ -96,7 +97,7 @@ class ProtectionListener : Listener {
                     val target = Bukkit.getPlayer(event.message.split(" ")[1])
                     if (target != null) {
                         if (command == "op") {
-                            target.inventory.setItem(8, settingsItem)
+                            target.inventory.setItem(8, getSettingsItem(target.language))
                         } else if (command == "deop") {
                             target.inventory.setItem(8, null)
                             target.closeInventory()

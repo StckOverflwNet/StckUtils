@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.command
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsGUI
@@ -55,7 +56,7 @@ class TimerCommand {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
                 return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")
             }
-            player.openGUI(settingsGUI(), -1)
+            player.openGUI(settingsGUI(player.language), -1)
         }
     }
 }

@@ -4,7 +4,9 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import de.stckoverflw.stckutils.command.*
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.i18n.TranslationsProvider
 import de.stckoverflw.stckutils.listener.ConnectionListener
 import de.stckoverflw.stckutils.listener.InteractListener
 import de.stckoverflw.stckutils.listener.ProtectionListener
@@ -13,13 +15,14 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.util.settingsItem
+import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
 import java.nio.file.Files
+import java.util.*
 import kotlin.io.path.div
 
 class StckUtilsPlugin : KSpigot() {
@@ -28,6 +31,7 @@ class StckUtilsPlugin : KSpigot() {
         const val prefix: String = "§f§lStckUtils §7| §r"
         var protocolManager: ProtocolManager? = null
         var isProtocolLib: Boolean = false
+        val translationsProvider: TranslationsProvider = TranslationsProvider()
     }
 
     private var wasReset = false
@@ -77,26 +81,68 @@ class StckUtilsPlugin : KSpigot() {
         HideCommand().register()
         PositionCommand().register()
         AllXCommand().register()
+        LanguageCommand().register()
 
         val pluginDescription = this.description
-        logger.info("§aEnabled §3${pluginDescription.name} §aversion §3${pluginDescription.version}")
+
+        Config.languageConfig.defaultLanguage = Locale.GERMAN
+
         logger.info(
-            "§aThis Plugin is made by §3".plus(
-                if (pluginDescription.authors.size <= 1) {
-                    pluginDescription.authors.joinToString()
-                } else {
-                    pluginDescription.authors.joinToString(limit = pluginDescription.authors.lastIndex, truncated = "").dropLast(2)
-                        .plus(" and ${pluginDescription.authors.last()}")
-                }
+            translationsProvider.translate(
+                "console.enabled.enabled",
+                Config.languageConfig.defaultLanguage,
+                "messages",
+                arrayOf(pluginDescription.name, pluginDescription.version)
             )
         )
-        if (pluginDescription.apiVersion != null) logger.info("§aUsing API-Version §3${pluginDescription.apiVersion!!}")
-        if (pluginDescription.website != null) logger.info("§aMore Information at §3${pluginDescription.website}")
+        logger.info(
+            translationsProvider.translate(
+                "console.enabled.authors",
+                Config.languageConfig.defaultLanguage,
+                "messages",
+                arrayOf(
+                    if (pluginDescription.authors.size <= 1) {
+                        pluginDescription.authors
+                    } else {
+                        val authors = pluginDescription.authors.sorted().toMutableList()
+                        authors.add(
+                            authors.size - 1,
+                            translationsProvider.translate(
+                                "generic.and",
+                                Config.languageConfig.defaultLanguage,
+                                "general"
+                            )
+                        )
+                        authors.joinToString(" ")
+                    }
+                )
+            )
+        )
+        if (pluginDescription.apiVersion != null) {
+            logger.info(
+                translationsProvider.translate(
+                    "console.enabled.api_version",
+                    Config.languageConfig.defaultLanguage,
+                    "messages",
+                    arrayOf(pluginDescription.apiVersion)
+                )
+            )
+        }
+        if (pluginDescription.website != null) {
+            logger.info(
+                translationsProvider.translate(
+                    "console.enabled.website",
+                    Config.languageConfig.defaultLanguage,
+                    "messages",
+                    arrayOf(pluginDescription.website)
+                )
+            )
+        }
 
         onlinePlayers.forEach {
             it.inventory.clear()
             if (it.isOp) {
-                it.inventory.setItem(8, settingsItem)
+                it.inventory.setItem(8, getSettingsItem(it.language))
             }
         }
     }
@@ -117,7 +163,14 @@ class StckUtilsPlugin : KSpigot() {
                 Files.delete(it)
             }
         } catch (e: Exception) {
-            logger.warning("An Error occured while trying to delete the world files ($world)")
+            logger.warning(
+                translationsProvider.translate(
+                    "error.delete_worlds",
+                    Config.languageConfig.defaultLanguage,
+                    "messages",
+                    arrayOf(world)
+                )
+            )
             logger.warning(e.stackTraceToString())
         }
         Files.createDirectories(worldPath)

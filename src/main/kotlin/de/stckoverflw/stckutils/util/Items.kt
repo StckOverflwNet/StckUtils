@@ -48,20 +48,58 @@ const val scrollUpb64 =
 const val scrollDownb64 =
     "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzQzNzM0NmQ4YmRhNzhkNTI1ZDE5ZjU0MGE5NWU0ZTc5ZGFlZGE3OTVjYmM1YTEzMjU2MjM2MzEyY2YifX19"
 
-val scrollRightItem = getTextureHead(scrollRightb64, "§fScroll Right")
+fun getScrollRightItem(locale: Locale) = getTextureHead(
+    scrollRightb64,
+    StckUtilsPlugin.translationsProvider.translate(
+        "gui.scroll_right",
+        locale,
+        "items"
+    )
+)
 
-val scrollLeftItem = getTextureHead(scrollLeftb64, "§fScroll Left")
+fun getScrollLeftItem(locale: Locale) = getTextureHead(
+    scrollLeftb64,
+    StckUtilsPlugin.translationsProvider.translate(
+        "gui.scroll_left",
+        locale,
+        "items"
+    )
+)
 
-val scrollUpItem = getTextureHead(scrollUpb64, "§fScroll Up")
+fun getScrollUpItem(locale: Locale) = getTextureHead(
+    scrollUpb64,
+    StckUtilsPlugin.translationsProvider.translate(
+        "gui.scroll_up",
+        locale,
+        "items"
+    )
+)
 
-val scrollDownItem = getTextureHead(scrollDownb64, "§fScroll Down")
+fun getScrollDownItem(locale: Locale) = getTextureHead(
+    scrollDownb64,
+    StckUtilsPlugin.translationsProvider.translate(
+        "gui.scroll_down",
+        locale,
+        "items"
+    )
+)
 
-val goBackItem = itemStack(Material.KNOWLEDGE_BOOK) {
+fun getGoBackItem(locale: Locale) = itemStack(Material.KNOWLEDGE_BOOK) {
     meta {
-        name = "${KColors.LIGHTGREEN}Go back"
+        name = StckUtilsPlugin.translationsProvider.translate(
+            "gui.back.name",
+            locale,
+            "items"
+        )
         addLore {
             +""
-            +"§7§oClick to go back to the previous Page"
+            StckUtilsPlugin.translationsProvider.translate(
+                "gui.back.lore",
+                locale,
+                "items"
+            ).split("\n").forEach {
+                +it
+            }
         }
     }
 }
@@ -70,13 +108,17 @@ val goBackItem = itemStack(Material.KNOWLEDGE_BOOK) {
  * Inventory Items
  */
 
-val settingsItem = itemStack(Material.NETHER_STAR) {
+fun getSettingsItem(locale: Locale) = itemStack(Material.NETHER_STAR) {
     meta {
-        name = "§cSettings"
+        name = StckUtilsPlugin.translationsProvider.translate(
+            "settings.name",
+            locale,
+            "items"
+        )
     }
 }
 
-fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.material) {
+fun generateItemForChallenge(challenge: Challenge, locale: Locale) = itemStack(challenge.material) {
     meta {
         name = challenge.name
         localName = challenge.id
@@ -87,22 +129,46 @@ fun generateItemForChallenge(challenge: Challenge) = itemStack(challenge.materia
             +" "
             if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
                 if (challenge.active) {
-                    +"§aActivated§7, Click to deactivate"
+                    StckUtilsPlugin.translationsProvider.translate(
+                        "gui.challenge.lore.active",
+                        locale,
+                        "items"
+                    ).split("\n").forEach {
+                        +it
+                    }
                 } else {
-                    +"§cDeactivated§7, Click to activate"
+                    StckUtilsPlugin.translationsProvider.translate(
+                        "gui.challenge.lore.inactive",
+                        locale,
+                        "items"
+                    ).split("\n").forEach {
+                        +it
+                    }
                 }
-                if (challenge.configurationGUI() != null) {
-                    +"§7Right Click to open the Configuration for ${challenge.name}"
+                if (challenge.configurationGUI(locale) != null) {
+                    StckUtilsPlugin.translationsProvider.translate(
+                        "gui.challenge.lore.config_gui",
+                        locale,
+                        "items",
+                        arrayOf(challenge.name)
+                    ).split("\n").forEach {
+                        +it
+                    }
                 }
             } else {
-                +"§c§lYou need to install ProtocolLib on this server"
-                +"§c§lto use this Challenge"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.challenge.lore.protocol_lib",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 }
 
-fun generateItemForGoal(goal: Goal) = itemStack(goal.material) {
+fun generateItemForGoal(goal: Goal, locale: Locale) = itemStack(goal.material) {
     meta {
         name = goal.name
         localName = goal.id
@@ -113,92 +179,156 @@ fun generateItemForGoal(goal: Goal) = itemStack(goal.material) {
             +" "
             if (GoalManager.activeGoal == goal || goal.active) {
                 GoalManager.activeGoal = goal
-                +"§aThis Goal is currently activated,"
-                +"§7click to §cdeactivate §7it"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.goal.lore.active",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             } else {
-                +"§cThis Goal is currently deactivated,"
-                +"§7click to §aactivate §7it"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.goal.lore.inactive",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 }
 
-fun generateTimerItem() = itemStack(Material.CLOCK) {
+fun generateTimerItem(locale: Locale) = itemStack(Material.CLOCK) {
     meta {
-        name = "§6Change Timer Time"
+        name = StckUtilsPlugin.translationsProvider.translate(
+            "gui.timer.name",
+            locale,
+            "items"
+        )
         addLore {
             +" "
-            if (Timer.time > 0) {
-                +"§7Current Time: $Timer"
-            } else {
-                +"§7Current Time: §c0m"
+            StckUtilsPlugin.translationsProvider.translate(
+                "gui.timer.lore",
+                locale,
+                "items",
+                arrayOf(Timer)
+            ).split("\n").forEach {
+                +it
             }
-            +" "
-            +"§7Left-click to higher §c1m"
-            +"§7Right-click to lower §c1m"
         }
     }
 }
 
-fun generateVillageSpawnItem() = itemStack(Material.VILLAGER_SPAWN_EGG) {
+fun generateVillageSpawnItem(locale: Locale) = itemStack(Material.VILLAGER_SPAWN_EGG) {
     meta {
-        name = "${KColors.SANDYBROWN}Village Spawn"
+        name = KColors.SANDYBROWN.toString().plus(
+            StckUtilsPlugin.translationsProvider.translate(
+                "gui.village_spawn.name",
+                locale,
+                "items"
+            )
+        )
         addLore {
             +" "
             if (Config.resetSettingsConfig.villageSpawn) {
-                +"§7Currently §aactivated"
-                +" "
-                +"§7Click to §cdeactivate"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.village_spawn.lore.activated",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             } else {
-                +"§7Currently §cdeactivated"
-                +" "
-                +"§7Click to §aactivate"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.village_spawn.lore.deactivated",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 }
 
-fun generateStartStopTimerItem() = if (Timer.running) {
+fun generateStartStopTimerItem(locale: Locale) = if (Timer.running) {
     itemStack(Material.REDSTONE) {
         meta {
-            name = "§6Stop the Timer"
+            name = StckUtilsPlugin.translationsProvider.translate(
+                "gui.start_stop_timer.running.name",
+                locale,
+                "items"
+            )
             addLore {
                 +" "
-                +"§7Click to Stop the Timer"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.start_stop_timer.running.lore",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 } else {
     itemStack(Material.EMERALD) {
         meta {
-            name = "§aStart the Timer"
+            name = StckUtilsPlugin.translationsProvider.translate(
+                "gui.start_stop_timer.stopped.name",
+                locale,
+                "items"
+            )
             addLore {
                 +" "
-                +"§7Click to Start the Timer"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.start_stop_timer.stopped.lore",
+                    locale,
+                    "items"
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 }
 
-fun generateTimerDirectionItem() = itemStack(Material.REPEATER) {
+fun generateTimerDirectionItem(locale: Locale) = itemStack(Material.REPEATER) {
     meta {
-        name = "§aChange the direction of the Timer"
+        name = StckUtilsPlugin.translationsProvider.translate(
+            "gui.timer_direction.name",
+            locale,
+            "items"
+        )
 
         setLore {
             +" "
             when (Timer.direction) {
                 TimerDirection.FORWARDS -> {
-                    +"§7The Timer is currently running §aforwards§7."
+                    StckUtilsPlugin.translationsProvider.translate(
+                        "gui.timer_direction.lore.forwards",
+                        locale,
+                        "items"
+                    ).split("\n").forEach {
+                        +it
+                    }
                 }
                 TimerDirection.BACKWARDS -> {
-                    +"§7The Timer is currently running §dbackwards§7."
+                    StckUtilsPlugin.translationsProvider.translate(
+                        "gui.timer_direction.lore.backwards",
+                        locale,
+                        "items"
+                    ).split("\n").forEach {
+                        +it
+                    }
                 }
             }
         }
     }
 }
 
-fun generateItemForJoinWhileRunning(accessLevel: AccessLevel): ItemStack {
+fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale): ItemStack {
     val item = itemStack(
         if (Timer.joinWhileRunning.contains(accessLevel)) {
             Material.GREEN_WOOL
@@ -212,37 +342,97 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel): ItemStack {
             setLore {
                 when (accessLevel) {
                     AccessLevel.OPERATOR -> {
-                        +"§4Operators §7can join"
+                        StckUtilsPlugin.translationsProvider.translate(
+                            "gui.join_while_running.lore.operator",
+                            locale,
+                            "items"
+                        ).split("\n").forEach {
+                            +it
+                        }
                     }
                     AccessLevel.HIDDEN -> {
-                        +"§bHidden players §7can join"
+                        StckUtilsPlugin.translationsProvider.translate(
+                            "gui.join_while_running.lore.hidden",
+                            locale,
+                            "items"
+                        ).split("\n").forEach {
+                            +it
+                        }
                     }
                     AccessLevel.EVERYONE -> {
-                        +"§aEveryone §7can join"
+                        StckUtilsPlugin.translationsProvider.translate(
+                            "gui.join_while_running.lore.everyone",
+                            locale,
+                            "items"
+                        ).split("\n").forEach {
+                            +it
+                        }
                     }
                     AccessLevel.NONE -> {
-                        +"§cNo one §7can join"
+                        StckUtilsPlugin.translationsProvider.translate(
+                            "gui.join_while_running.lore.none",
+                            locale,
+                            "items"
+                        ).split("\n").forEach {
+                            +it
+                        }
                     }
                 }
-                +"§7while the Timer is running."
-                +"§7Click to ${if (Timer.joinWhileRunning.contains(accessLevel)) "§cdeactivate" else "§aactivate"}"
+                StckUtilsPlugin.translationsProvider.translate(
+                    "gui.join_while_running.lore",
+                    locale,
+                    "items",
+                    arrayOf(
+                        if (Timer.joinWhileRunning.contains(accessLevel)) {
+                            "§c".plus(
+                                StckUtilsPlugin.translationsProvider.translate(
+                                    "generic.disable",
+                                    locale,
+                                    "general"
+                                )
+                            )
+                        } else {
+                            "§a".plus(
+                                StckUtilsPlugin.translationsProvider.translate(
+                                    "generic.activate",
+                                    locale,
+                                    "general"
+                                )
+                            )
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
     return item
 }
 
-fun generateItemForHide(player: Player): ItemStack {
+fun generateItemForHide(player: Player, locale: Locale): ItemStack {
     val head = getPlayerHead(player)
     val meta = head.itemMeta
     meta.setLore {
         +" "
         if (player.hidden) {
-            +"§7Currently ${player.name} is §ahidden"
-            +"§7Click to §areveal ${player.name}"
+            StckUtilsPlugin.translationsProvider.translate(
+                "gui.hide.hidden.lore",
+                locale,
+                "items",
+                arrayOf(player.name)
+            ).split("\n").forEach {
+                +it
+            }
         } else {
-            +"§7Currently ${player.name} is §arevealed"
-            +"§7Click to §ahide ${player.name}"
+            StckUtilsPlugin.translationsProvider.translate(
+                "gui.hide.revealed.lore",
+                locale,
+                "items",
+                arrayOf(player.name)
+            ).split("\n").forEach {
+                +it
+            }
         }
     }
     if (player.hidden) {

@@ -12,6 +12,7 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 fun Player.resetWorlds() {
     Config.resetSettingsConfig.shouldReset = true
@@ -91,3 +92,7 @@ fun Player.isInArea(location: Location, radius: Double): Boolean {
 
 fun Player.isInArea(location: Location, location2: Location): Boolean =
     LocationArea(location, location2).isInArea(this.location, false, 0)
+
+var Player.language: Locale
+    get() = Config.languageConfig.getLanguage(this)
+    set(value) = Config.languageConfig.setLanguage(this, value)

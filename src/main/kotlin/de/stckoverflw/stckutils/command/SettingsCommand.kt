@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.command
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.commands.command
@@ -16,7 +17,7 @@ class SettingsCommand {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
                 return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")
             }
-            player.openGUI(settingsGUI())
+            player.openGUI(settingsGUI(player.language))
         }
     }
 }
