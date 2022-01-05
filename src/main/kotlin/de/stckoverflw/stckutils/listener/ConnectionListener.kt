@@ -6,7 +6,7 @@ import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
-import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -30,7 +30,7 @@ class ConnectionListener : Listener {
         // set inventory
         player.inventory.clear()
         if (!Timer.running) {
-            event.joinMessage(Component.text("§7[§a+§7]§7 ${player.name}"))
+            event.joinMessage(text("§7[§a+§7]§7 ${player.name}"))
             if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
                 player.inventory.setItem(8, getSettingsItem(player.language))
             }
@@ -50,7 +50,7 @@ class ConnectionListener : Listener {
         val player = event.player
 
         if (!Timer.running) {
-            event.quitMessage(Component.text("§7[§c-§7]§7 ${player.name}"))
+            event.quitMessage(text("§7[§c-§7]§7 ${player.name}"))
         } else {
             player.saveInventory()
             player.inventory.clear()
@@ -96,7 +96,7 @@ class ConnectionListener : Listener {
             if (disallow) {
                 event.disallow(
                     PlayerLoginEvent.Result.KICK_OTHER,
-                    Component.text(
+                    text(
                         """§cThe Timer is currently running, you can't join at the moment.
                                     |Ask an Operator to change the setting if you believe that this isn't intended.
                             """.trimMargin()

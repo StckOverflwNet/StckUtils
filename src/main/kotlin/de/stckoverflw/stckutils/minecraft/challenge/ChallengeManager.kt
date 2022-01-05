@@ -11,6 +11,7 @@ object ChallengeManager {
 
     operator fun invoke() {
         challenges = arrayListOf(
+            AntiArmor,
             InventoryDamageClear,
             SingleUse,
             GamerChallenge,

@@ -14,7 +14,7 @@ import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.task
-import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
 import org.bukkit.Bukkit
 import org.bukkit.entity.Creature
 import kotlin.time.Duration.Companion.seconds
@@ -98,7 +98,7 @@ object Timer {
     private fun broadcastTimer() {
         Bukkit.getOnlinePlayers().forEach {
             it.sendActionBar(
-                Component.text(
+                text(
                     this.formatTime() + if (additionalInfo.isNotEmpty()) " (${
                     additionalInfo.joinToString(
                         " "
@@ -111,7 +111,7 @@ object Timer {
 
     private fun broadcastIdle() {
         Bukkit.getOnlinePlayers().forEach {
-            it.sendActionBar(Component.text("$color§lTimer paused"))
+            it.sendActionBar(text("$color§lTimer paused"))
         }
     }
 

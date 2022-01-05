@@ -25,8 +25,7 @@ object IceWalker : Challenge() {
     private var iceWalkerPlayers: List<UUID>
         get() {
             val list: MutableList<*>? = Config.challengeDataConfig.getSettingList(id, "iceWalkerPlayers")
-            return if (list == null || list.isEmpty()) listOf()
-            else list.filterNotNull().map { UUID.fromString(it as String?) }
+            return list?.filterNotNull()?.map { UUID.fromString(it as String?) } ?: emptyList()
         }
         set(value) = Config.challengeDataConfig.setSetting(id, "iceWalkerPlayers", value.map { it.toString() })
 

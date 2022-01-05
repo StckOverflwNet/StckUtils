@@ -15,13 +15,16 @@ class InteractListener : Listener {
 
     @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
-        if (event.action == Action.RIGHT_CLICK_AIR || event.action == Action.RIGHT_CLICK_BLOCK) {
-            if (event.player.inventory.itemInMainHand.isSimilar(getSettingsItem(event.player.language))) {
-                if (!event.player.hasPermission(Permissions.SETTINGS_GUI)) {
-                    return event.player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")
-                }
-                event.player.openGUI(settingsGUI(event.player.language))
+        val player = event.player
+        val action = event.action
+        if (
+            (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) &&
+            player.inventory.itemInMainHand.isSimilar(settingsItem)
+        ) {
+            if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
+                return player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")
             }
+            player.openGUI(settingsGUI(player.language))
         }
     }
 }
