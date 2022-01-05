@@ -17,7 +17,7 @@ class InteractListener : Listener {
         val player = event.player
         val action = event.action
         if (
-            action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK &&
+            (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) &&
             player.inventory.itemInMainHand.isSimilar(settingsItem)
         ) {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
