@@ -19,7 +19,7 @@ class InteractListener : Listener {
         val action = event.action
         if (
             (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) &&
-            player.inventory.itemInMainHand.isSimilar(settingsItem)
+            player.inventory.itemInMainHand.isSimilar(getSettingsItem(player.language))
         ) {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
                 return player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.SETTINGS_GUI}")

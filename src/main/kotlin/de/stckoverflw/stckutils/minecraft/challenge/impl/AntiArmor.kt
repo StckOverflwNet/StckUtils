@@ -8,6 +8,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.PlayerInventory
+import java.util.*
 
 // https://canary.discord.com/channels/484676017513037844/534731376352559124/923661675784183908
 object AntiArmor : Challenge() {
@@ -21,7 +22,7 @@ object AntiArmor : Challenge() {
     )
     override val usesEvents: Boolean = true
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
     /*
      * PlayerArmorChangeEvent is currently not supported
