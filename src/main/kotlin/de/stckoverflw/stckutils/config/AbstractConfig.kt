@@ -34,4 +34,5 @@ abstract class AbstractConfig(name: String) {
             e.printStackTrace()
         }
     }
+
 }

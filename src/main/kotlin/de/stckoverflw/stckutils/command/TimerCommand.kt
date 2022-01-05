@@ -14,41 +14,31 @@ class TimerCommand {
 
     fun register() = command("timer", true) {
         requiresPermission(Permissions.TIMER_COMMAND)
-        argument("action", StringArgumentType.string()) {
-            suggestListSuspending { suggest ->
-                listOf("resume", "pause", "reset").filter {
-                    if (suggest.input != null && suggest.input.substring(suggest.input.length - 1) != " ")
-                        it.startsWith(
-                            suggest.getArgument<String>("action"),
-                            true
-                        ) else
-                        true
-                }.sorted()
-            }
+        literal("resume") {
             runs {
-                when (getArgument<String>("action").lowercase()) {
-                    "resume" -> {
-                        if (!player.hasPermission(Permissions.TIMER_RESUME)) {
-                            return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.TIMER_RESUME}")
-                        }
-                        Timer.start()
-                        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
-                    }
-                    "pause" -> {
-                        if (!player.hasPermission(Permissions.TIMER_PAUSE)) {
-                            return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.TIMER_PAUSE}")
-                        }
-                        Timer.stop()
-                        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §6stopped"))
-                    }
-                    "reset" -> {
-                        if (!player.hasPermission(Permissions.TIMER_RESET)) {
-                            return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.TIMER_RESET}")
-                        }
-                        Timer.reset()
-                        Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §cresetted"))
-                    }
+                if (!player.hasPermission(Permissions.TIMER_RESUME)) {
+                    return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.TIMER_RESUME}")
                 }
+                Timer.start()
+                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §astarted"))
+            }
+        }
+        literal("pause") {
+            runs {
+                if (!player.hasPermission(Permissions.TIMER_PAUSE)) {
+                    return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.TIMER_PAUSE}")
+                }
+                Timer.stop()
+                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §6stopped"))
+            }
+        }
+        literal("reset") {
+            runs {
+                if (!player.hasPermission(Permissions.TIMER_RESET)) {
+                    return@runs player.sendMessage(StckUtilsPlugin.prefix + "§cMissing permission: ${Permissions.TIMER_RESET}")
+                }
+                Timer.reset()
+                Bukkit.broadcast(Component.text(StckUtilsPlugin.prefix + "§7The Timer was §cresetted"))
             }
         }
         runs {
