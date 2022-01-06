@@ -17,15 +17,15 @@ class AllXCommand {
             when (GoalManager.activeGoal) {
                 is AllItems -> {
                     AllItems.resetFilter(player)
-                    player.openGUI(AllItems.gui())
+                    player.openGUI(AllItems.gui(player.language))
                 }
                 is AllMobs -> {
                     AllMobs.resetFilter(player)
-                    player.openGUI(AllMobs.gui())
+                    player.openGUI(AllMobs.gui(player.language))
                 }
                 is AllAdvancements -> {
                     AllAdvancements.resetFilter(player)
-                    player.openGUI(AllAdvancements.gui())
+                    player.openGUI(AllAdvancements.gui(player.language))
                 }
                 else -> player.sendMessage(
                     StckUtilsPlugin.translationsProvider.translateWithPrefix(

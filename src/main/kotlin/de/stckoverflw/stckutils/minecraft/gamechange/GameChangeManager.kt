@@ -17,6 +17,7 @@ object GameChangeManager {
     lateinit var translationsProvider: TranslationsProvider
 
     operator fun invoke() {
+        translationsProvider = TranslationsProvider("translations.minecraft.gamechange")
         gameChanges = arrayListOf(
             MaxHealth,
             DeathCounter,
@@ -27,7 +28,6 @@ object GameChangeManager {
             SpawnWorld,
         )
         gameChanges.sortBy { it.id }
-        translationsProvider = TranslationsProvider("translations.minecraft.gamechange")
     }
 
     fun registerGameChangeListeners() {

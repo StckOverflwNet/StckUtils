@@ -1,15 +1,16 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
@@ -64,11 +65,6 @@ object AllAdvancements : TeamGoal() {
     }
 
     override val id: String = "all-advancements"
-    override val name: String = "§dAll Advancements"
-    override val description = listOf(
-        " ",
-        "§7Get all Advancements",
-    )
     override val material = Material.KNOWLEDGE_BOOK
 
     override fun onTimerToggle() {
@@ -85,8 +81,12 @@ object AllAdvancements : TeamGoal() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun gui() = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+    fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+        title = GoalManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -95,23 +95,32 @@ object AllAdvancements : TeamGoal() {
             val compound = createRectCompound<Advancement>(
                 Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
                 iconGenerator = {
-                    generateAllAdvancementsItem(it)
+                    generateAllAdvancementsItem(it, locale)
                 }, onClick = { clickEvent, _ ->
                 clickEvent.bukkitEvent.isCancelled = true
             }
             )
 
             // Reset Item
-            button(Slots.RowTwoSlotNine, resetItem(), onClick = {
+            button(Slots.RowTwoSlotNine, resetItem(locale), onClick = {
                 allAdvancements = listOf()
                 nextAdvancement = randomAdvancement()
                 formattedAdvancement = formatAdvancement(nextAdvancement)
                 it.guiInstance.reloadCurrentPage()
-                broadcast(StckUtilsPlugin.prefix + "§4${it.bukkitEvent.whoClicked.name} reset the progress of All Advancements")
+                onlinePlayers.forEach { player ->
+                    player.sendMessage(
+                        GoalManager.translationsProvider.translateWithPrefix(
+                            "message.reset_progress",
+                            locale,
+                            id,
+                            arrayOf(it.bukkitEvent.whoClicked.name)
+                        )
+                    )
+                }
             })
 
             // Filter Button (Filter only collected/only not collected/all)
-            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
+            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING), locale), onClick = { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
                 if (filter[player.uniqueId] == null) resetFilter(player)
@@ -152,26 +161,28 @@ object AllAdvancements : TeamGoal() {
                 compound.setContent(getContent(filter[player.uniqueId]!!))
                 clickEvent.guiInstance.reloadCurrentPage()
 
-                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
+                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!, locale)
             })
             if (!isWon()) {
-                button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
+                button(Slots.RowThreeSlotOne, skipItem(locale), onClick = { clickEvent ->
                     clickEvent.bukkitEvent.isCancelled = true
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.key.key }
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         done(
-                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped $formattedAdvancement",
+                            "message.skipped_advancement",
+                            arrayOf(clickEvent.player.name, formattedAdvancement),
                             false
                         )
                     } else {
                         done(
-                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked $formattedAdvancement as collected"
+                            "message.mark_advancement_collected",
+                            arrayOf(clickEvent.player.name, formattedAdvancement)
                         )
                         compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))
 //                        clickEvent.guiInstance.reloadCurrentPage()
                     }
                     if (!isWon()) {
-                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem()
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem(locale)
                     } else {
                         clickEvent.guiInstance[Slots.RowThreeSlotOne] = placeHolderItemGray
                     }
@@ -211,33 +222,60 @@ object AllAdvancements : TeamGoal() {
         }
     }
 
-    private fun skipItem(): ItemStack {
+    private fun skipItem(locale: Locale): ItemStack {
         val item = itemStack(Material.BEDROCK) {
             meta {
-                name = "§eSkip current Advancement ($formattedAdvancement)"
+                name = GoalManager.translationsProvider.translate(
+                    "skip_item.name",
+                    locale,
+                    id,
+                    arrayOf(formattedAdvancement)
+                )
                 addLore {
-                    +" "
-                    +"§7LMB - Skips §f$formattedAdvancement"
-                    +"§7RMB - Marks §f$formattedAdvancement§7 as done"
+                    GoalManager.translationsProvider.translate(
+                        "skip_item.lore",
+                        locale,
+                        id,
+                        arrayOf(formattedAdvancement)
+                    ).split("\n").forEach {
+                        +it
+                    }
                 }
             }
         }
         return item
     }
 
-    private fun generateAllAdvancementsItem(advancement: Advancement): ItemStack {
+    private fun generateAllAdvancementsItem(advancement: Advancement, locale: Locale): ItemStack {
         val itemStack = itemStack(
             (advancement.display?.icon()?.type) ?: Material.WRITABLE_BOOK
         ) {
             meta {
                 name = "§7${formatAdvancement(advancement)}"
                 addLore {
-                    +" "
-                    +"%description%"
-                    +" "
-                    +"§7Category: §d${formatAdvancementCategory(advancement)}"
-                    +" "
-                    +if (isDone(advancement)) "§7[§a+§7] §aDone" else "§7[§c~§7] §cNot Done"
+                    GoalManager.translationsProvider.translate(
+                        "all_advancements_item.lore",
+                        locale,
+                        id,
+                        arrayOf(
+                            formatAdvancementCategory(advancement),
+                            if (isDone(advancement)) {
+                                GoalManager.translationsProvider.translate(
+                                    "done",
+                                    locale,
+                                    id
+                                )
+                            } else {
+                                GoalManager.translationsProvider.translate(
+                                    "not_done",
+                                    locale,
+                                    id
+                                )
+                            }
+                        )
+                    ).split("\n").forEach {
+                        +it
+                    }
                 }
                 if (isDone(advancement)) {
                     addEnchant(Enchantment.ARROW_INFINITE, 1, true)
@@ -261,24 +299,45 @@ object AllAdvancements : TeamGoal() {
         return itemStack
     }
 
-    private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
+    private fun filterItem(filter: Pair<Filter, Filter>, locale: Locale) = itemStack(Material.HOPPER) {
         meta {
-            name = "§8Filter"
+            name = GoalManager.translationsProvider.translate(
+                "filter_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7LMB - ".plus(if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.DONE) "§a" else "§c")
-                    .plus(filter.first.name)
-                +"§7RMB - ".plus(if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                GoalManager.translationsProvider.translate(
+                    "filter_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        (if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.DONE) "§a" else "§c")
+                            .plus(filter.first.name),
+                        (if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = GoalManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the progress of All Advancements"
+                GoalManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
@@ -309,15 +368,24 @@ object AllAdvancements : TeamGoal() {
     private fun isDone(advancement: Advancement) = allAdvancements.contains(advancement)
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun done(message: String, markCollected: Boolean = true) {
-        broadcast(message)
+    private fun done(key: String, replacements: Array<Any?> = arrayOf(), markCollected: Boolean = true) {
+        onlinePlayers.forEach {
+            it.sendMessage(
+                GoalManager.translationsProvider.translateWithPrefix(
+                    key,
+                    it.language,
+                    id,
+                    replacements
+                )
+            )
+        }
         Timer.additionalInfo.clear()
         if (markCollected) {
             allAdvancements = ArrayList(allAdvancements.plus(nextAdvancement))
         }
         if (isWon()) {
             Config.allAdvancementsDataConfig.setSetting("nextAdvancement", null)
-            win("You got all Advancements!")
+            win(id)
             return
         } else {
             nextAdvancement = randomAdvancement()
@@ -327,7 +395,8 @@ object AllAdvancements : TeamGoal() {
                 onlinePlayers.forEach {
                     if (hasAdvancement(it, nextAdvancement)) {
                         done(
-                            StckUtilsPlugin.prefix + "§a${it.name} already got $formattedAdvancement"
+                            "message.already_got_advancement",
+                            arrayOf(it.name, formattedAdvancement)
                         )
                         return@launch
                     }
@@ -349,7 +418,8 @@ object AllAdvancements : TeamGoal() {
     fun onAdvancementDone(event: PlayerAdvancementDoneEvent) {
         if (event.player.isPlaying() && event.advancement == nextAdvancement) {
             done(
-                StckUtilsPlugin.prefix + "§a${event.player.name} got $formattedAdvancement"
+                "message.got_advancement",
+                arrayOf(event.player.name, formattedAdvancement)
             )
         }
     }

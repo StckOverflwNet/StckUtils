@@ -1,12 +1,14 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
-import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
@@ -62,11 +64,6 @@ object AllMobs : TeamGoal() {
     }
 
     override val id: String = "all-mobs"
-    override val name: String = "§dAll Mobs"
-    override val description = listOf(
-        " ",
-        "§7Kill all Mobs",
-    )
     override val material = Material.SPAWNER
 
     override fun onTimerToggle() {
@@ -82,8 +79,12 @@ object AllMobs : TeamGoal() {
         filter[player.uniqueId] = Pair(Filter.ALL, Filter.ASCENDING)
     }
 
-    fun gui() = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+    fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+        title = GoalManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -92,22 +93,31 @@ object AllMobs : TeamGoal() {
             val compound = createRectCompound<EntityType>(
                 Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
                 iconGenerator = {
-                    generateAllMobsItem(it)
+                    generateAllMobsItem(it, locale)
                 }, onClick = { clickEvent, _ ->
                 clickEvent.bukkitEvent.isCancelled = true
             }
             )
 
             // Reset Item
-            button(Slots.RowTwoSlotNine, resetItem()) {
+            button(Slots.RowTwoSlotNine, resetItem(locale)) {
                 allMobs = listOf()
                 nextMob = randomMob()
                 it.guiInstance.reloadCurrentPage()
-                broadcast(StckUtilsPlugin.prefix + "§4${it.bukkitEvent.whoClicked.name} reset the progress of All Mobs")
+                onlinePlayers.forEach { player ->
+                    player.sendMessage(
+                        GoalManager.translationsProvider.translateWithPrefix(
+                            "reset_progress",
+                            player.language,
+                            id,
+                            arrayOf(it.bukkitEvent.whoClicked.name)
+                        )
+                    )
+                }
             }
 
             // Filter Button (Filter only collected/only not collected/all)
-            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
+            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING), locale), onClick = { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
                 if (filter[player.uniqueId] == null) resetFilter(player)
@@ -148,33 +158,28 @@ object AllMobs : TeamGoal() {
                 compound.setContent(getContent(filter[player.uniqueId]!!))
                 clickEvent.guiInstance.reloadCurrentPage()
 
-                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
+                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!, locale)
             })
             if (!isWon()) {
-                button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
+                button(Slots.RowThreeSlotOne, skipItem(locale), onClick = { clickEvent ->
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
-                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${
-                            formatMob(
-                                nextMob
-                            )
-                            }",
+                            "skipped",
+                            arrayOf(clickEvent.player.name, formatMob(nextMob)),
                             false
                         )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
-                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${
-                            formatMob(
-                                nextMob
-                            )
-                            } as collected"
+                            "marked",
+                            arrayOf(clickEvent.player.name, formatMob(nextMob)),
+                            false
                         )
                     }
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
                     compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))
                     clickEvent.guiInstance.reloadCurrentPage()
                     if (!isWon()) {
-                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem()
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem(locale)
                     } else {
                         clickEvent.guiInstance[Slots.RowThreeSlotOne] = placeHolderItemGray
                     }
@@ -201,30 +206,40 @@ object AllMobs : TeamGoal() {
         return if (filter.second == Filter.ASCENDING) {
             when (filter.first) {
                 Filter.KILLED -> allMobs.sortedBy { it.name }
-                Filter.NOT_KILLED -> mobs.minus(allMobs).sortedBy { it.name }
+                Filter.NOT_KILLED -> mobs.minus(allMobs.toSet()).sortedBy { it.name }
                 else -> mobs.sortedBy { it.name }
             }
         } else {
             when (filter.first) {
                 Filter.KILLED -> allMobs.sortedBy { it.name }.asReversed()
-                Filter.NOT_KILLED -> mobs.minus(allMobs).sortedBy { it.name }.asReversed()
+                Filter.NOT_KILLED -> mobs.minus(allMobs.toSet()).sortedBy { it.name }.asReversed()
                 else -> mobs.sortedBy { it.name }.asReversed()
             }
         }
     }
 
-    private fun skipItem() = itemStack(Material.BEDROCK) {
+    private fun skipItem(locale: Locale) = itemStack(Material.BEDROCK) {
         meta {
-            name = "§eSkip current Mob (${formatMob(nextMob)})"
+            name = GoalManager.translationsProvider.translate(
+                "skip_item.name",
+                locale,
+                id,
+                arrayOf(formatMob(nextMob))
+            )
             addLore {
-                +" "
-                +"§7LMB - Skips §f${formatMob(nextMob)}"
-                +"§7RMB - Marks §f${formatMob(nextMob)}§7 as killed"
+                GoalManager.translationsProvider.translate(
+                    "skip_item.lore",
+                    locale,
+                    id,
+                    arrayOf(formatMob(nextMob))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun generateAllMobsItem(entity: EntityType) = itemStack(
+    private fun generateAllMobsItem(entity: EntityType, locale: Locale) = itemStack(
         when (entity) {
             EntityType.SNOWMAN -> Material.SNOW_BLOCK
             EntityType.IRON_GOLEM -> Material.IRON_BLOCK
@@ -238,7 +253,19 @@ object AllMobs : TeamGoal() {
             name = "§7${formatMob(entity)}"
             addLore {
                 +" "
-                +if (isKilled(entity)) "§7[§a+§7] §aKilled" else "§7[§c~§7] §cNot Killed"
+                +if (isKilled(entity)) {
+                    GoalManager.translationsProvider.translate(
+                        "killed",
+                        locale,
+                        id
+                    )
+                } else {
+                    GoalManager.translationsProvider.translate(
+                        "not_killed",
+                        locale,
+                        id
+                    )
+                }
             }
             if (isKilled(entity)) {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
@@ -253,24 +280,45 @@ object AllMobs : TeamGoal() {
         }
     }
 
-    private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
+    private fun filterItem(filter: Pair<Filter, Filter>, locale: Locale) = itemStack(Material.HOPPER) {
         meta {
-            name = "§8Filter"
+            name = GoalManager.translationsProvider.translate(
+                "filter_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7LMB - ".plus(if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.KILLED) "§a" else "§c")
-                    .plus(filter.first.name)
-                +"§7RMB - ".plus(if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                GoalManager.translationsProvider.translate(
+                    "filter_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        (if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.KILLED) "§a" else "§c")
+                            .plus(filter.first.name),
+                        (if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = GoalManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the progress of All Mobs"
+                GoalManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
@@ -291,14 +339,23 @@ object AllMobs : TeamGoal() {
 
     private fun isWon() = mobs.none { !isKilled(it) }
 
-    private fun collected(message: String, markCollected: Boolean = true) {
-        broadcast(message)
+    private fun collected(key: String, replacements: Array<Any?> = arrayOf(), markCollected: Boolean = true) {
+        onlinePlayers.forEach {
+            it.sendMessage(
+                GoalManager.translationsProvider.translateWithPrefix(
+                    key,
+                    it.language,
+                    id,
+                    replacements
+                )
+            )
+        }
         Timer.additionalInfo.clear()
         if (markCollected)
             allMobs = ArrayList(allMobs.plus(nextMob))
         if (isWon()) {
             Config.allMobsDataConfig.setSetting("nextMob", null)
-            win("You killed all Mobs!")
+            win(id)
         } else {
             nextMob = randomMob()
             Timer.additionalInfo.add("kill ${formatMob(nextMob)}")
@@ -314,8 +371,8 @@ object AllMobs : TeamGoal() {
             event.entity.killer!!.isPlaying()
         ) {
             collected(
-                StckUtilsPlugin.prefix +
-                    "§a${event.entity.killer!!.name} killed ${formatMob(nextMob)}"
+                "collected_killed",
+                arrayOf(event.entity.killer!!.name, formatMob(nextMob))
             )
         }
     }

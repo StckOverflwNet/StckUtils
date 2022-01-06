@@ -12,6 +12,7 @@ object ChallengeManager {
     lateinit var translationsProvider: TranslationsProvider
 
     operator fun invoke() {
+        translationsProvider = TranslationsProvider("translations.minecraft.challenge")
         challenges = arrayListOf(
             AntiArmor,
             InventoryDamageClear,
@@ -45,7 +46,6 @@ object ChallengeManager {
             DamageFreeze,
         )
         challenges.sortBy { it.id }
-        translationsProvider = TranslationsProvider("translations.minecraft.challenge")
     }
 
     fun registerChallengeListeners() {

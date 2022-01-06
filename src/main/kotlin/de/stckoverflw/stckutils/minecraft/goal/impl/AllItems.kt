@@ -1,13 +1,15 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isObtainableInSurvival
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
-import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
@@ -55,11 +57,6 @@ object AllItems : TeamGoal() {
     }
 
     override val id: String = "all-items"
-    override val name: String = "§aAll Items"
-    override val description: List<String> = listOf(
-        " ",
-        "§7Collect all Items",
-    )
     override val material: Material = Material.ENDER_CHEST
 
     override fun onTimerToggle() {
@@ -75,8 +72,12 @@ object AllItems : TeamGoal() {
         filter[player.uniqueId] = Pair(Filter.ALL, Filter.ASCENDING)
     }
 
-    fun gui() = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+    fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
+        title = GoalManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -85,22 +86,31 @@ object AllItems : TeamGoal() {
             val compound = createRectCompound<Material>(
                 Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
                 iconGenerator = {
-                    generateAllItemsItem(it)
+                    generateAllItemsItem(it, locale)
                 }, onClick = { clickEvent, _ ->
                 clickEvent.bukkitEvent.isCancelled = true
             }
             )
 
             // Reset Item
-            button(Slots.RowTwoSlotNine, resetItem()) {
+            button(Slots.RowTwoSlotNine, resetItem(locale)) {
                 allItems = listOf()
                 nextMaterial = randomMaterial()
                 it.guiInstance.reloadCurrentPage()
-                broadcast(StckUtilsPlugin.prefix + "§4${it.bukkitEvent.whoClicked.name} reset the progress of All Items")
+                onlinePlayers.forEach { player ->
+                    player.sendMessage(
+                        GoalManager.translationsProvider.translateWithPrefix(
+                            "message.reset_progress",
+                            locale,
+                            id,
+                            arrayOf(it.bukkitEvent.whoClicked.name)
+                        )
+                    )
+                }
             }
 
             // Filter Button (Filter only collected/only not collected/all)
-            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
+            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING), locale), onClick = { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
                 if (filter[player.uniqueId] == null) resetFilter(player)
@@ -141,33 +151,29 @@ object AllItems : TeamGoal() {
                 compound.setContent(getContent(filter[player.uniqueId]!!))
                 clickEvent.guiInstance.reloadCurrentPage()
 
-                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
+                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!, locale)
             })
             if (!isWon()) {
-                button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
+                button(Slots.RowThreeSlotOne, skipItem(locale), onClick = { clickEvent ->
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
-                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} skipped ${
-                            formatMaterial(
-                                nextMaterial
-                            )
-                            }",
+                            "skipped",
+                            id,
+                            arrayOf(clickEvent.player.name, formatMaterial(nextMaterial)),
                             false
                         )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
-                            StckUtilsPlugin.prefix + "§a${clickEvent.player.name} marked ${
-                            formatMaterial(
-                                nextMaterial
-                            )
-                            } as collected"
+                            "marked",
+                            id,
+                            arrayOf(clickEvent.player.name, formatMaterial(nextMaterial))
                         )
                     }
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
                     compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))
                     clickEvent.guiInstance.reloadCurrentPage()
                     if (!isWon()) {
-                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem()
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem(locale)
                     } else {
                         clickEvent.guiInstance[Slots.RowThreeSlotOne] = placeHolderItemGray
                     }
@@ -194,35 +200,57 @@ object AllItems : TeamGoal() {
         return if (filter.second == Filter.ASCENDING) {
             when (filter.first) {
                 Filter.COLLECTED -> allItems.sortedBy { it.name }
-                Filter.NOT_COLLECTED -> materials.minus(allItems).sortedBy { it.name }
+                Filter.NOT_COLLECTED -> materials.minus(allItems.toSet()).sortedBy { it.name }
                 else -> materials.sortedBy { it.name }
             }
         } else {
             when (filter.first) {
                 Filter.COLLECTED -> allItems.sortedBy { it.name }.asReversed()
-                Filter.NOT_COLLECTED -> materials.minus(allItems).sortedBy { it.name }.asReversed()
+                Filter.NOT_COLLECTED -> materials.minus(allItems.toSet()).sortedBy { it.name }.asReversed()
                 else -> materials.sortedBy { it.name }.asReversed()
             }
         }
     }
 
-    private fun skipItem() = itemStack(Material.BEDROCK) {
+    private fun skipItem(locale: Locale) = itemStack(Material.BEDROCK) {
         meta {
-            name = "§eSkip current Item (${formatMaterial(nextMaterial)})"
+            name = GoalManager.translationsProvider.translate(
+                "skip_item.name",
+                locale,
+                id,
+                arrayOf(formatMaterial(nextMaterial))
+            )
             addLore {
-                +" "
-                +"§7LMB - Skips §f${formatMaterial(nextMaterial)}"
-                +"§7RMB - Marks §f${formatMaterial(nextMaterial)}§7 as collected"
+                GoalManager.translationsProvider.translate(
+                    "skip_item.lore",
+                    locale,
+                    id,
+                    arrayOf(formatMaterial(nextMaterial))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun generateAllItemsItem(material: Material) = itemStack(material) {
+    private fun generateAllItemsItem(material: Material, locale: Locale) = itemStack(material) {
         meta {
             name = "§7${formatMaterial(material)}"
             addLore {
                 +" "
-                +if (isCollected(material)) "§7[§a+§7] §aCollected" else "§7[§c~§7] §cNot Collected"
+                +if (isCollected(material)) {
+                    GoalManager.translationsProvider.translate(
+                        "collected",
+                        locale,
+                        id
+                    )
+                } else {
+                    GoalManager.translationsProvider.translate(
+                        "not_collected",
+                        locale,
+                        id
+                    )
+                }
             }
             if (isCollected(material)) {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
@@ -237,24 +265,45 @@ object AllItems : TeamGoal() {
         }
     }
 
-    private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
+    private fun filterItem(filter: Pair<Filter, Filter>, locale: Locale) = itemStack(Material.HOPPER) {
         meta {
-            name = "§8Filter"
+            name = GoalManager.translationsProvider.translate(
+                "filter_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7LMB - ".plus(if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.COLLECTED) "§a" else "§c")
-                    .plus(filter.first.name)
-                +"§7RMB - ".plus(if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                GoalManager.translationsProvider.translate(
+                    "filter_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        (if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.COLLECTED) "§a" else "§c")
+                            .plus(filter.first.name),
+                        (if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = GoalManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the progress of All Items"
+                GoalManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
@@ -275,14 +324,23 @@ object AllItems : TeamGoal() {
 
     private fun isWon() = materials.none { !isCollected(it) }
 
-    private fun collected(message: String, markCollected: Boolean = true) {
-        broadcast(message)
+    private fun collected(key: String, id: String, replacements: Array<Any?> = arrayOf(), markCollected: Boolean = true) {
+        onlinePlayers.forEach {
+            it.sendMessage(
+                GoalManager.translationsProvider.translateWithPrefix(
+                    key,
+                    it.language,
+                    id,
+                    replacements
+                )
+            )
+        }
         Timer.additionalInfo.clear()
         if (markCollected)
             allItems = ArrayList(allItems.plus(nextMaterial))
         if (isWon()) {
             Config.allItemsDataConfig.setSetting("nextMaterial", null)
-            win("You collected all Items!")
+            win(id)
         } else {
             nextMaterial = randomMaterial()
             Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
@@ -294,12 +352,12 @@ object AllItems : TeamGoal() {
     @EventHandler
     fun onCollectMove(event: InventoryClickEvent) {
         if (event.currentItem?.type == nextMaterial && (event.whoClicked as Player).isPlaying())
-            collected(StckUtilsPlugin.prefix + "§a${event.whoClicked.name} collected ${formatMaterial(nextMaterial)}")
+            collected("collected_collected", id, arrayOf(event.whoClicked.name, formatMaterial(nextMaterial)))
     }
 
     @EventHandler
     fun onCollectPickup(event: PlayerAttemptPickupItemEvent) {
         if (event.item.itemStack.type == nextMaterial && event.player.isPlaying())
-            collected(StckUtilsPlugin.prefix + "§a${event.player.name} collected ${formatMaterial(nextMaterial)}")
+            collected("collected_collected", id, arrayOf(event.player.name, formatMaterial(nextMaterial)))
     }
 }

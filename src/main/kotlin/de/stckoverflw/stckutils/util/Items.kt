@@ -182,10 +182,18 @@ fun generateItemForChallenge(challenge: Challenge, locale: Locale) = itemStack(c
 
 fun generateItemForGoal(goal: Goal, locale: Locale) = itemStack(goal.material) {
     meta {
-        name = goal.name
+        name = GoalManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            goal.id
+        )
         localName = goal.id
         addLore {
-            goal.description.forEach {
+            GoalManager.translationsProvider.translate(
+                descriptionKey,
+                locale,
+                goal.id
+            ).split("\n").forEach {
                 +it
             }
             +" "

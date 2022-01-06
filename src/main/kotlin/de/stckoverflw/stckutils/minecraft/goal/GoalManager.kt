@@ -13,6 +13,7 @@ object GoalManager {
     lateinit var translationsProvider: TranslationsProvider
 
     operator fun invoke() {
+        translationsProvider = TranslationsProvider("translations.minecraft.goal")
         goals = arrayListOf(
             KillEnderdragon,
             GoToNether,
@@ -24,7 +25,6 @@ object GoalManager {
             AllAdvancements,
         )
         goals.sortBy { it.id }
-        translationsProvider = TranslationsProvider("translations.minecraft.goal")
 
         setActiveGoal()
     }
