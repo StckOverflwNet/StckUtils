@@ -1,9 +1,9 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
@@ -28,13 +28,7 @@ object BlockExplode : Challenge() {
         set(value) = Config.challengeConfig.setSetting(id, "chance", value)
 
     override val id: String = "block-explode"
-    override val name: String = "§cBlock Explode"
     override val material: Material = Material.TNT
-    override val description: List<String> = listOf(
-        " ",
-        "§cEvery §7Block you break has a ",
-        "§7chance to §cexplode",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
@@ -47,27 +41,22 @@ object BlockExplode : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
-            button(Slots.RowThreeSlotFour, generateChanceItem()) {
-                val player = it.player
+            button(Slots.RowThreeSlotFour, generateChanceItem(locale)) {
                 if (it.bukkitEvent.isLeftClick) {
-                    if (chance < 100) {
+                    if (chance <= 95) {
                         chance += 5
-                    } else {
-                        player.sendMessage(StckUtilsPlugin.prefix + "§cYou reached the maximal value")
                     }
                 } else if (it.bukkitEvent.isRightClick) {
-                    if (chance > 5) {
+                    if (chance >= 5) {
                         chance -= 5
-                    } else {
-                        player.sendMessage(StckUtilsPlugin.prefix + "§cYou reached the minimal value")
                     }
                 }
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateChanceItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateChanceItem(locale))
             }
 
-            button(Slots.RowThreeSlotSix, generateFireItem()) {
+            button(Slots.RowThreeSlotSix, generateFireItem(locale)) {
                 isFire = !isFire
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateFireItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateFireItem(locale))
             }
         }
     }
@@ -82,28 +71,42 @@ object BlockExplode : Challenge() {
         }
     }
 
-    private fun generateChanceItem() = itemStack(Material.SPRUCE_SIGN) {
+    private fun generateChanceItem(locale: Locale) = itemStack(Material.SPRUCE_SIGN) {
         meta {
-            name = "§aChance"
+            name = ChallengeManager.translationsProvider.translate(
+                "chance_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7The Chance how often the"
-                +"§7Block should §cexplode"
-                +" "
-                +"§7Current value: §9$chance%"
+                ChallengeManager.translationsProvider.translate(
+                    "chance_item.lore",
+                    locale,
+                    id,
+                    arrayOf(chance)
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun generateFireItem() = itemStack(Material.FIRE_CHARGE) {
+    private fun generateFireItem(locale: Locale) = itemStack(Material.FIRE_CHARGE) {
         meta {
-            name = "§cExplosion Fire"
+            name = ChallengeManager.translationsProvider.translate(
+                "fire_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7If the Explosion should"
-                +"§7Create Fire in the radius"
-                +" "
-                +"§7Current value: ".plus(if (isFire) "§a$isFire" else "§c$isFire")
+                ChallengeManager.translationsProvider.translate(
+                    "fire_item.lore",
+                    locale,
+                    id,
+                    arrayOf(if (isFire) "§a$isFire" else "§c$isFire")
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }

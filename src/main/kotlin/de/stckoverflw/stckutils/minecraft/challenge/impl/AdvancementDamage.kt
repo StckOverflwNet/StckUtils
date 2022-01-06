@@ -17,12 +17,7 @@ object AdvancementDamage : Challenge() {
         set(value) = Config.challengeConfig.setSetting(id, "damage", value)
 
     override val id: String = "advancement-damage"
-    override val name: String = "§bAdvancement Damage"
     override val material: Material = Material.DAMAGED_ANVIL
-    override val description: List<String> = listOf(
-        " ",
-        "§7For every advancement you get, you lose hp.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

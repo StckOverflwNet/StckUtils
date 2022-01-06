@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.goal
 
+import de.stckoverflw.stckutils.i18n.TranslationsProvider
 import de.stckoverflw.stckutils.minecraft.goal.impl.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
@@ -9,6 +10,7 @@ object GoalManager {
 
     lateinit var goals: ArrayList<Goal>
     var activeGoal: Goal? = null
+    lateinit var translationsProvider: TranslationsProvider
 
     operator fun invoke() {
         goals = arrayListOf(
@@ -22,15 +24,22 @@ object GoalManager {
             AllAdvancements,
         )
         goals.sortBy { it.id }
+        translationsProvider = TranslationsProvider("translations.minecraft.goal")
+
+        setActiveGoal()
     }
 
-    fun registerActiveGoal() {
+    private fun setActiveGoal() {
         goals.forEach {
             it.unregister()
             if (it.active) {
                 activeGoal = it
             }
         }
+    }
+
+    fun registerActiveGoal() {
+        setActiveGoal()
         if (activeGoal != null) {
             pluginManager.registerEvents(activeGoal!!, KSpigotMainInstance)
         }

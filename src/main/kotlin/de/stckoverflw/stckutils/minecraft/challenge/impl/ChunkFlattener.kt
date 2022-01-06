@@ -1,8 +1,11 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
@@ -37,17 +40,15 @@ object ChunkFlattener : Challenge() {
         set(value) = Config.challengeDataConfig.setSetting(id, "time", value)
 
     override val id: String = "chunk-flattener"
-    override val name: String = "§aChunk Flattener"
     override val material: Material = Material.BEDROCK
-    override val description: List<String> = listOf(
-        " ",
-        "§7Every now and then the top layer",
-        "§7of your current chunk will be removed",
-    )
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+        title = ChallengeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -58,85 +59,129 @@ object ChunkFlattener : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
-            button(Slots.RowThreeSlotSeven, plusItem()) {
+            button(Slots.RowThreeSlotSeven, plusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 handleUpdateClick(it.bukkitEvent, true)
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotSix, resetItem()) {
+            button(Slots.RowThreeSlotSix, resetItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 period = 10
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFive, minusItem()) {
+            button(Slots.RowThreeSlotFive, minusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 handleUpdateClick(it.bukkitEvent, false)
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotThree, dropItem()) {
+            button(Slots.RowThreeSlotThree, dropItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 doDrop = !doDrop
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
         }
     }
 
-    private fun updateInventory(inv: Inventory) {
-        inv.setItem(20, dropItem())
-        inv.setItem(22, minusItem())
-        inv.setItem(23, resetItem())
-        inv.setItem(24, plusItem())
+    private fun updateInventory(inv: Inventory, locale: Locale) {
+        inv.setItem(20, dropItem(locale))
+        inv.setItem(22, minusItem(locale))
+        inv.setItem(23, resetItem(locale))
+        inv.setItem(24, plusItem(locale))
     }
 
-    private fun dropItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun dropItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§aDrop Items"
+            name = ChallengeManager.translationsProvider.translate(
+                "drop_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Toggle Item Drops"
-                +"§7Currently ".plus(if (doDrop) "§aenabled" else "§cdisabled")
+                ChallengeManager.translationsProvider.translate(
+                    "drop_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        if (doDrop) {
+                            "§a" + StckUtilsPlugin.translationsProvider.translate(
+                                "generic.activated",
+                                locale,
+                                "general"
+                            )
+                        } else {
+                            "§c" + StckUtilsPlugin.translationsProvider.translate(
+                                "generic.disabled",
+                                locale,
+                                "general"
+                            )
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = ChallengeManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the period of the ChunkFlattener"
-                +"§7Period: §f$period§7s (§8Default: 10§7)"
+                ChallengeManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id,
+                    arrayOf(period)
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun plusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun plusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§aPlus"
+            name = ChallengeManager.translationsProvider.translate(
+                "plus_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Increase the period of the ChunkFlattener"
-                +"§7Period: §f$period§7s"
-                +" "
-                +"§7Left-click:             §a+ 1§7s"
-                +"§7Right-click:            §a+ 10§7s"
+                ChallengeManager.translationsProvider.translate(
+                    "plus_item.lore",
+                    locale,
+                    id,
+                    arrayOf(period)
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun minusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun minusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§cMinus"
+            name = ChallengeManager.translationsProvider.translate(
+                "minus_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Decrease the period of the ChunkFlattener"
-                +"§7Period: §f$period§7s"
-                +" "
-                +"§7Left-click:             §c- 1§7s"
-                +"§7Right-click:            §c- 10§7s"
+                ChallengeManager.translationsProvider.translate(
+                    "minus_item.lore",
+                    locale,
+                    id,
+                    arrayOf(period)
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }

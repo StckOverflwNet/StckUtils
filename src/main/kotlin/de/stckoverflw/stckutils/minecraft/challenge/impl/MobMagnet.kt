@@ -14,13 +14,7 @@ import java.util.*
 object MobMagnet : Challenge() {
 
     override val id: String = "mob-magnet"
-    override val name: String = "§dMob Magnet"
     override val material: Material = Material.RAW_IRON_BLOCK
-    override val description: List<String> = listOf(
-        " ",
-        "§7Every time you kill a mob all nearby mobs",
-        "§7of that type will be teleported to the killed mob",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

@@ -12,13 +12,7 @@ import java.util.*
 object JackHammer : Challenge() {
 
     override val id: String = "jackhammer"
-    override val name: String = "§eJackHammer"
     override val material: Material = Material.IRON_PICKAXE
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you break a block every block below it will break too",
-        "§7(Except Bedrock)"
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

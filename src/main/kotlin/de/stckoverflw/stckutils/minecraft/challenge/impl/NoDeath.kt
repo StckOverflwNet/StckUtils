@@ -12,12 +12,7 @@ import java.util.*
 object NoDeath : Challenge() {
 
     override val id: String = "no-death"
-    override val name: String = "§4No Death"
     override val material: Material = Material.SKELETON_SKULL
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you die the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -28,6 +23,6 @@ object NoDeath : Challenge() {
             return
         }
         event.entity.inventory.clear()
-        lose("${event.entity.name} died.")
+        lose(id, arrayOf(event.entity.name))
     }
 }

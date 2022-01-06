@@ -12,12 +12,7 @@ import java.util.*
 object NoSneak : Challenge() {
 
     override val id: String = "no-sneak"
-    override val name: String = "§eNo Sneak"
     override val material: Material = Material.CHAINMAIL_BOOTS
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you sneak the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -28,7 +23,7 @@ object NoSneak : Challenge() {
             return
         }
         if (event.isSneaking) {
-            lose("${event.player.name} sneaked.")
+            lose(id, arrayOf(event.player.name))
         }
     }
 }

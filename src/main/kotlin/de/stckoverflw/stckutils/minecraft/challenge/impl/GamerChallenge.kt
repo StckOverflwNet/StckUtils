@@ -18,13 +18,7 @@ object GamerChallenge : Challenge() {
     private val respawned = HashMap<UUID, Boolean>()
 
     override val id: String = "no-grass"
-    override val name: String = "§dGamer Challenge"
     override val material: Material = Material.GRASS
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you walk on or in Grass",
-        "§7you die",
-    )
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

@@ -12,12 +12,7 @@ import java.util.*
 object NoBlockBreak : Challenge() {
 
     override val id: String = "no-block-break"
-    override val name: String = "§eNo Block Break"
     override val material: Material = Material.GOLDEN_PICKAXE
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you break a block the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -27,6 +22,6 @@ object NoBlockBreak : Challenge() {
         if (!event.player.isPlaying()) {
             return
         }
-        lose("${event.player.name} broke a Block.")
+        lose(id, arrayOf(event.player.name))
     }
 }

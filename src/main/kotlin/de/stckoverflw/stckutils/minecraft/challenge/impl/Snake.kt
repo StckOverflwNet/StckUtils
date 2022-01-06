@@ -1,10 +1,12 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.getKey
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
@@ -48,16 +50,15 @@ object Snake : Challenge() {
         set(value) = Config.challengeConfig.setSetting(id, "isColored", value)
 
     override val id: String = "snake"
-    override val name: String = "§aSnake"
     override val material: Material = Material.PINK_CONCRETE
-    override val description: List<String> = listOf(
-        " ",
-        "§7A line follows you. If you touch it you lose",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+        title = ChallengeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -68,57 +69,124 @@ object Snake : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
-            button(Slots.RowThreeSlotThree, visibleItem()) {
+            button(Slots.RowThreeSlotThree, visibleItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isVisible = !isVisible
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, visibleItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, visibleItem(locale))
             }
 
-            button(Slots.RowThreeSlotFive, breakableItem()) {
+            button(Slots.RowThreeSlotFive, breakableItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isBreakable = !isBreakable
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, breakableItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, breakableItem(locale))
             }
 
-            button(Slots.RowThreeSlotSeven, colorsItem()) {
+            button(Slots.RowThreeSlotSeven, colorsItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isColored = !isColored
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, colorsItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, colorsItem(locale))
             }
         }
     }
 
-    private fun visibleItem() = itemStack(Material.WHITE_BANNER) {
+    private fun visibleItem(locale: Locale) = itemStack(Material.WHITE_BANNER) {
         meta {
-            name = "§aVisible Lines"
+            name = ChallengeManager.translationsProvider.translate(
+                "visible_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Toggle if the lines should be visible or not"
-                +"§7Lines are currently ".plus(if (isVisible) "§avisible" else "§cinvisible")
+                ChallengeManager.translationsProvider.translate(
+                    "colors_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        if (isVisible) {
+                            "§a" + ChallengeManager.translationsProvider.translate(
+                                "visible",
+                                locale,
+                                id
+                            )
+                        } else {
+                            "§c" + ChallengeManager.translationsProvider.translate(
+                                "invisible",
+                                locale,
+                                id
+                            )
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun breakableItem() = itemStack(Material.WOODEN_PICKAXE) {
+    private fun breakableItem(locale: Locale) = itemStack(Material.WOODEN_PICKAXE) {
         meta {
-            name = "§aBreakable Lines"
+            name = ChallengeManager.translationsProvider.translate(
+                "breakable_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Toggle if the lines should be breakable or not"
-                +"§7(The temporary (white) Blocks aren't breakable)"
-                +"§7Lines are currently ".plus(if (isBreakable) "§abreakable" else "§cunbreakable")
+                ChallengeManager.translationsProvider.translate(
+                    "colors_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        if (isBreakable) {
+                            "§a" + ChallengeManager.translationsProvider.translate(
+                                "breakable",
+                                locale,
+                                id
+                            )
+                        } else {
+                            "§c" + ChallengeManager.translationsProvider.translate(
+                                "unbreakable",
+                                locale,
+                                id
+                            )
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun colorsItem() = itemStack(Material.PINK_CONCRETE) {
+    private fun colorsItem(locale: Locale) = itemStack(Material.PINK_CONCRETE) {
         meta {
-            name = "§aColored Lines"
+            name = ChallengeManager.translationsProvider.translate(
+                "colors_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Toggle if the lines should be differently colored"
-                +"§7(Every Player has its own color - limits maximum players due to lack of colors)"
-                +"§7Lines are currently ".plus(if (isColored) "§adifferent colors" else "§cthe same color")
+                ChallengeManager.translationsProvider.translate(
+                    "colors_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        if (isColored) {
+                            "§a" + ChallengeManager.translationsProvider.translate(
+                                "different_colors",
+                                locale,
+                                id
+                            )
+                        } else {
+                            "§c" + ChallengeManager.translationsProvider.translate(
+                                "same_colors",
+                                locale,
+                                id
+                            )
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
@@ -129,7 +197,13 @@ object Snake : Challenge() {
                 if (playerMaterials.containsKey(player)) return
                 if (materials.isEmpty()) {
                     player.gameMode = GameMode.SPECTATOR
-                    player.sendMessage(StckUtilsPlugin.prefix + "§cthere was no material left for you, so you were excluded from the challenge")
+                    player.sendMessage(
+                        ChallengeManager.translationsProvider.translateWithPrefix(
+                            "no_material_left",
+                            player.language,
+                            id
+                        )
+                    )
                 }
                 val material = materials.random()
                 playerMaterials[player] = material
@@ -168,19 +242,20 @@ object Snake : Challenge() {
                 if (playerMaterials.containsValue(block.type)) {
                     val player = playerMaterials.getKey(block.type) as Player
                     lose(
-                        "${event.player.name} touched " +
-                            player.name +
-                            if (player.name.endsWith('s') || player.name.endsWith('x'))
-                                "' snake trail."
-                            else
-                                "'s snake trail."
+                        id,
+                        arrayOf(
+                            event.player.name,
+                            player.name + if (player.name.endsWith('s') || player.name.endsWith('x')) {
+                                "'"
+                            } else {
+                                "'s"
+                            }
+                        )
                     )
                     return
                 }
             }
-            lose(
-                "${event.player.name} touched a snake trail."
-            )
+            lose(id, arrayOf(event.player.name, "a"))
             return
         }
 

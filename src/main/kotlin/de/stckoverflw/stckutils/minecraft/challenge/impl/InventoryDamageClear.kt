@@ -13,13 +13,7 @@ import java.util.*
 object InventoryDamageClear : Challenge() {
 
     override val id: String = "inventory-damage-clear"
-    override val name: String = "§9Inventory Damage Clear"
     override val material: Material = Material.PURPLE_WOOL
-    override val description: List<String> = listOf(
-        " ",
-        "§7Every Time you get §cDamage §7your",
-        "§7entire Inventory gets cleared",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

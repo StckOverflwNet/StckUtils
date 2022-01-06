@@ -21,13 +21,7 @@ object BalanceLife : Challenge() {
         set(value) = Config.challengeConfig.setSetting(MobDuplicator.id, "isFirstRun", value)
 
     override val id: String = "balance-life"
-    override val name: String = "§aBalance Life"
     override val material: Material = Material.HEART_OF_THE_SEA
-    override val description: List<String> = listOf(
-        " ",
-        "§7Keep your health in balance.",
-        "§7The Challenge is over when you hit §f0 §7or §ffull hp",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -50,7 +44,7 @@ object BalanceLife : Challenge() {
         val player = event.entity as Player
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
         if (player.isPlaying() && player.health + event.amount >= maxHealth?.value!!) {
-            lose("${player.name} hit ${maxHealth.value.toInt()} hp.")
+            lose(id, arrayOf(player.name, maxHealth.value.toInt()))
             isFirstRun = true
         }
     }
@@ -60,7 +54,7 @@ object BalanceLife : Challenge() {
         if (!event.entity.isPlaying()) {
             return
         }
-        lose("${event.entity.name} hit 0 hp.")
+        lose(id, arrayOf(event.entity.name, 0))
         isFirstRun = true
     }
 }

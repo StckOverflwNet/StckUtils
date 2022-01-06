@@ -5,8 +5,7 @@ import com.mojang.authlib.properties.Property
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.hidden
-import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import de.stckoverflw.stckutils.minecraft.challenge.active
+import de.stckoverflw.stckutils.minecraft.challenge.*
 import de.stckoverflw.stckutils.minecraft.goal.Goal
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.active
@@ -120,10 +119,18 @@ fun getSettingsItem(locale: Locale) = itemStack(Material.NETHER_STAR) {
 
 fun generateItemForChallenge(challenge: Challenge, locale: Locale) = itemStack(challenge.material) {
     meta {
-        name = challenge.name
+        name = ChallengeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            challenge.id
+        )
         localName = challenge.id
         addLore {
-            challenge.description.forEach {
+            ChallengeManager.translationsProvider.translate(
+                descriptionKey,
+                locale,
+                challenge.id
+            ).split("\n").forEach {
                 +it
             }
             +" "
@@ -150,7 +157,13 @@ fun generateItemForChallenge(challenge: Challenge, locale: Locale) = itemStack(c
                         "gui.challenge.lore.config_gui",
                         locale,
                         "items",
-                        arrayOf(challenge.name)
+                        arrayOf(
+                            ChallengeManager.translationsProvider.translate(
+                                nameKey,
+                                locale,
+                                challenge.id
+                            )
+                        )
                     ).split("\n").forEach {
                         +it
                     }

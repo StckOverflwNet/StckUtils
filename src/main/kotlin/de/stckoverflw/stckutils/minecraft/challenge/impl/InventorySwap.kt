@@ -1,10 +1,11 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
@@ -32,17 +33,15 @@ object InventorySwap : Challenge() {
         set(value) = Config.challengeDataConfig.setSetting(id, "time", value)
 
     override val id: String = "inventory-swap"
-    override val name: String = "§2Inventory Swap"
     override val material: Material = Material.CHEST_MINECART
-    override val description: List<String> = listOf(
-        " ",
-        "§7Swaps your inventory with",
-        "§7someone elses every now and then",
-    )
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = ChunkFlattener.name
+        title = ChallengeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -53,7 +52,7 @@ object InventorySwap : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
-            button(Slots.RowThreeSlotFour, minusItem()) {
+            button(Slots.RowThreeSlotFour, minusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (period - 1 < minPeriod)
@@ -66,68 +65,89 @@ object InventorySwap : Challenge() {
                     else
                         period -= 10
                 }
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem()) {
+            button(Slots.RowThreeSlotFive, resetItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 period = 60
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotSix, plusItem()) {
+            button(Slots.RowThreeSlotSix, plusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     period += 1
                 } else if (it.bukkitEvent.isRightClick) {
                     period += 10
                 }
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
         }
     }
 
-    private fun updateInventory(inv: Inventory) {
-        inv.setItem(21, minusItem())
-        inv.setItem(22, resetItem())
-        inv.setItem(23, plusItem())
+    private fun updateInventory(inv: Inventory, locale: Locale) {
+        inv.setItem(21, minusItem(locale))
+        inv.setItem(22, resetItem(locale))
+        inv.setItem(23, plusItem(locale))
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = ChallengeManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the period"
-                +"§7Period: §f${ChatColor.stripColor(Timer.formatTime(period.toLong()))}§7 (§8Default: §71m)"
+                ChallengeManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id,
+                    arrayOf(ChatColor.stripColor(Timer.formatTime(period.toLong())))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun plusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun plusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§aPlus"
+            name = ChallengeManager.translationsProvider.translate(
+                "plus_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Increase the period"
-                +"§7Period: §f${ChatColor.stripColor(Timer.formatTime(period.toLong()))}§7"
-                +" "
-                +"§7Left-click:             §a+ 1§7s"
-                +"§7Right-click:            §a+ 10§7s"
+                ChallengeManager.translationsProvider.translate(
+                    "plus_item.lore",
+                    locale,
+                    id,
+                    arrayOf(ChatColor.stripColor(Timer.formatTime(period.toLong())))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun minusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun minusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§cMinus"
+            name = ChallengeManager.translationsProvider.translate(
+                "minus_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Decrease the period"
-                +"§7Period: §f${ChatColor.stripColor(Timer.formatTime(period.toLong()))}§7"
-                +" "
-                +"§7Left-click:             §c- 1§7s"
-                +"§7Right-click:            §c- 10§7s"
+                ChallengeManager.translationsProvider.translate(
+                    "minus_item.lore",
+                    locale,
+                    id,
+                    arrayOf(ChatColor.stripColor(Timer.formatTime(period.toLong())))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
@@ -139,7 +159,6 @@ object InventorySwap : Challenge() {
 
         val players = onlinePlayers.filter { it.isPlaying() }
         if (players.size <= 1) {
-            players.forEach { it.sendMessage(StckUtilsPlugin.prefix + "§7You are alone, couldn't change inventory with anyone") }
             return
         }
 

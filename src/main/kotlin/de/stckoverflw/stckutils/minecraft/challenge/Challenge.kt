@@ -22,19 +22,9 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
     abstract val id: String
 
     /**
-     * the name of the challenge, the item in the inventory is called like this
-     */
-    abstract val name: String
-
-    /**
      * the item of the challenge, this is used in the challenge inventory
      */
     abstract val material: Material
-
-    /**
-     * the description of the challenge, the item in the inventory is called like this
-     */
-    abstract val description: List<String>
 
     /**
      * If the Challenge uses Event(s) register the class as a Listener
@@ -74,20 +64,21 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
     /**
      * Is run once a challenge is lost
      */
-    fun lose(reasonKey: String) {
+    fun lose(id: String, replacements: Array<Any?> = arrayOf()) {
         Timer.stop()
         Bukkit.getOnlinePlayers().forEach {
             it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
             it.sendMessage(
-                StckUtilsPlugin.translationsProvider.translate(
+                StckUtilsPlugin.translationsProvider.translateWithPrefix(
                     "challenge.lose",
                     it.language,
                     "messages",
                     arrayOf(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            reasonKey,
+                        ChallengeManager.translationsProvider.translateWithPrefix(
+                            loseKey,
                             it.language,
-                            "messages"
+                            id,
+                            replacements
                         ),
                         Timer
                     )
@@ -98,6 +89,13 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
         Timer.backwardsStartTime = 0
     }
 }
+
+val nameKey: String
+    get() = "name"
+val descriptionKey: String
+    get() = "description"
+val loseKey: String
+    get() = "lose"
 
 var Challenge.active: Boolean
     get() = Config.challengeConfig.getActive(this.id)

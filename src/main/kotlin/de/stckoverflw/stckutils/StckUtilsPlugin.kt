@@ -30,7 +30,7 @@ class StckUtilsPlugin : KSpigot() {
         const val prefix: String = "§f§lStckUtils §7| §r"
         var protocolManager: ProtocolManager? = null
         var isProtocolLib: Boolean = false
-        val translationsProvider: TranslationsProvider = TranslationsProvider()
+        val translationsProvider: TranslationsProvider = TranslationsProvider("translations.general")
     }
 
     private var wasReset = false
@@ -66,8 +66,6 @@ class StckUtilsPlugin : KSpigot() {
         Timer()
         ChallengeManager()
         GoalManager()
-        GoalManager.registerActiveGoal()
-        GoalManager.unregisterActiveGoal()
         GameChangeManager()
 
         pluginManager.registerEvents(ConnectionListener(), this)

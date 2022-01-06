@@ -13,12 +13,7 @@ import java.util.*
 object NoFallDamage : Challenge() {
 
     override val id: String = "no-fall-damage"
-    override val name: String = "§aNo Fall Damage"
     override val material: Material = Material.LEATHER_BOOTS
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you get fall damgage the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -35,7 +30,7 @@ object NoFallDamage : Challenge() {
         }
 
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
-            lose("${player.name} took fall damage.")
+            lose(id, arrayOf(player.name))
         }
     }
 }

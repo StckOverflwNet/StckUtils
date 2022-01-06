@@ -12,12 +12,7 @@ import java.util.*
 object NoXP : Challenge() {
 
     override val id: String = "no-xp"
-    override val name: String = "§eNo XP"
     override val material: Material = Material.EXPERIENCE_BOTTLE
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you pick up xp the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -27,6 +22,6 @@ object NoXP : Challenge() {
         if (!event.player.isPlaying()) {
             return
         }
-        lose("${event.player.name} picked up XP.")
+        lose(id, arrayOf(event.player.name))
     }
 }

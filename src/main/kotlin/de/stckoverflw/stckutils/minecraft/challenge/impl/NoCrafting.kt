@@ -13,12 +13,7 @@ import java.util.*
 object NoCrafting : Challenge() {
 
     override val id: String = "no-crafting"
-    override val name: String = "§aNo Crafting"
     override val material: Material = Material.CRAFTING_TABLE
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you craft something the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -28,6 +23,6 @@ object NoCrafting : Challenge() {
         if (!(event.whoClicked as Player).isPlaying()) {
             return
         }
-        lose("${event.whoClicked.name} crafted ${event.recipe.result.type.name}.")
+        lose(id, arrayOf(event.whoClicked.name, event.recipe.result.type.name))
     }
 }

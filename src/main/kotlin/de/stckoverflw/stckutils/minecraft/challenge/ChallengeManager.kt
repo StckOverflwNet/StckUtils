@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.challenge
 
+import de.stckoverflw.stckutils.i18n.TranslationsProvider
 import de.stckoverflw.stckutils.minecraft.challenge.impl.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
@@ -8,6 +9,7 @@ import net.axay.kspigot.main.KSpigotMainInstance
 object ChallengeManager {
 
     lateinit var challenges: ArrayList<Challenge>
+    lateinit var translationsProvider: TranslationsProvider
 
     operator fun invoke() {
         challenges = arrayListOf(
@@ -16,7 +18,6 @@ object ChallengeManager {
             SingleUse,
             GamerChallenge,
             BlockExplode,
-            // ChunkSync,
             ChunkFlattener,
             NoXP,
             NoBlockBreak,
@@ -44,6 +45,7 @@ object ChallengeManager {
             DamageFreeze,
         )
         challenges.sortBy { it.id }
+        translationsProvider = TranslationsProvider("translations.minecraft.challenge")
     }
 
     fun registerChallengeListeners() {

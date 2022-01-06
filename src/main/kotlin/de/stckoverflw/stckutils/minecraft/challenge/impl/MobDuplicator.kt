@@ -1,8 +1,11 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
@@ -30,16 +33,15 @@ object MobDuplicator : Challenge() {
         set(value) = Config.challengeConfig.setSetting(id, "isExponential", value)
 
     override val id: String = "mob-duplicator"
-    override val name: String = "§dMob Duplicator"
     override val material: Material = Material.SUSPICIOUS_STEW
-    override val description: List<String> = listOf(
-        " ",
-        "§7Every time you kill a mob it duplicates itself ",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+        title = ChallengeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -50,30 +52,53 @@ object MobDuplicator : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
-            button(Slots.RowThreeSlotFive, exponentialItem()) {
+            button(Slots.RowThreeSlotFive, exponentialItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isShiftClick) {
                     exponentialAmount = 2
                 } else {
                     isExponential = !isExponential
                 }
-                it.bukkitEvent.currentItem = exponentialItem()
+                it.bukkitEvent.currentItem = exponentialItem(locale)
             }
         }
     }
 
-    private fun exponentialItem() = itemStack(Material.RABBIT_STEW) {
+    private fun exponentialItem(locale: Locale) = itemStack(Material.RABBIT_STEW) {
         meta {
-            name = "§aExponential Duplication"
+            name = ChallengeManager.translationsProvider.translate(
+                "exponential_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Toggle exponential duplication (capped at 64)"
-                if (isExponential) {
-                    +" "
-                    +"§7 Shift Click to reset amount"
+                ChallengeManager.translationsProvider.translate(
+                    "exponential_item.lore",
+                    locale,
+                    id,
+                    arrayOf(
+                        if (isExponential) {
+                            " \n§7 Shift Click to reset amount\n"
+                        } else {
+                            ""
+                        },
+                        if (isExponential) {
+                            StckUtilsPlugin.translationsProvider.translate(
+                                "generic.enabled",
+                                locale,
+                                "general"
+                            )
+                        } else {
+                            StckUtilsPlugin.translationsProvider.translate(
+                                "generic.disabled",
+                                locale,
+                                "general"
+                            )
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
                 }
-                +" "
-                +"§7Currently ".plus(if (isExponential) "§aenabled ($exponentialAmount)" else "§cdisabled")
             }
         }
     }

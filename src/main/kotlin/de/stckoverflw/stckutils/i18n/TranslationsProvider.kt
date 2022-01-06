@@ -4,13 +4,13 @@ import de.stckoverflw.stckutils.StckUtilsPlugin
 import java.text.MessageFormat
 import java.util.*
 
-class TranslationsProvider {
+class TranslationsProvider(private val resourceDirectory: String = "translations") {
 
     private val resourceBundles: MutableMap<Pair<String, Locale>, ResourceBundle> = mutableMapOf()
 
     @Throws(MissingResourceException::class)
     fun getBundle(locale: Locale, bundleName: String): ResourceBundle? {
-        val bundle = "translations.$bundleName"
+        val bundle = "$resourceDirectory.$bundleName"
         val bundleKey = bundle to locale
 
         if (resourceBundles[bundleKey] == null) {

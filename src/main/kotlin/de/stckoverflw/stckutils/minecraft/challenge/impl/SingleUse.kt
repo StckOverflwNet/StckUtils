@@ -2,7 +2,6 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
@@ -17,13 +16,7 @@ import java.util.*
 object SingleUse : Challenge() {
 
     override val id: String = "single-use"
-    override val name: String = "${KColors.INDIANRED}Single use"
     override val material: Material = Material.WOODEN_PICKAXE
-    override val description: List<String> = listOf(
-        " ",
-        "§7§lEvery §7Item has §c1 durability §7and",
-        "§7can just be used §conce",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

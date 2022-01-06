@@ -1,4 +1,5 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
+import de.stckoverflw.stckutils.i18n.TranslationsProvider
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DamageMultiplier
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DeathCounter
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.MaxHealth
@@ -13,6 +14,7 @@ import net.axay.kspigot.main.KSpigotMainInstance
 object GameChangeManager {
 
     lateinit var gameChanges: ArrayList<GameChange>
+    lateinit var translationsProvider: TranslationsProvider
 
     operator fun invoke() {
         gameChanges = arrayListOf(
@@ -25,6 +27,7 @@ object GameChangeManager {
             SpawnWorld,
         )
         gameChanges.sortBy { it.id }
+        translationsProvider = TranslationsProvider("translations.minecraft.gamechange")
     }
 
     fun registerGameChangeListeners() {

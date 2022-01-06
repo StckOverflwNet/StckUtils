@@ -14,13 +14,7 @@ import java.util.*
 object Medusa : Challenge() {
 
     override val id: String = "medusa"
-    override val name: String = "§8Medusa"
     override val material: Material = Material.STONE
-    override val description: List<String> = listOf(
-        " ",
-        "§7Every mob you look at",
-        "§7will be petrified."
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

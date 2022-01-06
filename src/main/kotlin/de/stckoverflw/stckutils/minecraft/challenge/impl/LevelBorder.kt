@@ -6,7 +6,9 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isInArea
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
@@ -54,14 +56,7 @@ object LevelBorder : Challenge(true) {
         set(value) = Config.challengeDataConfig.setLocation(id, "endSpawn", value!!)
 
     override val id: String = "level-border"
-    override val name: String = "§eLevel Border"
     override val material: Material = Material.EXPERIENCE_BOTTLE
-    override val description: List<String> = listOf(
-        " ",
-        "§7You start with a world border of 1.",
-        "§7It will increase and decrease",
-        "§7as your xp level changes."
-    )
     override val usesEvents: Boolean = true
 
     private fun initializeBorder(player: Player, location: Location, size: Double) {
@@ -214,7 +209,11 @@ object LevelBorder : Challenge(true) {
     }
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = name
+        title = ChallengeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -225,7 +224,7 @@ object LevelBorder : Challenge(true) {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
 
-            button(Slots.RowThreeSlotFive, resetItem()) {
+            button(Slots.RowThreeSlotFive, resetItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isFirstRun = true
                 xpLevel = 0
@@ -238,12 +237,21 @@ object LevelBorder : Challenge(true) {
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = ChallengeManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the Border and Level"
+                ChallengeManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }

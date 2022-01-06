@@ -14,13 +14,7 @@ import java.util.*
 object DamageSwap : Challenge() {
 
     override val id: String = "damage-swap"
-    override val name: String = "§4DamageSwap"
     override val material: Material = Material.SHIELD
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you take damage, someone else",
-        "§7takes the damage instead of you"
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

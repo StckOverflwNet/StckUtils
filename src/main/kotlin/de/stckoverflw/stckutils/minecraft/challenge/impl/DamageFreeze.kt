@@ -15,13 +15,7 @@ import java.util.*
 object DamageFreeze : Challenge() {
 
     override val id: String = "damage-freeze"
-    override val name: String = "§aDamageFreeze"
     override val material: Material = Material.ICE
-    override val description: List<String> = listOf(
-        " ",
-        "§7Every time you take 1 heart damage",
-        "§7You will be freezed for a minute."
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

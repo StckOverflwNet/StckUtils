@@ -14,12 +14,7 @@ import java.util.*
 object AntiArmor : Challenge() {
 
     override val id: String = "anti-armor"
-    override val name: String = "§3AntiArmor"
     override val material: Material = Material.IRON_HELMET
-    override val description: List<String> = listOf(
-        " ",
-        "§7You loose health if you wear armor",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null

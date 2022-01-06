@@ -12,12 +12,7 @@ import java.util.*
 object NoBlockPlace : Challenge() {
 
     override val id: String = "no-block-place"
-    override val name: String = "§eNo Block Place"
     override val material: Material = Material.GRASS_BLOCK
-    override val description: List<String> = listOf(
-        " ",
-        "§7When you place a block the challenge is over.",
-    )
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
@@ -27,6 +22,6 @@ object NoBlockPlace : Challenge() {
         if (!event.player.isPlaying()) {
             return
         }
-        lose("${event.player.name} placed a Block.")
+        lose(id, arrayOf(event.player.name))
     }
 }
