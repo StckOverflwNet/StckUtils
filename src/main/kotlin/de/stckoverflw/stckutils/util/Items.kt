@@ -26,7 +26,6 @@ import java.util.*
 /*
  * GUI Items
  */
-
 val placeHolderItemGray = itemStack(Material.GRAY_STAINED_GLASS_PANE) {
     meta {
         name = "§a "

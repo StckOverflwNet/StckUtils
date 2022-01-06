@@ -1,7 +1,11 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.minecraft.challenge.descriptionKey
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.util.getGoBackItem
@@ -23,19 +27,44 @@ import java.util.*
 import kotlin.math.roundToInt
 
 object DamageMultiplier : GameExtension() {
+
+    private var minMultiplier: Double = 0.1
+    private var maxMultiplier: Double = 100.0
+    private var multiplier: Double
+        get() = (Config.gameChangeConfig.getSetting(id, "multiplier") ?: 1.0) as Double
+        set(value) = Config.gameChangeConfig.setSetting(id, "multiplier", value)
+
     override val id: String = "damage-multiplier"
     override val usesEvents: Boolean = true
 
-    override fun item() = itemStack(Material.IRON_SWORD) {
+    override fun item(locale: Locale) = itemStack(Material.IRON_SWORD) {
         meta {
-            name = "§6Damage Multiplier"
+            name = GameChangeManager.translationsProvider.translate(
+                nameKey,
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Multiplies the damage you do to entities"
-                +" "
-                +"§7Right-click: §fOpen more settings"
-                +""
-                +"§7Currently ".plus(if (active) "§aactivated" else "§cdeactivated")
+                GameChangeManager.translationsProvider.translate(
+                    descriptionKey,
+                    locale,
+                    id,
+                    arrayOf(
+                        if (active) {
+                            "§a" + StckUtilsPlugin.translationsProvider.translate(
+                                "generic.activated",
+                                locale,
+                                "general"
+                            )
+                        } else {
+                            "§c" + StckUtilsPlugin.translationsProvider.translate(
+                                "generic.disabled",
+                                locale,
+                                "general"
+                            )
+                        }
+                    )
+                )
             }
         }
     }
@@ -48,11 +77,15 @@ object DamageMultiplier : GameExtension() {
             event.player.openGUI(configurationGUI(event.player.language))
         }
 
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.language))
     }
 
     fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = "§6Damage Multiplier"
+        title = GameChangeManager.translationsProvider.translate(
+            nameKey,
+            locale,
+            id
+        )
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -63,71 +96,88 @@ object DamageMultiplier : GameExtension() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 3) }
 
-            button(Slots.RowThreeSlotSix, plusItem()) {
+            button(Slots.RowThreeSlotSix, plusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 handleUpdateClick(it.bukkitEvent, true)
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem()) {
+            button(Slots.RowThreeSlotFive, resetItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 multiplier = 1.0
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFour, minusItem()) {
+            button(Slots.RowThreeSlotFour, minusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 handleUpdateClick(it.bukkitEvent, false)
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
         }
     }
 
-    private fun updateInventory(inv: Inventory) {
-        inv.setItem(21, minusItem())
-        inv.setItem(22, resetItem())
-        inv.setItem(23, plusItem())
+    private fun updateInventory(inv: Inventory, locale: Locale) {
+        inv.setItem(21, minusItem(locale))
+        inv.setItem(22, resetItem(locale))
+        inv.setItem(23, plusItem(locale))
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = "§4Reset"
+            name = GameChangeManager.translationsProvider.translate(
+                "reset_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Reset the value of the Multiplier"
-                +"§7Value: §f${String.format("%.1f", multiplier)} §7(§8Default: 1.0§7)"
+                GameChangeManager.translationsProvider.translate(
+                    "reset_item.lore",
+                    locale,
+                    id,
+                    arrayOf(String.format("%.1f", multiplier))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun plusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun plusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§aPlus"
+            name = GameChangeManager.translationsProvider.translate(
+                "plus_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Increase the value of the Multiplier"
-                +"§7Value: §f${String.format("%.1f", multiplier)}"
-                +" "
-                +"§7Left-click + Shift:     §a+ 0.1"
-                +"§7Left-click:             §a+ 0.5"
-                +"§7Right-click + Shift:    §a+ 1"
-                +"§7Right-click:            §a+ 10"
+                GameChangeManager.translationsProvider.translate(
+                    "plus_item.lore",
+                    locale,
+                    id,
+                    arrayOf(String.format("%.1f", multiplier))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
 
-    private fun minusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun minusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = "§cMinus"
+            name = GameChangeManager.translationsProvider.translate(
+                "minus_item.name",
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Decrease the value of the Multiplier"
-                +"§7Value: §f${String.format("%.1f", multiplier)}"
-                +" "
-                +"§7Left-click + Shift:     §c- 0.1"
-                +"§7Left-click:             §c- 0.5"
-                +"§7Right-click + Shift:    §c- 1"
-                +"§7Right-click:            §c- 10"
+                GameChangeManager.translationsProvider.translate(
+                    "minus_item.lore",
+                    locale,
+                    id,
+                    arrayOf(String.format("%.1f", multiplier))
+                ).split("\n").forEach {
+                    +it
+                }
             }
         }
     }
@@ -163,12 +213,6 @@ object DamageMultiplier : GameExtension() {
     override fun run() {
         // since this method is empty we don't ever call it
     }
-
-    private var minMultiplier: Double = 0.1
-    private var maxMultiplier: Double = 100.0
-    private var multiplier: Double
-        get() = (Config.gameChangeConfig.getSetting(id, "multiplier") ?: 1.0) as Double
-        set(value) = Config.gameChangeConfig.setSetting(id, "multiplier", value)
 
     @EventHandler
     fun onDamage(event: EntityDamageByEntityEvent) {

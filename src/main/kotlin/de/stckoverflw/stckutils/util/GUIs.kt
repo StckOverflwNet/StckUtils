@@ -317,7 +317,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         val gameExtensionCompound = createRectCompound<GameExtension>(
             Slots.RowFourSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = {
-                it.item()
+                it.item(locale)
             },
             onClick = { clickEvent, extension ->
                 clickEvent.bukkitEvent.isCancelled = true
@@ -329,7 +329,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         val gameRuleCompound = createRectCompound<GameRule>(
             Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
             iconGenerator = {
-                it.item()
+                it.item(locale)
             },
             onClick = { clickEvent, rule ->
                 clickEvent.bukkitEvent.isCancelled = true

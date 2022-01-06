@@ -5,6 +5,7 @@ import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 sealed class GameChange : Listener {
     /**
@@ -16,7 +17,7 @@ sealed class GameChange : Listener {
     /**
      * the item that is shown in the GUI
      */
-    abstract fun item(): ItemStack
+    abstract fun item(locale: Locale): ItemStack
 
     /**
      * If the Challenge uses Event(s) register the class as a Listener

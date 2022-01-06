@@ -3,6 +3,10 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 import com.destroystokyo.paper.MaterialTags
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.minecraft.challenge.descriptionKey
+import de.stckoverflw.stckutils.minecraft.challenge.nameKey
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -36,7 +40,7 @@ object SpawnWorld : GameRule() {
     override val id: String = "spawn-world"
     override val usesEvents: Boolean = true
 
-    override fun item(): ItemStack = itemStack(
+    override fun item(locale: Locale): ItemStack = itemStack(
         when (environment) {
             World.Environment.NORMAL -> {
                 Material.GRASS_BLOCK
@@ -50,21 +54,43 @@ object SpawnWorld : GameRule() {
         }
     ) {
         meta {
-            name = "§aSpawn World"
+            name = GameChangeManager.translationsProvider.translate(
+                nameKey,
+                locale,
+                id
+            )
             addLore {
-                +" "
-                +"§7Sets the world to spawn in"
-                +" "
-                when (environment) {
-                    World.Environment.NORMAL -> {
-                        +"§aOverworld"
-                    }
-                    World.Environment.NETHER -> {
-                        +"§4Nether"
-                    }
-                    else -> {
-                        +"§eEnd (End Islands, not Ender Dragon Island)"
-                    }
+                GameChangeManager.translationsProvider.translate(
+                    descriptionKey,
+                    locale,
+                    id,
+                    arrayOf(
+                        when (environment) {
+                            World.Environment.NORMAL -> {
+                                GameChangeManager.translationsProvider.translate(
+                                    "overworld",
+                                    locale,
+                                    id
+                                )
+                            }
+                            World.Environment.NETHER -> {
+                                GameChangeManager.translationsProvider.translate(
+                                    "nether",
+                                    locale,
+                                    id
+                                )
+                            }
+                            else -> {
+                                GameChangeManager.translationsProvider.translate(
+                                    "end",
+                                    locale,
+                                    id
+                                )
+                            }
+                        }
+                    )
+                ).split("\n").forEach {
+                    +it
                 }
             }
         }
@@ -84,7 +110,7 @@ object SpawnWorld : GameRule() {
             }
         }
         players = listOf()
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item())
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.language))
         run()
     }
 
@@ -119,13 +145,17 @@ object SpawnWorld : GameRule() {
         ) {
             return
         }
-        val pickaxe = itemStack(Material.IRON_PICKAXE) {
-            meta {
-                name = "§aEnd Starter Pickaxe"
-            }
-        }
         onlinePlayers.filter { it.isPlaying() && players.contains(it.uniqueId) }.forEach {
             if (it.inventory.none { item -> MaterialTags.PICKAXES.values.contains(item?.type) }) {
+                val pickaxe = itemStack(Material.IRON_PICKAXE) {
+                    meta {
+                        name = GameChangeManager.translationsProvider.translate(
+                            "starter_pickaxe.name",
+                            it.language,
+                            id
+                        )
+                    }
+                }
                 it.inventory.addItem(pickaxe)
             }
         }
@@ -137,7 +167,11 @@ object SpawnWorld : GameRule() {
             it.teleportAsync(location)
             val pickaxe = itemStack(Material.IRON_PICKAXE) {
                 meta {
-                    name = "§aEnd Starter Pickaxe"
+                    name = GameChangeManager.translationsProvider.translate(
+                        "starter_pickaxe.name",
+                        it.language,
+                        id
+                    )
                 }
             }
             if (environment == World.Environment.THE_END &&
