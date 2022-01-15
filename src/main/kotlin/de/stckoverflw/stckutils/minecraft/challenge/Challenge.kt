@@ -1,17 +1,18 @@
 package de.stckoverflw.stckutils.minecraft.challenge
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.Listener
-import java.util.*
+import java.util.Locale
 
 abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
 
@@ -40,7 +41,7 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
      * Is run before the Timer starts to prepare the Challenge
      */
     open fun prepareChallenge() {
-        KSpigotMainInstance.logger.info("§aPreparing Challenge")
+        KSpigotMainInstance.logger.info("Preparing Challenge")
     }
 
     /**
@@ -64,38 +65,30 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
     /**
      * Is run once a challenge is lost
      */
-    fun lose(id: String, replacements: Array<Any?> = arrayOf()) {
+    fun lose(replacements: List<Component> = listOf()) {
         Timer.stop()
         Bukkit.getOnlinePlayers().forEach {
             it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
             it.sendMessage(
-                StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                translatable(
                     "challenge.lose",
-                    it.language,
-                    "messages",
-                    arrayOf(
-                        ChallengeManager.translationsProvider.translateWithPrefix(
-                            loseKey,
-                            it.language,
-                            id,
-                            replacements
-                        ),
-                        Timer
+                    listOf(
+                        translatable(loseKey, replacements),
+                        text(Timer.toString())
                     )
                 )
             )
         }
-
         Timer.backwardsStartTime = 0
     }
 }
 
-val nameKey: String
-    get() = "name"
-val descriptionKey: String
-    get() = "description"
-val loseKey: String
-    get() = "lose"
+val Challenge.nameKey: String
+    get() = "$id.name"
+val Challenge.descriptionKey: String
+    get() = "$id.description"
+val Challenge.loseKey: String
+    get() = "$id.lose"
 
 var Challenge.active: Boolean
     get() = Config.challengeConfig.getActive(this.id)

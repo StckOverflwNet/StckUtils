@@ -1,7 +1,6 @@
 package de.stckoverflw.stckutils.command
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.extension.errorTranslatable
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.impl.AllAdvancements
 import de.stckoverflw.stckutils.minecraft.goal.impl.AllItems
@@ -17,23 +16,17 @@ class AllXCommand {
             when (GoalManager.activeGoal) {
                 is AllItems -> {
                     AllItems.resetFilter(player)
-                    player.openGUI(AllItems.gui(player.language))
+                    player.openGUI(AllItems.gui(player.locale()))
                 }
                 is AllMobs -> {
                     AllMobs.resetFilter(player)
-                    player.openGUI(AllMobs.gui(player.language))
+                    player.openGUI(AllMobs.gui(player.locale()))
                 }
                 is AllAdvancements -> {
                     AllAdvancements.resetFilter(player)
-                    player.openGUI(AllAdvancements.gui(player.language))
+                    player.openGUI(AllAdvancements.gui(player.locale()))
                 }
-                else -> player.sendMessage(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                        "allx.not_enabled",
-                        player.language,
-                        "messages"
-                    )
-                )
+                else -> player.sendMessage(errorTranslatable("allx.not_enabled"))
             }
         }
     }

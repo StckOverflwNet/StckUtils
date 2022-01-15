@@ -1,9 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.goal.Battle
-import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import net.axay.kspigot.extensions.onlinePlayers
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -19,16 +18,12 @@ object Survive : Battle() {
         val player = event.entity
         player.gameMode = GameMode.SPECTATOR
         player.sendMessage(
-            GoalManager.translationsProvider.translateWithPrefix(
-                "died",
-                player.language,
-                id
-            )
+            translatable("$id.died")
         )
         val alivePlayers = onlinePlayers.filter { it.gameMode == GameMode.SURVIVAL }
         if (alivePlayers.size == 1) {
             val winningPlayer = alivePlayers[0]
-            win(winningPlayer, id, arrayOf(winningPlayer.name))
+            win(winningPlayer, listOf(winningPlayer.name()))
         }
     }
 }

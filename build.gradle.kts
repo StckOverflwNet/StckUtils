@@ -1,19 +1,17 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-    id("io.papermc.paperweight.userdev") version "1.3.4-SNAPSHOT"
-}
-
-ktlint {
-    disabledRules.set(listOf("no-wildcard-imports"))
+    id("io.papermc.paperweight.userdev") version "1.3.3"
 }
 
 group = "de.stckoverflw"
 version = "1.3.2"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/")
 }
@@ -23,7 +21,7 @@ dependencies {
     paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.18.0")
+    implementation("net.axay", "kspigot", "1.18.1")
 
     // ProtocolLib
     implementation("com.comphenix.protocol", "ProtocolLib", "4.7.0")
@@ -35,8 +33,8 @@ dependencies {
     implementation("com.mojang", "brigadier", "1.0.18")
 
     // Kotlinx.Coroutines dependency
-    api("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.0-RC2")
-    api("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.0-RC2")
+    api("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.0")
+    api("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.0")
 }
 
 kotlin {
@@ -46,8 +44,16 @@ kotlin {
 }
 
 tasks {
+    jar {
+        // Disabled, because we use the shadowJar task for building our jar
+        enabled = false
+    }
     build {
         dependsOn(reobfJar)
+        dependsOn(shadowJar)
+    }
+    // Relocating KSpigot to prevent conflicts with multiple Plugins using KSpigot
+    shadowJar {
     }
     withType<KotlinCompile> {
         kotlinOptions {

@@ -14,7 +14,7 @@ object FindDiamond : TeamGoal() {
     @EventHandler
     fun onPickup(event: PlayerAttemptPickupItemEvent) {
         if (event.item.itemStack.type == Material.DIAMOND) {
-            win(id, arrayOf(event.player.name))
+            win(listOf(event.player.name()))
         }
     }
 
@@ -22,7 +22,7 @@ object FindDiamond : TeamGoal() {
     fun onInventoryClick(event: InventoryClickEvent) {
         if (event.currentItem == null) return
         if (event.currentItem!!.type == Material.DIAMOND) {
-            win(id, arrayOf(event.whoClicked.name))
+            win(listOf(event.whoClicked.name()))
         }
     }
 }

@@ -7,7 +7,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
-import java.util.*
+import java.util.Locale
 
 object NoDeath : Challenge() {
 
@@ -23,6 +23,6 @@ object NoDeath : Challenge() {
             return
         }
         event.entity.inventory.clear()
-        lose(id, arrayOf(event.entity.name))
+        lose(listOf(event.entity.name()))
     }
 }

@@ -14,7 +14,7 @@ object KillEnderdragon : TeamGoal() {
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         if (event.entityType == EntityType.ENDER_DRAGON) {
-            win(id)
+            win()
         }
     }
 }

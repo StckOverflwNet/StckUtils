@@ -7,7 +7,7 @@ import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
-import java.util.*
+import java.util.Locale
 
 object NoVillagerTrade : Challenge() {
 
@@ -22,6 +22,6 @@ object NoVillagerTrade : Challenge() {
         if (!event.player.isPlaying()) {
             return
         }
-        lose(id, arrayOf(event.player.name, event.villager.name))
+        lose(listOf(event.player.name(), event.villager.name()))
     }
 }

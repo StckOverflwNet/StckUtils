@@ -1,19 +1,30 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isObtainableInSurvival
 import de.stckoverflw.stckutils.extension.isPlaying
-import de.stckoverflw.stckutils.extension.language
-import de.stckoverflw.stckutils.minecraft.challenge.nameKey
-import de.stckoverflw.stckutils.minecraft.goal.GoalManager
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
+import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
-import net.axay.kspigot.items.*
+import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.flag
+import net.axay.kspigot.items.itemStack
+import net.axay.kspigot.items.meta
+import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.space
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -22,7 +33,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 object AllItems : TeamGoal() {
 
@@ -73,11 +85,7 @@ object AllItems : TeamGoal() {
     }
 
     fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = GoalManager.translationsProvider.translate(
-            nameKey,
-            locale,
-            id
-        )
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -99,12 +107,7 @@ object AllItems : TeamGoal() {
                 it.guiInstance.reloadCurrentPage()
                 onlinePlayers.forEach { player ->
                     player.sendMessage(
-                        GoalManager.translationsProvider.translateWithPrefix(
-                            "message.reset_progress",
-                            locale,
-                            id,
-                            arrayOf(it.bukkitEvent.whoClicked.name)
-                        )
+                        translatable("$id.message.reset_progress", listOf(it.bukkitEvent.whoClicked.name()))
                     )
                 }
             }
@@ -157,16 +160,14 @@ object AllItems : TeamGoal() {
                 button(Slots.RowThreeSlotOne, skipItem(locale), onClick = { clickEvent ->
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
-                            "skipped",
-                            id,
-                            arrayOf(clickEvent.player.name, formatMaterial(nextMaterial)),
+                            "$id.skipped",
+                            listOf(clickEvent.player.name(), text(formatMaterial(nextMaterial))),
                             false
                         )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
-                            "marked",
-                            id,
-                            arrayOf(clickEvent.player.name, formatMaterial(nextMaterial))
+                            "$id.marked",
+                            listOf(clickEvent.player.name(), text(formatMaterial(nextMaterial)))
                         )
                     }
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
@@ -214,43 +215,31 @@ object AllItems : TeamGoal() {
 
     private fun skipItem(locale: Locale) = itemStack(Material.BEDROCK) {
         meta {
-            name = GoalManager.translationsProvider.translate(
-                "skip_item.name",
-                locale,
-                id,
-                arrayOf(formatMaterial(nextMaterial))
-            )
+            name = translatable("$id.skip_item.name", listOf(text(formatMaterial(nextMaterial))))
+                .render(locale)
             addLore {
-                GoalManager.translationsProvider.translate(
-                    "skip_item.lore",
-                    locale,
-                    id,
-                    arrayOf(formatMaterial(nextMaterial))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable("$id.skip_item.lore", listOf(text(formatMaterial(nextMaterial))))
+                        .render(locale)
+                )
             }
         }
     }
 
     private fun generateAllItemsItem(material: Material, locale: Locale) = itemStack(material) {
         meta {
-            name = "§7${formatMaterial(material)}"
+            name = text(formatMaterial(material))
             addLore {
-                +" "
-                +if (isCollected(material)) {
-                    GoalManager.translationsProvider.translate(
-                        "collected",
-                        locale,
-                        id
-                    )
-                } else {
-                    GoalManager.translationsProvider.translate(
-                        "not_collected",
-                        locale,
-                        id
-                    )
-                }
+                +space()
+                addComponent(
+                    if (isCollected(material)) {
+                        translatable("$id.collected")
+                            .render(locale)
+                    } else {
+                        translatable("$id.not_collected")
+                            .render(locale)
+                    }
+                )
             }
             if (isCollected(material)) {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
@@ -267,43 +256,42 @@ object AllItems : TeamGoal() {
 
     private fun filterItem(filter: Pair<Filter, Filter>, locale: Locale) = itemStack(Material.HOPPER) {
         meta {
-            name = GoalManager.translationsProvider.translate(
-                "filter_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.filter_item.name")
+                .render(locale)
             addLore {
-                GoalManager.translationsProvider.translate(
-                    "filter_item.lore",
-                    locale,
-                    id,
-                    arrayOf(
-                        (if (filter.first == Filter.ALL) "§d" else if (filter.first == Filter.COLLECTED) "§a" else "§c")
-                            .plus(filter.first.name),
-                        (if (filter.second == Filter.ASCENDING) "§a" else "§c").plus(filter.second.name)
+                addComponent(
+                    translatable(
+                        "$id.filter_item.lore",
+                        listOf(
+                            text(
+                                filter.first.name,
+                                TextColor.color(
+                                    (if (filter.first == Filter.ALL) KColors.PURPLE else if (filter.first == Filter.COLLECTED) KColors.GREEN else KColors.RED).color.rgb
+                                )
+                            ),
+                            text(
+                                filter.second.name,
+                                TextColor.color(
+                                    (if (filter.second == Filter.ASCENDING) KColors.GREEN else KColors.RED).color.rgb
+                                )
+                            )
+                        )
                     )
-                ).split("\n").forEach {
-                    +it
-                }
+                        .render(locale)
+                )
             }
         }
     }
 
     private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = GoalManager.translationsProvider.translate(
-                "reset_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.reset_item.name")
+                .render(locale)
             addLore {
-                GoalManager.translationsProvider.translate(
-                    "reset_item.lore",
-                    locale,
-                    id
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable("$id.reset_item.lore")
+                        .render(locale)
+                )
             }
         }
     }
@@ -324,15 +312,10 @@ object AllItems : TeamGoal() {
 
     private fun isWon() = materials.none { !isCollected(it) }
 
-    private fun collected(key: String, id: String, replacements: Array<Any?> = arrayOf(), markCollected: Boolean = true) {
+    private fun collected(key: String, replacements: List<Component> = listOf(), markCollected: Boolean = true) {
         onlinePlayers.forEach {
             it.sendMessage(
-                GoalManager.translationsProvider.translateWithPrefix(
-                    key,
-                    it.language,
-                    id,
-                    replacements
-                )
+                translatable(key, replacements)
             )
         }
         Timer.additionalInfo.clear()
@@ -340,7 +323,7 @@ object AllItems : TeamGoal() {
             allItems = ArrayList(allItems.plus(nextMaterial))
         if (isWon()) {
             Config.allItemsDataConfig.setSetting("nextMaterial", null)
-            win(id)
+            win()
         } else {
             nextMaterial = randomMaterial()
             Timer.additionalInfo.add("collect ${formatMaterial(nextMaterial)}")
@@ -352,12 +335,12 @@ object AllItems : TeamGoal() {
     @EventHandler
     fun onCollectMove(event: InventoryClickEvent) {
         if (event.currentItem?.type == nextMaterial && (event.whoClicked as Player).isPlaying())
-            collected("collected_collected", id, arrayOf(event.whoClicked.name, formatMaterial(nextMaterial)))
+            collected("$id.collected_collected", listOf(event.whoClicked.name(), text(formatMaterial(nextMaterial))))
     }
 
     @EventHandler
     fun onCollectPickup(event: PlayerAttemptPickupItemEvent) {
         if (event.item.itemStack.type == nextMaterial && event.player.isPlaying())
-            collected("collected_collected", id, arrayOf(event.player.name, formatMaterial(nextMaterial)))
+            collected("$id.collected_collected", listOf(event.player.name(), text(formatMaterial(nextMaterial))))
     }
 }

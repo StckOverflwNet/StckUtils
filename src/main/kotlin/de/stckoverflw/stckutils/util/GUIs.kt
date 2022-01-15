@@ -3,7 +3,6 @@ package de.stckoverflw.stckutils.util
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
@@ -18,16 +17,24 @@ import de.stckoverflw.stckutils.minecraft.goal.active
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
-import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.bukkitColor
 import net.axay.kspigot.extensions.onlinePlayers
-import net.axay.kspigot.gui.*
-import net.axay.kspigot.items.*
+import net.axay.kspigot.gui.ForInventoryFiveByNine
+import net.axay.kspigot.gui.GUI
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.PageChangeEffect
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
+import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.Player
-import java.util.*
+import org.bukkit.inventory.ItemFlag
+import java.util.Locale
+import org.bukkit.ChatColor as BukkitChatColor
 
 object GUIPage {
     const val goalsPage = 2
@@ -46,7 +53,7 @@ object GUIPage {
  * The Method to generate a new Instance of the Settings GUI
  */
 fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-    title = "§9Settings"
+    title = "Settings"
     defaultPage = GUIPage.settingsPageNumber
 
     // Default Settings Page
@@ -59,97 +66,28 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Item for opening the Challenges Page
         pageChanger(
             Slots.RowThreeSlotThree,
-            itemStack(Material.DRAGON_HEAD) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.challenges.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.challenges.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateChallengeGuiItem(locale),
             GUIPage.challengesPageNumber, null, null
         )
 
         // Item for opening the GameChanges Page
         pageChanger(
             Slots.RowThreeSlotFive,
-            itemStack(Material.FILLED_MAP) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.game_change.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.game_change.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateGameChangeGuiItem(locale),
             GUIPage.gameChangesPage, null, null
         )
 
         // Item for opening the Goals Page
         pageChanger(
             Slots.RowThreeSlotSeven,
-            itemStack(Material.DIAMOND) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.goals.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.goals.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateGoalGuiItem(locale),
             GUIPage.goalsPage, null, null
         )
 
         // Item for opening the Page with More settings
         pageChanger(
             Slots.RowOneSlotFive,
-            itemStack(Material.COMPARATOR) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.more_settings.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.more_settings.lore",
-                            locale,
-                            "items",
-                            arrayOf(KColors.ROSYBROWN.toString())
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateMoreSettingsGuiItem(locale),
             GUIPage.moreSettingsPageNumber, null, null
         )
     }
@@ -171,52 +109,14 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Item for opening the World reset Settings Page
         pageChanger(
             Slots.RowThreeSlotThree,
-            itemStack(Material.GRASS_BLOCK) {
-                meta {
-                    name = KColors.ROSYBROWN.toString().plus(
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.world_reset.name",
-                            locale,
-                            "items"
-                        )
-                    )
-                    addLore {
-                        KColors.ROSYBROWN.toString().plus(
-                            StckUtilsPlugin.translationsProvider.translate(
-                                "gui.page_changer.world_reset.lore",
-                                locale,
-                                "items"
-                            )
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateWorldResetGuiItem(locale),
             GUIPage.worldResetPageNumber, null, null
         )
 
         // Item for opening the Timer Settings Page
         pageChanger(
             Slots.RowThreeSlotSeven,
-            itemStack(Material.CLOCK) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.timer.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.timer.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateTimerSettingsGuiItem(locale),
             GUIPage.timerPageNumber, null, null
         )
     }
@@ -246,11 +146,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
                         player.sendMessage(
-                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                                "gui.timer_not_paused",
-                                player.language,
-                                "messages"
-                            )
+                            translatable("gui.timer_not_paused")
                         )
                     } else {
                         if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
@@ -260,26 +156,18 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                                 .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge, locale))
                         } else {
                             player.sendMessage(
-                                StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                                    "gui.depend.protocol_lib",
-                                    player.language,
-                                    "messages"
-                                )
+                                translatable("gui.depend.protocol_lib")
                             )
                         }
                     }
                 } else if (clickEvent.bukkitEvent.isRightClick) {
-                    val configGUI = challenge.configurationGUI(player.language)
+                    val configGUI = challenge.configurationGUI(locale)
                     if (configGUI != null) {
                         if (challenge.active) {
                             player.openGUI(configGUI)
                         } else {
                             player.sendMessage(
-                                StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                                    "gui.challenge.config.challenge_not_activated",
-                                    player.language,
-                                    "messages"
-                                )
+                                translatable("gui.challenge.config.challenge_not_activated")
                             )
                         }
                     }
@@ -316,8 +204,17 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Compound for displaying the GameExtensions
         val gameExtensionCompound = createRectCompound<GameExtension>(
             Slots.RowFourSlotTwo, Slots.RowFourSlotEight,
-            iconGenerator = {
-                it.item(locale)
+            iconGenerator = iconGenerator@{
+                val item = it.item(locale)
+                item.addItemFlags(
+                    ItemFlag.HIDE_ATTRIBUTES,
+                    ItemFlag.HIDE_DESTROYS,
+                    ItemFlag.HIDE_DYE,
+                    ItemFlag.HIDE_PLACED_ON,
+                    ItemFlag.HIDE_UNBREAKABLE,
+                    ItemFlag.HIDE_POTION_EFFECTS
+                )
+                return@iconGenerator item
             },
             onClick = { clickEvent, extension ->
                 clickEvent.bukkitEvent.isCancelled = true
@@ -328,8 +225,17 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Compound for displaying the Minecraft GameRules
         val gameRuleCompound = createRectCompound<GameRule>(
             Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
-            iconGenerator = {
-                it.item(locale)
+            iconGenerator = iconGenerator@{
+                val item = it.item(locale)
+                item.addItemFlags(
+                    ItemFlag.HIDE_ATTRIBUTES,
+                    ItemFlag.HIDE_DESTROYS,
+                    ItemFlag.HIDE_DYE,
+                    ItemFlag.HIDE_PLACED_ON,
+                    ItemFlag.HIDE_UNBREAKABLE,
+                    ItemFlag.HIDE_POTION_EFFECTS
+                )
+                return@iconGenerator item
             },
             onClick = { clickEvent, rule ->
                 clickEvent.bukkitEvent.isCancelled = true
@@ -374,48 +280,12 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
 
         placeholder(
             Slots.RowFourSlotOne,
-            itemStack(Material.AZALEA) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.team_goal.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        +" "
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.team_goal.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            }
+            generateTeamGoalItem(locale)
         )
 
         placeholder(
             Slots.RowTwoSlotOne,
-            itemStack(Material.NETHERITE_SWORD) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.battle.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        +" "
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.battle.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            }
+            generateBattleGoalItem(locale)
         )
 
         // Compound for the Goals
@@ -430,11 +300,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
                         player.sendMessage(
-                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                                "gui.timer_not_paused",
-                                player.language,
-                                "messages"
-                            )
+                            translatable("gui.timer_not_paused")
                         )
                     } else {
                         if (GoalManager.activeGoal != goal) {
@@ -515,24 +381,12 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             if (Timer.running) {
                 Timer.stop()
                 Bukkit.broadcast(
-                    text(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "timer.stopped",
-                            locale,
-                            "messages"
-                        )
-                    )
+                    translatable("timer.stopped")
                 )
             } else {
                 Timer.start()
                 Bukkit.broadcast(
-                    text(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "timer.started",
-                            locale,
-                            "messages"
-                        )
-                    )
+                    translatable("timer.started")
                 )
             }
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateStartStopTimerItem(locale))
@@ -558,26 +412,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Item for toggling the only OP join when Timer is running
         pageChanger(
             Slots.RowTwoSlotFive,
-            itemStack(Material.ENCHANTED_GOLDEN_APPLE) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.join_while_running.name",
-                        locale,
-                        "items"
-                    )
-
-                    setLore {
-                        +" "
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.join_while_running.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateJoinWhileRunningGuiItem(locale),
             GUIPage.timerJoinWhileRunningPageNumber,
             null,
             null
@@ -586,38 +421,14 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Item for resetting the Timer
         button(
             Slots.RowTwoSlotThree,
-            itemStack(Material.BARRIER) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.reset_timer.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        +" "
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.reset_timer.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            }
+            generateResetTimerGuiItem(locale)
         ) {
             if (Timer.running) {
                 Timer.stop()
             }
             Timer.reset()
             Bukkit.broadcast(
-                text(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                        "timer.reset",
-                        locale,
-                        "messages"
-                    )
-                )
+                translatable("timer.reset")
             )
             it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem(locale))
         }
@@ -625,25 +436,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Item for changing to the Timer color page
         pageChanger(
             Slots.RowFourSlotSeven,
-            itemStack(Material.ORANGE_DYE) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.page_changer.color.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        +" "
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.page_changer.color.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            },
+            generateTimerColorGuiItem(locale),
             GUIPage.timerColorPageNumber,
             null,
             null
@@ -681,60 +474,18 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), GUIPage.timerPageNumber, null, null)
 
         // Color compound
-        val compound = createRectCompound<ChatColor>(
+        val compound = createRectCompound<BukkitChatColor>(
             Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = { chatColor ->
-                itemStack(
-                    when (chatColor) {
-                        ChatColor.DARK_RED -> Material.RED_DYE
-                        ChatColor.RED -> Material.RED_DYE
-                        ChatColor.GOLD -> Material.ORANGE_DYE
-                        ChatColor.YELLOW -> Material.YELLOW_DYE
-                        ChatColor.DARK_GREEN -> Material.GREEN_DYE
-                        ChatColor.GREEN -> Material.GREEN_DYE
-                        ChatColor.AQUA -> Material.CYAN_DYE
-                        ChatColor.DARK_AQUA -> Material.CYAN_DYE
-                        ChatColor.DARK_BLUE -> Material.BLUE_DYE
-                        ChatColor.BLUE -> Material.LIGHT_BLUE_DYE
-                        ChatColor.LIGHT_PURPLE -> Material.PURPLE_DYE
-                        ChatColor.DARK_PURPLE -> Material.PURPLE_DYE
-                        ChatColor.WHITE -> Material.WHITE_DYE
-                        ChatColor.GRAY -> Material.LIGHT_GRAY_DYE
-                        ChatColor.DARK_GRAY -> Material.GRAY_DYE
-                        else -> Material.BLACK_DYE
-                    }
-                ) {
-                    meta {
-                        name = "$chatColor${chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
-
-                        addLore {
-                            +" "
-                            StckUtilsPlugin.translationsProvider.translate(
-                                "gui.color_compound.lore",
-                                locale,
-                                "items",
-                                arrayOf(
-                                    chatColor.toString().plus(
-                                        chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                                    ),
-                                    chatColor.toString().plus("§l").plus(
-                                        ChatColor.stripColor(Timer.formatTime(90061.toLong())) // 1d 1h 1m 1s
-                                    )
-                                )
-                            ).split("\n").forEach {
-                                +it
-                            }
-                        }
-                    }
-                }
+                generateColorCompoundItem(chatColor, locale)
             },
             onClick = { clickEvent, chatColor ->
                 clickEvent.bukkitEvent.isCancelled = true
-                Timer.color = "§${chatColor.char}"
+                Timer.color = TextColor.color(chatColor.bukkitColor.asRGB())
             }
         )
 
-        compound.addContent(ChatColor.values().filter { it.isColor })
+        compound.addContent(BukkitChatColor.values().filter { it.isColor })
     }
 
     // Settings Page for World reset
@@ -759,25 +510,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         // Item for running a World reset
         button(
             Slots.RowThreeSlotSeven,
-            itemStack(Material.BARRIER) {
-                meta {
-                    name = StckUtilsPlugin.translationsProvider.translate(
-                        "gui.world_reset.name",
-                        locale,
-                        "items"
-                    )
-                    addLore {
-                        +" "
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "gui.world_reset.lore",
-                            locale,
-                            "items"
-                        ).split("\n").forEach {
-                            +it
-                        }
-                    }
-                }
-            }
+            generateWorldResetItem(locale)
         ) {
             it.player.resetWorlds()
         }
@@ -812,12 +545,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 }
                 if (!player.hasPermission(perm)) {
                     return@click player.sendMessage(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "generic.missing_permission",
-                            player.language,
-                            "general",
-                            arrayOf(perm)
-                        )
+                        translatable("generic.missing_permission", listOf(text(perm)))
                     )
                 }
                 HideCommand.sendResponse(player, target)
@@ -861,7 +589,8 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 } else {
                     when (accessLevel) {
                         AccessLevel.OPERATOR,
-                        AccessLevel.HIDDEN -> {
+                        AccessLevel.HIDDEN,
+                        -> {
                             Timer.joinWhileRunning.minus(AccessLevel.NONE).minus(AccessLevel.EVERYONE).plus(accessLevel)
                         }
                         AccessLevel.EVERYONE -> {

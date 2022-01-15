@@ -4,11 +4,12 @@ import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
+import net.kyori.adventure.text.Component.text
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
-import java.util.*
+import java.util.Locale
 
 object NoCrafting : Challenge() {
 
@@ -23,6 +24,6 @@ object NoCrafting : Challenge() {
         if (!(event.whoClicked as Player).isPlaying()) {
             return
         }
-        lose(id, arrayOf(event.whoClicked.name, event.recipe.result.type.name))
+        lose(listOf(event.whoClicked.name(), text(event.recipe.result.type.name)))
     }
 }

@@ -1,7 +1,6 @@
 package de.stckoverflw.stckutils.command
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsGUI
@@ -21,13 +20,7 @@ class TimerCommand {
             runs {
                 Timer.start()
                 onlinePlayers.forEach {
-                    it.sendMessage(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "timer.started",
-                            it.language,
-                            "messages"
-                        )
-                    )
+                    it.sendMessage(successTranslatable("timer.started"))
                 }
             }
         }
@@ -36,13 +29,7 @@ class TimerCommand {
             runs {
                 Timer.stop()
                 onlinePlayers.forEach {
-                    it.sendMessage(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "timer.stopped",
-                            it.language,
-                            "messages"
-                        )
-                    )
+                    it.sendMessage(successTranslatable("timer.stopped"))
                 }
             }
         }
@@ -51,19 +38,13 @@ class TimerCommand {
             runs {
                 Timer.reset()
                 onlinePlayers.forEach {
-                    it.sendMessage(
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "timer.reset",
-                            it.language,
-                            "messages"
-                        )
-                    )
+                    it.sendMessage(successTranslatable("timer.reset"))
                 }
             }
         }
         runs {
             requiresPermission(Permissions.SETTINGS_GUI)
-            player.openGUI(settingsGUI(player.language), -1)
+            player.openGUI(settingsGUI(player.locale()), -1)
         }
     }
 }

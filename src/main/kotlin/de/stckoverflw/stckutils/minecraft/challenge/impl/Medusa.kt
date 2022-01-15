@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerMoveEvent
-import java.util.*
+import java.util.Locale
 
 object Medusa : Challenge() {
 

@@ -18,7 +18,8 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 object IceWalker : Challenge() {
 

@@ -1,28 +1,38 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.extensions.onlinePlayers
-import net.axay.kspigot.gui.*
+import net.axay.kspigot.gui.ForInventoryFiveByNine
+import net.axay.kspigot.gui.GUI
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
+import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import java.util.Locale
 
 object InventorySwap : Challenge() {
 
@@ -37,11 +47,7 @@ object InventorySwap : Challenge() {
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = ChallengeManager.translationsProvider.translate(
-            nameKey,
-            locale,
-            id
-        )
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -50,9 +56,9 @@ object InventorySwap : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFour, minusItem(locale)) {
+            button(Slots.RowThreeSlotFour, minusItem()) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (period - 1 < minPeriod)
@@ -65,89 +71,73 @@ object InventorySwap : Challenge() {
                     else
                         period -= 10
                 }
-                updateInventory(it.bukkitEvent.inventory, locale)
+                updateInventory(it.bukkitEvent.inventory)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem(locale)) {
+            button(Slots.RowThreeSlotFive, resetItem()) {
                 it.bukkitEvent.isCancelled = true
                 period = 60
-                updateInventory(it.bukkitEvent.inventory, locale)
+                updateInventory(it.bukkitEvent.inventory)
             }
 
-            button(Slots.RowThreeSlotSix, plusItem(locale)) {
+            button(Slots.RowThreeSlotSix, plusItem()) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     period += 1
                 } else if (it.bukkitEvent.isRightClick) {
                     period += 10
                 }
-                updateInventory(it.bukkitEvent.inventory, locale)
+                updateInventory(it.bukkitEvent.inventory)
             }
         }
     }
 
-    private fun updateInventory(inv: Inventory, locale: Locale) {
-        inv.setItem(21, minusItem(locale))
-        inv.setItem(22, resetItem(locale))
-        inv.setItem(23, plusItem(locale))
+    private fun updateInventory(inv: Inventory) {
+        inv.setItem(21, minusItem())
+        inv.setItem(22, resetItem())
+        inv.setItem(23, plusItem())
     }
 
-    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
+    private fun resetItem() = itemStack(Material.BARRIER) {
         meta {
-            name = ChallengeManager.translationsProvider.translate(
-                "reset_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.reset_item.name")
             addLore {
-                ChallengeManager.translationsProvider.translate(
-                    "reset_item.lore",
-                    locale,
-                    id,
-                    arrayOf(ChatColor.stripColor(Timer.formatTime(period.toLong())))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable(
+                        "$id.reset_item.lore",
+                        listOf(
+                            text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a")
+                        )
+                    )
+                )
             }
         }
     }
 
-    private fun plusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun plusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = ChallengeManager.translationsProvider.translate(
-                "plus_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.plus_item.name")
             addLore {
-                ChallengeManager.translationsProvider.translate(
-                    "plus_item.lore",
-                    locale,
-                    id,
-                    arrayOf(ChatColor.stripColor(Timer.formatTime(period.toLong())))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable(
+                        "$id.plus_item.lore",
+                        listOf(text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a"))
+                    )
+                )
             }
         }
     }
 
-    private fun minusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun minusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = ChallengeManager.translationsProvider.translate(
-                "minus_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.minus_item.name")
             addLore {
-                ChallengeManager.translationsProvider.translate(
-                    "minus_item.lore",
-                    locale,
-                    id,
-                    arrayOf(ChatColor.stripColor(Timer.formatTime(period.toLong())))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable(
+                        "$id.minus_item.lore",
+                        listOf(text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a"))
+                    )
+                )
             }
         }
     }

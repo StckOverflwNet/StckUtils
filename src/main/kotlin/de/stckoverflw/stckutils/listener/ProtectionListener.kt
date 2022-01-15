@@ -1,6 +1,5 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.getSettingsItem
 import org.bukkit.Bukkit
@@ -12,78 +11,64 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
+import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerRespawnEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
 
 class ProtectionListener : Listener {
 
     @EventHandler
     fun onRespawn(event: PlayerRespawnEvent) {
         if (!Timer.running && event.player.isOp) {
-            event.player.inventory.setItem(8, getSettingsItem(event.player.language))
+            event.player.inventory.setItem(8, getSettingsItem(event.player.locale()))
         }
     }
 
     @EventHandler
     fun onItemPickUp(event: PlayerAttemptPickupItemEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onEntityTarget(event: EntityTargetEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onDamage(event: EntityDamageEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onSwapHand(event: PlayerSwapHandItemsEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onFoodLevelChange(event: FoodLevelChangeEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
     fun onDrop(event: PlayerDropItemEvent) {
-        if (!Timer.running) {
-            event.isCancelled = true
-        }
+        event.isCancelled = !Timer.running
     }
 
     @EventHandler
@@ -97,7 +82,7 @@ class ProtectionListener : Listener {
                     val target = Bukkit.getPlayer(event.message.split(" ")[1])
                     if (target != null) {
                         if (command == "op") {
-                            target.inventory.setItem(8, getSettingsItem(target.language))
+                            target.inventory.setItem(8, getSettingsItem(target.locale()))
                         } else if (command == "deop") {
                             target.inventory.setItem(8, null)
                             target.closeInventory()

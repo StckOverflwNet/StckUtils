@@ -1,6 +1,19 @@
 package de.stckoverflw.stckutils.config
 
-import de.stckoverflw.stckutils.config.impl.*
+import de.stckoverflw.stckutils.config.impl.AllAdvancementsDataConfig
+import de.stckoverflw.stckutils.config.impl.AllItemsDataConfig
+import de.stckoverflw.stckutils.config.impl.AllMobsDataConfig
+import de.stckoverflw.stckutils.config.impl.ChallengeConfig
+import de.stckoverflw.stckutils.config.impl.ChallengeDataConfig
+import de.stckoverflw.stckutils.config.impl.GameChangeConfig
+import de.stckoverflw.stckutils.config.impl.GameChangeDataConfig
+import de.stckoverflw.stckutils.config.impl.GoalConfig
+import de.stckoverflw.stckutils.config.impl.HideConfig
+import de.stckoverflw.stckutils.config.impl.LanguageConfig
+import de.stckoverflw.stckutils.config.impl.PositionDataConfig
+import de.stckoverflw.stckutils.config.impl.ResetSettingsConfig
+import de.stckoverflw.stckutils.config.impl.TimerConfig
+import de.stckoverflw.stckutils.config.impl.TimerDataConfig
 
 object Config {
 
@@ -23,7 +36,7 @@ object Config {
         reloadConfig()
     }
 
-    fun reloadConfig() {
+    private fun reloadConfig() {
         resetSettingsConfig = ResetSettingsConfig()
         challengeConfig = ChallengeConfig()
         challengeDataConfig = ChallengeDataConfig()

@@ -3,7 +3,7 @@ package de.stckoverflw.stckutils.config.impl
 import de.stckoverflw.stckutils.config.AbstractDataConfig
 import net.axay.kspigot.main.KSpigotMainInstance
 import org.bukkit.Location
-import java.util.*
+import java.util.UUID
 
 class ChallengeDataConfig : AbstractDataConfig("challenges.yml", "Challenges") {
 

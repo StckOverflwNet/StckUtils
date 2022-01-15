@@ -1,6 +1,5 @@
 package de.stckoverflw.stckutils.command
 
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.commands.command
@@ -14,7 +13,7 @@ class SettingsCommand {
         requiresPermission(Permissions.SETTINGS_COMMAND)
         runs {
             requiresPermission(Permissions.SETTINGS_GUI)
-            player.openGUI(settingsGUI(player.language))
+            player.openGUI(settingsGUI(player.locale()))
         }
     }
 }

@@ -1,15 +1,20 @@
 package de.stckoverflw.stckutils.command
 
 import com.mojang.brigadier.arguments.StringArgumentType
-import de.stckoverflw.stckutils.StckUtilsPlugin
+import de.stckoverflw.stckutils.extension.errorTranslatable
 import de.stckoverflw.stckutils.extension.hidden
 import de.stckoverflw.stckutils.extension.hide
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.reveal
+import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.settingsGUI
-import net.axay.kspigot.commands.*
+import net.axay.kspigot.commands.argument
+import net.axay.kspigot.commands.command
+import net.axay.kspigot.commands.getArgument
+import net.axay.kspigot.commands.requiresPermission
+import net.axay.kspigot.commands.runs
+import net.axay.kspigot.commands.suggestListSuspending
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.openGUI
 import org.bukkit.Bukkit
@@ -23,54 +28,22 @@ class HideCommand {
                 target.reveal()
                 target.sendMessage(
                     if (player != target) {
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "hide.revealed_by.target",
-                            target.language,
-                            "messages",
-                            arrayOf(player.name)
-                        )
+                        successTranslatable("hide.revealed_by.target", player.name())
                     } else {
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "hide.revealed.target",
-                            target.language,
-                            "messages"
-                        )
+                        successTranslatable("hide.revealed.target")
                     }
                 )
-                player.sendMessage(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                        "hide.revealed.player",
-                        player.language,
-                        "messages",
-                        arrayOf(target.name)
-                    )
-                )
+                player.sendMessage(successTranslatable("hide.revealed.player", target.name()))
             } else {
                 target.hide()
                 target.sendMessage(
                     if (player != target) {
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "hide.hidden_by.target",
-                            target.language,
-                            "messages",
-                            arrayOf(player.name)
-                        )
+                        successTranslatable("hide.hidden_by.target", player.name())
                     } else {
-                        StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                            "hide.hidden.target",
-                            target.language,
-                            "messages"
-                        )
+                        successTranslatable("hide.hidden.target")
                     }
                 )
-                player.sendMessage(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                        "hide.hidden.player",
-                        player.language,
-                        "messages",
-                        arrayOf(target.name)
-                    )
-                )
+                player.sendMessage(successTranslatable("hide.hidden.player", target.name()))
             }
         }
     }
@@ -92,11 +65,7 @@ class HideCommand {
                 runs runs@{
                     val target = Bukkit.getPlayer(getArgument<String>("player"))
                         ?: return@runs player.sendMessage(
-                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                                "general.player_not_found",
-                                player.language,
-                                "messages"
-                            )
+                            errorTranslatable("general.player_not_found")
                         )
                     val perm = if (player == target) {
                         Permissions.HIDE_SELF
@@ -108,7 +77,7 @@ class HideCommand {
                 }
             }
             runs {
-                player.openGUI(settingsGUI(player.language), GUIPage.hidePageNumber)
+                player.openGUI(settingsGUI(player.locale()), GUIPage.hidePageNumber)
             }
         }
 }

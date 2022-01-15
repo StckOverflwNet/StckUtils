@@ -2,9 +2,16 @@ package de.stckoverflw.stckutils
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
-import de.stckoverflw.stckutils.command.*
+import de.stckoverflw.stckutils.command.AllXCommand
+import de.stckoverflw.stckutils.command.DefaultLanguageCommand
+import de.stckoverflw.stckutils.command.HideCommand
+import de.stckoverflw.stckutils.command.PositionCommand
+import de.stckoverflw.stckutils.command.SettingsCommand
+import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.extension.Colors
+import de.stckoverflw.stckutils.extension.asTextColor
+import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.i18n.TranslationsProvider
 import de.stckoverflw.stckutils.listener.ConnectionListener
@@ -16,9 +23,12 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.getSettingsItem
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
 import java.nio.file.Files
@@ -27,10 +37,10 @@ import kotlin.io.path.div
 class StckUtilsPlugin : KSpigot() {
 
     companion object {
-        const val prefix: String = "§f§lStckUtils §7| §r"
+        const val prefix: String = "StckUtils | "
         var protocolManager: ProtocolManager? = null
         var isProtocolLib: Boolean = false
-        val translationsProvider: TranslationsProvider = TranslationsProvider("translations.general")
+        val translationsProvider = TranslationsProvider()
     }
 
     private var wasReset = false
@@ -65,8 +75,9 @@ class StckUtilsPlugin : KSpigot() {
 
         Timer()
         ChallengeManager()
-        GoalManager()
         GameChangeManager()
+        GoalManager()
+        translationsProvider.registerTranslations()
 
         pluginManager.registerEvents(ConnectionListener(), this)
         pluginManager.registerEvents(InteractListener(), this)
@@ -78,66 +89,76 @@ class StckUtilsPlugin : KSpigot() {
         HideCommand().register()
         PositionCommand().register()
         AllXCommand().register()
-        LanguageCommand().register()
+        DefaultLanguageCommand().register()
 
         val pluginDescription = this.description
 
         logger.info(
-            translationsProvider.translate(
+            translatable(
                 "console.enabled.enabled",
-                Config.languageConfig.defaultLanguage,
-                "messages",
-                arrayOf(pluginDescription.name, pluginDescription.version)
-            )
-        )
-        logger.info(
-            translationsProvider.translate(
-                "console.enabled.authors",
-                Config.languageConfig.defaultLanguage,
-                "messages",
-                arrayOf(
-                    if (pluginDescription.authors.size <= 1) {
-                        pluginDescription.authors
-                    } else {
-                        val authors = pluginDescription.authors.sorted().toMutableList()
-                        authors.add(
-                            authors.size - 1,
-                            translationsProvider.translate(
-                                "generic.and",
-                                Config.languageConfig.defaultLanguage,
-                                "general"
-                            )
-                        )
-                        authors.joinToString(" ")
-                    }
+                listOf(
+                    text(pluginDescription.name)
+                        .color(Colors.PRIMARY),
+                    text(pluginDescription.version)
+                        .color(Colors.PRIMARY)
                 )
             )
+                .color(KColors.YELLOW.asTextColor())
+                .coloredString()
+        )
+        logger.info(
+            translatable(
+                "console.enabled.authors",
+                listOf(
+                    text(
+                        if (pluginDescription.authors.size <= 1) {
+                            pluginDescription.authors.joinToString("")
+                        } else {
+                            val authors = pluginDescription.authors.sorted().toMutableList()
+                            authors.add(
+                                authors.size - 1,
+                                translatable("generic.and").coloredString()
+                            )
+                            authors.joinToString(" ")
+                        }
+                    )
+                        .color(Colors.PRIMARY)
+                )
+            )
+                .color(KColors.YELLOW.asTextColor())
+                .coloredString()
         )
         if (pluginDescription.apiVersion != null) {
             logger.info(
-                translationsProvider.translate(
+                translatable(
                     "console.enabled.api_version",
-                    Config.languageConfig.defaultLanguage,
-                    "messages",
-                    arrayOf(pluginDescription.apiVersion)
+                    listOf(
+                        text(pluginDescription.apiVersion ?: "n/a")
+                            .color(Colors.PRIMARY)
+                    )
                 )
+                    .color(KColors.YELLOW.asTextColor())
+                    .coloredString()
             )
         }
         if (pluginDescription.website != null) {
             logger.info(
-                translationsProvider.translate(
+                translatable(
                     "console.enabled.website",
-                    Config.languageConfig.defaultLanguage,
-                    "messages",
-                    arrayOf(pluginDescription.website)
+                    listOf(
+                        text(pluginDescription.website ?: "n/a")
+                            .color(Colors.PRIMARY)
+                    )
                 )
+                    .color(KColors.YELLOW.asTextColor())
+                    .coloredString()
             )
         }
 
         onlinePlayers.forEach {
             it.inventory.clear()
             if (it.isOp) {
-                it.inventory.setItem(8, getSettingsItem(it.language))
+                it.inventory.setItem(8, getSettingsItem(it.locale()))
             }
         }
     }
@@ -159,12 +180,15 @@ class StckUtilsPlugin : KSpigot() {
             }
         } catch (e: Exception) {
             logger.warning(
-                translationsProvider.translate(
+                translatable(
                     "error.delete_worlds",
-                    Config.languageConfig.defaultLanguage,
-                    "messages",
-                    arrayOf(world)
+                    listOf(
+                        text(world)
+                            .color(Colors.ERROR_ARGS)
+                    )
                 )
+                    .color(Colors.ERROR)
+                    .coloredString()
             )
             logger.warning(e.stackTraceToString())
         }

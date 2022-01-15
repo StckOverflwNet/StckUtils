@@ -7,7 +7,7 @@ import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.CreatureSpawnEvent
-import java.util.*
+import java.util.Locale
 
 object InvisibleEntities : Challenge() {
 

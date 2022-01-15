@@ -6,13 +6,14 @@ import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
+import net.kyori.adventure.text.Component.text
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.PlayerDeathEvent
-import java.util.*
+import java.util.Locale
 
 object BalanceLife : Challenge() {
 
@@ -44,7 +45,7 @@ object BalanceLife : Challenge() {
         val player = event.entity as Player
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
         if (player.isPlaying() && player.health + event.amount >= maxHealth?.value!!) {
-            lose(id, arrayOf(player.name, maxHealth.value.toInt()))
+            lose(listOf(player.name(), text(maxHealth.value.toInt())))
             isFirstRun = true
         }
     }
@@ -54,7 +55,7 @@ object BalanceLife : Challenge() {
         if (!event.entity.isPlaying()) {
             return
         }
-        lose(id, arrayOf(event.entity.name, 0))
+        lose(listOf(event.entity.name(), text(0)))
         isFirstRun = true
     }
 }

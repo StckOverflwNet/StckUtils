@@ -6,7 +6,6 @@ authors:
 main: de.stckoverflw.stckutils.StckUtilsPlugin
 version: 1.3.2
 libraries:
-  - "net.axay:kspigot:1.18.0"
   - "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
   - "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-RC2"
   - "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0-RC2"

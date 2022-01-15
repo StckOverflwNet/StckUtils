@@ -5,7 +5,7 @@ import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import java.util.Locale
 
 sealed class GameChange : Listener {
     /**
@@ -40,6 +40,11 @@ sealed class GameChange : Listener {
     open fun onTimerToggle() {
     }
 }
+
+val GameChange.nameKey: String
+    get() = "$id.name"
+val GameChange.descriptionKey: String
+    get() = "$id.description"
 
 var GameChange.active: Boolean
     get() = Config.gameChangeConfig.getActive(this.id)

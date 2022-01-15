@@ -1,76 +1,65 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.language
-import de.stckoverflw.stckutils.minecraft.challenge.descriptionKey
-import de.stckoverflw.stckutils.minecraft.challenge.nameKey
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.extension.Colors
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.minecraft.gamechange.active
+import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
+import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
-import org.bukkit.Bukkit
+import net.kyori.adventure.bossbar.BossBar
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Material
-import org.bukkit.boss.BarColor
-import org.bukkit.boss.BarStyle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
-import java.util.*
+import java.util.Locale
 
 object DeathCounter : GameExtension() {
 
     override val id: String = "death-counter"
     override val usesEvents: Boolean = true
 
-    private val bossbar = Bukkit.createBossBar(
-        GameChangeManager.translationsProvider.translate(
-            "deaths",
-            Config.languageConfig.defaultLanguage,
-            id,
-            arrayOf(0)
-        ),
-        BarColor.BLUE, BarStyle.SOLID
+    private val bossbar = BossBar.bossBar(
+        translatable("deaths", listOf(text(0))),
+        1.0F,
+        BossBar.Color.BLUE,
+        BossBar.Overlay.PROGRESS
     )
     private var deaths = 0
 
     override fun item(locale: Locale) = itemStack(Material.WITHER_SKELETON_SKULL) {
         meta {
-            name = GameChangeManager.translationsProvider.translate(
-                nameKey,
-                locale,
-                id
-            )
+            name = translatable(nameKey)
+                .color(Colors.GOAL_COMPOUND)
+                .render(locale)
             addLore {
-                GameChangeManager.translationsProvider.translate(
-                    descriptionKey,
-                    locale,
-                    id,
-                    arrayOf(
-                        if (active) {
-                            "§a" + StckUtilsPlugin.translationsProvider.translate(
-                                "generic.activated",
-                                locale,
-                                "general"
-                            )
-                        } else {
-                            "§c" + StckUtilsPlugin.translationsProvider.translate(
-                                "generic.disabled",
-                                locale,
-                                "general"
-                            )
-                        }
+                addComponent(
+                    translatable(
+                        descriptionKey,
+                        listOf(
+                            if (active) {
+                                translatable("generic.activated")
+                                    .color(Colors.ACTIVE)
+                            } else {
+                                translatable("generic.disabled")
+                                    .color(Colors.INACTIVE)
+                            }
+                        )
                     )
-                ).split("\n").forEach {
-                    +it
-                }
+                        .color(Colors.GOAL_COMPOUND_SECONDARY)
+                        .render(locale)
+                )
                 /*
-                + "§7Shift Left-click to higher the deaths"
-                + "§7Shift Right-click to lower the deaths"
+                + "Shift Left-click to higher the deaths"
+                + "Shift Right-click to lower the deaths"
                  */
             }
         }
@@ -90,26 +79,20 @@ object DeathCounter : GameExtension() {
             active = !active
         }
         run()
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.language))
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.locale()))
     }
 
     override fun run() {
         if (active) {
-            bossbar.isVisible = true
-            Bukkit.getOnlinePlayers().forEach {
-                bossbar.addPlayer(it)
-                bossbar.progress = 1.0
+            onlinePlayers.forEach {
+                it.showBossBar(bossbar)
+                bossbar.progress(1.0F)
             }
-            bossbar.setTitle(
-                GameChangeManager.translationsProvider.translate(
-                    "deaths",
-                    Config.languageConfig.defaultLanguage,
-                    id,
-                    arrayOf(deaths)
-                )
-            )
+            bossbar.name(translatable("deaths", listOf(text(deaths))))
         } else {
-            bossbar.isVisible = false
+            onlinePlayers.forEach {
+                it.hideBossBar(bossbar)
+            }
         }
     }
 

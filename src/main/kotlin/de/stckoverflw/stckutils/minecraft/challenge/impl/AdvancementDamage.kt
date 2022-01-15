@@ -8,7 +8,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
-import java.util.*
+import java.util.Locale
 
 object AdvancementDamage : Challenge() {
 

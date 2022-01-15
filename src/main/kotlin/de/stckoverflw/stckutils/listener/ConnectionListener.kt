@@ -1,7 +1,12 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.extension.*
+import de.stckoverflw.stckutils.extension.errorTranslatable
+import de.stckoverflw.stckutils.extension.hidden
+import de.stckoverflw.stckutils.extension.hide
+import de.stckoverflw.stckutils.extension.reveal
+import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.setSavedInventory
+import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -31,9 +36,9 @@ class ConnectionListener : Listener {
         // set inventory
         player.inventory.clear()
         if (!Timer.running) {
-            event.joinMessage(text("§7[§a+§7]§7 ${player.name}"))
+            event.joinMessage(text("[+] ${player.name}"))
             if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
-                player.inventory.setItem(8, getSettingsItem(player.language))
+                player.inventory.setItem(8, getSettingsItem(player.locale()))
             }
         } else {
             player.setSavedInventory()
@@ -51,7 +56,7 @@ class ConnectionListener : Listener {
         val player = event.player
 
         if (!Timer.running) {
-            event.quitMessage(text("§7[§c-§7]§7 ${player.name}"))
+            event.quitMessage(text("[-] ${player.name}"))
         } else {
             player.saveInventory()
             player.inventory.clear()
@@ -97,23 +102,13 @@ class ConnectionListener : Listener {
             if (disallow) {
                 event.disallow(
                     PlayerLoginEvent.Result.KICK_OTHER,
-                    text(
-                        StckUtilsPlugin.translationsProvider.translate(
-                            "connect.disallow",
-                            player.language,
-                            "messages"
-                        )
-                    )
+                    errorTranslatable("connect.disallow")
                 )
             }
         }
         player.gameMode = GameMode.SPECTATOR
         player.sendMessage(
-            StckUtilsPlugin.translationsProvider.translate(
-                "connect.spectator",
-                player.language,
-                "messages"
-            )
+            successTranslatable("connect.spectator")
         )
     }
 }

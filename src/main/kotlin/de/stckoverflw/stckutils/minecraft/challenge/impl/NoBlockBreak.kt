@@ -7,7 +7,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
-import java.util.*
+import java.util.Locale
 
 object NoBlockBreak : Challenge() {
 
@@ -22,6 +22,6 @@ object NoBlockBreak : Challenge() {
         if (!event.player.isPlaying()) {
             return
         }
-        lose(id, arrayOf(event.player.name))
+        lose(listOf(event.player.name()))
     }
 }

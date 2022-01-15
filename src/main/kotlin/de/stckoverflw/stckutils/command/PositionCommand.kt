@@ -1,13 +1,18 @@
 package de.stckoverflw.stckutils.command
 
 import com.mojang.brigadier.arguments.StringArgumentType
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.config.data.PositionData
-import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.util.Permissions
-import net.axay.kspigot.commands.*
+import net.axay.kspigot.commands.argument
+import net.axay.kspigot.commands.command
+import net.axay.kspigot.commands.getArgument
+import net.axay.kspigot.commands.requiresPermission
+import net.axay.kspigot.commands.runs
+import net.axay.kspigot.commands.suggestListSuspending
 import net.axay.kspigot.extensions.onlinePlayers
+import net.kyori.adventure.text.Component.text
 
 class PositionCommand {
 
@@ -35,11 +40,13 @@ class PositionCommand {
                     )
                     onlinePlayers.forEach {
                         it.sendMessage(
-                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                            successTranslatable(
                                 "position.create",
-                                it.language,
-                                "messages",
-                                arrayOf(player.name, name, location.blockX, location.blockY, location.blockZ)
+                                player.name(),
+                                text(name),
+                                text(location.blockX),
+                                text(location.blockY),
+                                text(location.blockZ)
                             )
                         )
                     }
@@ -47,18 +54,18 @@ class PositionCommand {
                     requiresPermission(Permissions.POSITION_SHOW)
                     val position = Config.positionDataConfig.positions.find {
                         it.name == getArgument<String>("name")
-                    }
-                    if (position != null) {
-                        val location = position.location
-                        player.sendMessage(
-                            StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                                "position.show",
-                                player.language,
-                                "messages",
-                                arrayOf(position.name, player.name, location.blockX, location.blockY, location.blockZ)
-                            )
+                    } ?: return@runs
+                    val location = position.location
+                    player.sendMessage(
+                        successTranslatable(
+                            "position.show",
+                            text(position.name),
+                            player.name(),
+                            text(location.blockX),
+                            text(location.blockY),
+                            text(location.blockZ)
                         )
-                    }
+                    )
                 }
             }
         }

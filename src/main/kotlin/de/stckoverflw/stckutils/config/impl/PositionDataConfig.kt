@@ -3,7 +3,7 @@ package de.stckoverflw.stckutils.config.impl
 import de.stckoverflw.stckutils.config.AbstractDataConfig
 import de.stckoverflw.stckutils.config.data.PositionData
 import org.bukkit.Location
-import java.util.*
+import java.util.UUID
 
 class PositionDataConfig : AbstractDataConfig("positions.yml", "Positions") {
 

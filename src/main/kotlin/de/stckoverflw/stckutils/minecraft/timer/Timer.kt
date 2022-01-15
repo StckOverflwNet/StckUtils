@@ -1,9 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.fromKey
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
@@ -13,10 +12,13 @@ import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.entity.Creature
 import kotlin.time.Duration.Companion.seconds
@@ -27,7 +29,7 @@ object Timer {
     private var initialized = false
 
     var direction: TimerDirection
-        get() = fromKey((Config.timerConfig.getSetting("direction") ?: TimerDirection.FORWARDS.key) as String) ?: TimerDirection.FORWARDS
+        get() = fromKey(Config.timerConfig.getSetting("direction") as? String ?: TimerDirection.FORWARDS.key) ?: TimerDirection.FORWARDS
         set(value) {
             Config.timerConfig.setSetting("direction", value.key)
             if (value == TimerDirection.BACKWARDS) {
@@ -35,18 +37,13 @@ object Timer {
             }
         }
     var joinWhileRunning: List<AccessLevel>
-        get() = (Config.timerConfig.getSettingList("joinWhileRunning") ?: listOf(AccessLevel.OPERATOR.key)).map { fromKey(it as String) ?: AccessLevel.OPERATOR }.distinct()
+        get() = (Config.timerConfig.getSettingList("joinWhileRunning") ?: listOf(AccessLevel.OPERATOR.key)).map {
+            fromKey(it as String) ?: AccessLevel.OPERATOR
+        }.distinct()
         set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.map { it.key })
-    var color: String
-        get() {
-            var col = Config.timerConfig.getSetting("color")
-            if (col == null) {
-                Config.timerConfig.setSetting("color", "§c")
-                col = "§c"
-            }
-            return col as String
-        }
-        set(value) = Config.timerConfig.setSetting("color", value)
+    var color: TextColor
+        get() = TextColor.color(Config.timerConfig.getSetting("color") as? Int ?: KColors.RED.color.rgb)
+        set(value) = Config.timerConfig.setSetting("color", value.value())
     var time: Long
         get() = (Config.timerDataConfig.getSetting("time") ?: 0).toString().toLong()
         set(value) {
@@ -78,7 +75,7 @@ object Timer {
                     TimerDirection.BACKWARDS -> {
                         if (time == 0L) {
                             sync {
-                                ChallengeManager.challenges.first().lose("timer.backwards.time_up")
+                                ChallengeManager.challenges.first().lose()
                             }
                         } else {
                             time--
@@ -105,7 +102,8 @@ object Timer {
                     additionalInfo.joinToString(
                         " "
                     )
-                    })" else ""
+                    })" else "",
+                    color
                 )
             )
         }
@@ -114,13 +112,7 @@ object Timer {
     private fun broadcastIdle() {
         Bukkit.getOnlinePlayers().forEach {
             it.sendActionBar(
-                text(
-                    color + StckUtilsPlugin.translationsProvider.translate(
-                        "timer.idle",
-                        it.language,
-                        "messages"
-                    )
-                )
+                translatable("timer.idle", color)
             )
         }
     }
@@ -167,7 +159,7 @@ object Timer {
                         it.target = null
                 }
                 if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
-                    player.inventory.setItem(8, getSettingsItem(player.language))
+                    player.inventory.setItem(8, getSettingsItem(player.locale()))
                 }
             }
             ChallengeManager.unregisterChallengeListeners()
@@ -197,16 +189,20 @@ object Timer {
 
     @OptIn(ExperimentalTime::class)
     fun formatTime(
-        seconds: Long = time
+        seconds: Long = time,
     ): String {
         val duration = seconds.seconds
         duration.toComponents(
             action = { days, hours, min, sec, _ ->
                 return (
-                    "$color§l" + (if (days != 0L) "${days}d " else "") +
-                        (if (hours != 0) "${hours}h " else "") +
-                        (if (min != 0) "${min}m " else "") +
-                        if (sec != 0) "$sec" + if (days + hours + min == 0L) " second" + if (sec != 1) "s" else "" else "s" else ""
+                    text(
+                        (if (days != 0L) "${days}d " else "") +
+                            (if (hours != 0) "${hours}h " else "") +
+                            (if (min != 0) "${min}m " else "") +
+                            if (sec != 0) "$sec" + if (days + hours + min == 0L) " second" + if (sec != 1) "s" else "" else "s" else "",
+                        color
+                    )
+                        .coloredString()
                     )
             }
         )

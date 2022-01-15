@@ -1,27 +1,37 @@
 package de.stckoverflw.stckutils.minecraft.challenge.impl
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
+import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
-import net.axay.kspigot.gui.*
+import net.axay.kspigot.gui.ForInventoryFiveByNine
+import net.axay.kspigot.gui.GUI
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
+import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component.empty
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Material
 import org.bukkit.entity.EnderDragon
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import java.util.*
+import java.util.Locale
 
 object MobDuplicator : Challenge() {
 
@@ -37,11 +47,7 @@ object MobDuplicator : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = ChallengeManager.translationsProvider.translate(
-            nameKey,
-            locale,
-            id
-        )
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -50,55 +56,41 @@ object MobDuplicator : Challenge() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFive, exponentialItem(locale)) {
+            button(Slots.RowThreeSlotFive, exponentialItem()) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isShiftClick) {
                     exponentialAmount = 2
                 } else {
                     isExponential = !isExponential
                 }
-                it.bukkitEvent.currentItem = exponentialItem(locale)
+                it.bukkitEvent.currentItem = exponentialItem()
             }
         }
     }
 
-    private fun exponentialItem(locale: Locale) = itemStack(Material.RABBIT_STEW) {
+    private fun exponentialItem() = itemStack(Material.RABBIT_STEW) {
         meta {
-            name = ChallengeManager.translationsProvider.translate(
-                "exponential_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.exponential_item.name")
             addLore {
-                ChallengeManager.translationsProvider.translate(
-                    "exponential_item.lore",
-                    locale,
-                    id,
-                    arrayOf(
-                        if (isExponential) {
-                            " \n§7 Shift Click to reset amount\n"
-                        } else {
-                            ""
-                        },
-                        if (isExponential) {
-                            StckUtilsPlugin.translationsProvider.translate(
-                                "generic.enabled",
-                                locale,
-                                "general"
-                            )
-                        } else {
-                            StckUtilsPlugin.translationsProvider.translate(
-                                "generic.disabled",
-                                locale,
-                                "general"
-                            )
-                        }
+                addComponent(
+                    translatable(
+                        "$id.exponential_item.lore",
+                        listOf(
+                            if (isExponential) {
+                                text(" \nShift Click to reset amount\n")
+                            } else {
+                                empty()
+                            },
+                            if (isExponential) {
+                                translatable("generic.enabled")
+                            } else {
+                                translatable("generic.disabled")
+                            }
+                        )
                     )
-                ).split("\n").forEach {
-                    +it
-                }
+                )
             }
         }
     }

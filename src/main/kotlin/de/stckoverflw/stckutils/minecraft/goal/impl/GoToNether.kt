@@ -16,7 +16,7 @@ object GoToNether : TeamGoal() {
     fun onWorldSwitch(event: PlayerChangedWorldEvent) {
         if (event.player.gameMode != GameMode.SPECTATOR) {
             if (event.player.world.environment == World.Environment.NETHER) {
-                win(id, arrayOf(event.player.name))
+                win(listOf(event.player.name()))
             }
         }
     }

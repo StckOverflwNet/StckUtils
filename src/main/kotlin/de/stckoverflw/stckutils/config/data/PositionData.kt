@@ -1,7 +1,7 @@
 package de.stckoverflw.stckutils.config.data
 
 import org.bukkit.Location
-import java.util.*
+import java.util.UUID
 
 data class PositionData(
     val name: String,

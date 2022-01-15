@@ -1,29 +1,40 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.language
-import de.stckoverflw.stckutils.minecraft.challenge.descriptionKey
-import de.stckoverflw.stckutils.minecraft.challenge.nameKey
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.extension.Colors
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.coloredString
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.minecraft.gamechange.active
+import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
+import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
+import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
-import net.axay.kspigot.gui.*
+import net.axay.kspigot.gui.ForInventoryFiveByNine
+import net.axay.kspigot.gui.GUI
+import net.axay.kspigot.gui.GUIClickEvent
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
+import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import java.util.*
+import java.util.Locale
 import kotlin.math.roundToInt
 
 object DamageMultiplier : GameExtension() {
@@ -39,31 +50,25 @@ object DamageMultiplier : GameExtension() {
 
     override fun item(locale: Locale) = itemStack(Material.IRON_SWORD) {
         meta {
-            name = GameChangeManager.translationsProvider.translate(
-                nameKey,
-                locale,
-                id
-            )
+            name = translatable(nameKey)
+                .color(Colors.GOAL_COMPOUND)
+                .render(locale)
             addLore {
-                GameChangeManager.translationsProvider.translate(
-                    descriptionKey,
-                    locale,
-                    id,
-                    arrayOf(
-                        if (active) {
-                            "§a" + StckUtilsPlugin.translationsProvider.translate(
-                                "generic.activated",
-                                locale,
-                                "general"
-                            )
-                        } else {
-                            "§c" + StckUtilsPlugin.translationsProvider.translate(
-                                "generic.disabled",
-                                locale,
-                                "general"
-                            )
-                        }
+                addComponent(
+                    translatable(
+                        descriptionKey,
+                        listOf(
+                            if (active) {
+                                translatable("generic.activated")
+                                    .color(Colors.ACTIVE)
+                            } else {
+                                translatable("generic.disabled")
+                                    .color(Colors.INACTIVE)
+                            }
+                        )
                     )
+                        .color(Colors.GOAL_COMPOUND_SECONDARY)
+                        .render(locale)
                 )
             }
         }
@@ -74,18 +79,13 @@ object DamageMultiplier : GameExtension() {
         if (event.bukkitEvent.isLeftClick) {
             active = !active
         } else if (event.bukkitEvent.isRightClick) {
-            event.player.openGUI(configurationGUI(event.player.language))
+            event.player.openGUI(configurationGUI(event.player.locale()))
         }
-
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.language))
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.locale()))
     }
 
     fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = GameChangeManager.translationsProvider.translate(
-            nameKey,
-            locale,
-            id
-        )
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -94,7 +94,7 @@ object DamageMultiplier : GameExtension() {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 3) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.gameChangesPage) }
 
             button(Slots.RowThreeSlotSix, plusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
@@ -124,60 +124,48 @@ object DamageMultiplier : GameExtension() {
 
     private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
-            name = GameChangeManager.translationsProvider.translate(
-                "reset_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.reset_item.name")
+                .render(locale)
             addLore {
-                GameChangeManager.translationsProvider.translate(
-                    "reset_item.lore",
-                    locale,
-                    id,
-                    arrayOf(String.format("%.1f", multiplier))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable(
+                        "$id.reset_item.lore",
+                        listOf(text(String.format("%.1f", multiplier)))
+                    )
+                        .render(locale)
+                )
             }
         }
     }
 
     private fun plusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = GameChangeManager.translationsProvider.translate(
-                "plus_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.plus_item.name")
+                .render(locale)
             addLore {
-                GameChangeManager.translationsProvider.translate(
-                    "plus_item.lore",
-                    locale,
-                    id,
-                    arrayOf(String.format("%.1f", multiplier))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable(
+                        "$id.plus_item.lore",
+                        listOf(text(String.format("%.1f", multiplier)))
+                    )
+                        .render(locale)
+                )
             }
         }
     }
 
     private fun minusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
-            name = GameChangeManager.translationsProvider.translate(
-                "minus_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.minus_item.name")
+                .render(locale)
             addLore {
-                GameChangeManager.translationsProvider.translate(
-                    "minus_item.lore",
-                    locale,
-                    id,
-                    arrayOf(String.format("%.1f", multiplier))
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(
+                    translatable(
+                        "$id.minus_item.lore",
+                        listOf(text(String.format("%.1f", multiplier)))
+                    )
+                        .render(locale)
+                )
             }
         }
     }

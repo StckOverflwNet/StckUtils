@@ -1,8 +1,8 @@
 package de.stckoverflw.stckutils.config.impl
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.AbstractConfig
-import org.bukkit.entity.Player
-import java.util.*
+import java.util.Locale
 
 class LanguageConfig : AbstractConfig("languages.yml") {
 
@@ -10,21 +10,10 @@ class LanguageConfig : AbstractConfig("languages.yml") {
 
     var defaultLanguage: Locale
         get() = Locale((getSetting("default") ?: defaultLocale.language) as String)
-        set(value) = setSetting("default", value.language)
-
-    fun setLanguage(offlinePlayer: Player, locale: Locale) {
-        yaml.set(offlinePlayer.uniqueId.toString(), locale.language)
-        save()
-    }
-
-    fun getLanguage(offlinePlayer: Player): Locale {
-        return if (yaml.contains(offlinePlayer.uniqueId.toString())) {
-            Locale(yaml.getString(offlinePlayer.uniqueId.toString()) ?: defaultLanguage.language)
-        } else {
-            setLanguage(offlinePlayer, defaultLanguage)
-            defaultLanguage
+        set(value) {
+            setSetting("default", value.language)
+            StckUtilsPlugin.translationsProvider.setDefault(value)
         }
-    }
 
     fun setSetting(setting: String, value: Any?) {
         yaml.set(setting, value)

@@ -11,7 +11,8 @@ import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.runnables.task
 import org.bukkit.Material
 import org.bukkit.util.Vector
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 object GamerChallenge : Challenge() {
 

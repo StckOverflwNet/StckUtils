@@ -1,52 +1,49 @@
 package de.stckoverflw.stckutils.i18n
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
-import java.text.MessageFormat
-import java.util.*
+import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
+import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.minecraft.goal.GoalManager
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.translation.GlobalTranslator
+import net.kyori.adventure.translation.TranslationRegistry
+import java.util.Locale
+import java.util.ResourceBundle
 
-class TranslationsProvider(private val resourceDirectory: String = "translations") {
+class TranslationsProvider {
 
-    private val resourceBundles: MutableMap<Pair<String, Locale>, ResourceBundle> = mutableMapOf()
+    val key = Key.key("de.stckoverflw.stckutils")
 
-    @Throws(MissingResourceException::class)
-    fun getBundle(locale: Locale, bundleName: String): ResourceBundle? {
-        val bundle = "$resourceDirectory.$bundleName"
-        val bundleKey = bundle to locale
+    private val translationRegistry = TranslationRegistry.create(key).apply {
+        defaultLocale(Locale.US)
+    }
 
-        if (resourceBundles[bundleKey] == null) {
-            val resourceBundle = ResourceBundle.getBundle(bundle, locale)
-            resourceBundles[bundleKey] = resourceBundle
+    val locales = listOf(Locale.US, Locale.GERMANY)
+
+    fun setDefault(locale: Locale) {
+        translationRegistry.defaultLocale(locale)
+    }
+
+    fun registerTranslations() {
+        val bundleNames = mutableListOf(
+            "translations.general.general",
+            "translations.general.items",
+            "translations.general.messages",
+        )
+        bundleNames.apply {
+            addAll(ChallengeManager.challenges.map { "translations.minecraft.challenge.${it.id}" })
+            addAll(GameChangeManager.gameChanges.map { "translations.minecraft.gamechange.${it.id}" })
+            addAll(GoalManager.goals.map { "translations.minecraft.goal.${it.id}" })
         }
-        return resourceBundles[bundleKey]
-    }
 
-    @Throws(MissingResourceException::class)
-    fun get(key: String, locale: Locale, bundleName: String): String? {
-        val bundle = getBundle(locale, bundleName)
-        return bundle?.getString(key)
-    }
-
-    fun hasKey(key: String, locale: Locale, bundleName: String): Boolean {
-        return try {
-            val bundle = getBundle(locale, bundleName)
-            bundle?.keys?.toList()?.contains(key) == true
-        } catch (exception: MissingResourceException) {
-            false
+        locales.forEach { locale ->
+            bundleNames.forEach { bundleName ->
+                translationRegistry.registerAll(
+                    locale,
+                    ResourceBundle.getBundle(bundleName, locale),
+                    false
+                )
+            }
         }
-    }
-
-    fun translate(key: String, locale: Locale, bundleName: String, replacements: Array<Any?> = arrayOf()): String {
-        val translation = get(key, locale, bundleName) ?: return key
-
-        return try {
-            val formatter = MessageFormat(translation, locale)
-            formatter.format(replacements)
-        } catch (exception: MissingResourceException) {
-            key
-        }
-    }
-
-    fun translateWithPrefix(key: String, locale: Locale, bundleName: String, replacements: Array<Any?> = arrayOf()): String {
-        return StckUtilsPlugin.prefix + translate(key, locale, bundleName, replacements)
+        GlobalTranslator.get().addSource(translationRegistry)
     }
 }

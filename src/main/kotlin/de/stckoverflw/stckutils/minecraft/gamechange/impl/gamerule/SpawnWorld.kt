@@ -2,14 +2,17 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
 import com.destroystokyo.paper.MaterialTags
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.Colors
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.asTextColor
 import de.stckoverflw.stckutils.extension.isPlaying
-import de.stckoverflw.stckutils.extension.language
-import de.stckoverflw.stckutils.minecraft.challenge.descriptionKey
-import de.stckoverflw.stckutils.minecraft.challenge.nameKey
-import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.gamechange.active
+import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
+import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
@@ -17,6 +20,7 @@ import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -25,7 +29,8 @@ import org.bukkit.block.Biome
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 object SpawnWorld : GameRule() {
 
@@ -54,44 +59,27 @@ object SpawnWorld : GameRule() {
         }
     ) {
         meta {
-            name = GameChangeManager.translationsProvider.translate(
-                nameKey,
-                locale,
-                id
-            )
+            name = translatable(nameKey)
+                .color(Colors.GAME_CHANGE_COMPOUND)
+                .render(locale)
             addLore {
-                GameChangeManager.translationsProvider.translate(
-                    descriptionKey,
-                    locale,
-                    id,
-                    arrayOf(
-                        when (environment) {
-                            World.Environment.NORMAL -> {
-                                GameChangeManager.translationsProvider.translate(
-                                    "overworld",
-                                    locale,
-                                    id
-                                )
-                            }
-                            World.Environment.NETHER -> {
-                                GameChangeManager.translationsProvider.translate(
-                                    "nether",
-                                    locale,
-                                    id
-                                )
-                            }
-                            else -> {
-                                GameChangeManager.translationsProvider.translate(
-                                    "end",
-                                    locale,
-                                    id
-                                )
-                            }
-                        }
+                addComponent(
+                    translatable(
+                        descriptionKey,
+                        listOf(
+                            translatable(
+                                when (environment) {
+                                    World.Environment.NORMAL -> "$id.overworld"
+                                    World.Environment.NETHER -> "$id.nether"
+                                    else -> "$id.end"
+                                }
+                            )
+                                .color(KColors.DARKGRAY.asTextColor())
+                        )
                     )
-                ).split("\n").forEach {
-                    +it
-                }
+                        .color(Colors.GAME_CHANGE_COMPOUND_SECONDARY)
+                        .render(locale)
+                )
             }
         }
     }
@@ -110,7 +98,7 @@ object SpawnWorld : GameRule() {
             }
         }
         players = listOf()
-        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.language))
+        event.bukkitEvent.clickedInventory!!.setItem(event.bukkitEvent.slot, item(event.player.locale()))
         run()
     }
 
@@ -118,13 +106,12 @@ object SpawnWorld : GameRule() {
         val locationWorld = Bukkit.getWorlds().first { it.environment == environment }
         return when (environment) {
             World.Environment.NORMAL,
-            World.Environment.NETHER -> {
-                locationWorld.spawnLocation
-            }
-            else -> {
-                locationWorld.locateNearestBiome(locationWorld.spawnLocation.add(1000.0, 0.0, 1000.0), Biome.END_HIGHLANDS, 500)
+            World.Environment.NETHER,
+            -> locationWorld.spawnLocation
+            else ->
+                locationWorld
+                    .locateNearestBiome(locationWorld.spawnLocation.add(1000.0, 0.0, 1000.0), Biome.END_HIGHLANDS, 500)
                     ?: locationWorld.spawnLocation
-            }
         }
     }
 
@@ -149,11 +136,7 @@ object SpawnWorld : GameRule() {
             if (it.inventory.none { item -> MaterialTags.PICKAXES.values.contains(item?.type) }) {
                 val pickaxe = itemStack(Material.IRON_PICKAXE) {
                     meta {
-                        name = GameChangeManager.translationsProvider.translate(
-                            "starter_pickaxe.name",
-                            it.language,
-                            id
-                        )
+                        name = translatable("$id.starter_pickaxe.name")
                     }
                 }
                 it.inventory.addItem(pickaxe)
@@ -167,11 +150,7 @@ object SpawnWorld : GameRule() {
             it.teleportAsync(location)
             val pickaxe = itemStack(Material.IRON_PICKAXE) {
                 meta {
-                    name = GameChangeManager.translationsProvider.translate(
-                        "starter_pickaxe.name",
-                        it.language,
-                        id
-                    )
+                    name = translatable("$id.starter_pickaxe.name")
                 }
             }
             if (environment == World.Environment.THE_END &&

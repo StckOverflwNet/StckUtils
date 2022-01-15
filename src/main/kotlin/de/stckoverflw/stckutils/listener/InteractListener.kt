@@ -1,11 +1,11 @@
 package de.stckoverflw.stckutils.listener
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
-import de.stckoverflw.stckutils.extension.language
+import de.stckoverflw.stckutils.extension.errorTranslatable
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
 import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.gui.openGUI
+import net.kyori.adventure.text.Component.text
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -19,19 +19,14 @@ class InteractListener : Listener {
         val action = event.action
         if (
             (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) &&
-            player.inventory.itemInMainHand.isSimilar(getSettingsItem(player.language))
+            player.inventory.itemInMainHand.isSimilar(getSettingsItem(player.locale()))
         ) {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
                 return player.sendMessage(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                        "generic.missing_permission",
-                        player.language,
-                        "general",
-                        arrayOf(Permissions.SETTINGS_GUI)
-                    )
+                    errorTranslatable("generic.missing_permission", text(Permissions.SETTINGS_GUI))
                 )
             }
-            player.openGUI(settingsGUI(player.language))
+            player.openGUI(settingsGUI(player.locale()))
         }
     }
 }

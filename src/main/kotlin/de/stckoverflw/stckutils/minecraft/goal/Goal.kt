@@ -1,11 +1,17 @@
 package de.stckoverflw.stckutils.minecraft.goal
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.language
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.bukkitColor
 import net.axay.kspigot.extensions.onlinePlayers
-import org.bukkit.*
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.Component.translatable
+import org.bukkit.ChatColor
+import org.bukkit.FireworkEffect
+import org.bukkit.GameMode
+import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
@@ -44,16 +50,38 @@ var Goal.active: Boolean
     }
 
 abstract class TeamGoal : Goal() {
-    fun win(id: String, replacements: Array<Any?> = arrayOf()) {
+    fun win(replacements: List<Component> = listOf()) {
         if (Timer.running) {
             spawnFireworks()
             onlinePlayers.forEach {
                 it.sendMessage(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
+                    translatable(
                         "team_goal.win",
-                        it.language,
-                        id,
-                        arrayOf(replacements, ChatColor.stripColor(Timer.formatTime()))
+                        listOf(
+                            translatable(winKey, replacements),
+                            text(ChatColor.stripColor(Timer.toString())!!)
+                        )
+                    )
+                )
+                Timer.stop()
+            }
+        }
+    }
+}
+
+abstract class Battle : Goal() {
+    fun win(player: Player, replacements: List<Component> = listOf()) {
+        if (Timer.running) {
+            spawnFireworks()
+            onlinePlayers.forEach {
+                it.sendMessage(
+                    translatable(
+                        "battle.win",
+                        listOf(
+                            translatable(winKey, replacements),
+                            player.name(),
+                            text(ChatColor.stripColor(Timer.toString())!!)
+                        )
                     )
                 )
             }
@@ -62,24 +90,12 @@ abstract class TeamGoal : Goal() {
     }
 }
 
-abstract class Battle : Goal() {
-    fun win(player: Player, id: String, replacements: Array<Any?> = arrayOf()) {
-        if (Timer.running) {
-            spawnFireworks()
-            onlinePlayers.forEach {
-                it.sendMessage(
-                    StckUtilsPlugin.translationsProvider.translateWithPrefix(
-                        "battle.win",
-                        it.language,
-                        id,
-                        arrayOf(replacements, player.name, ChatColor.stripColor(Timer.formatTime()))
-                    )
-                )
-            }
-            Timer.stop()
-        }
-    }
-}
+val Goal.nameKey: String
+    get() = "$id.name"
+val Goal.descriptionKey: String
+    get() = "$id.description"
+val Goal.winKey: String
+    get() = "$id.win"
 
 private fun spawnFireworks() {
     onlinePlayers.forEach {
@@ -88,7 +104,7 @@ private fun spawnFireworks() {
         val fireworkMeta = firework.fireworkMeta
 
         fireworkMeta.power = 1
-        fireworkMeta.addEffect(FireworkEffect.builder().withColor(Color.BLUE).flicker(true).build())
+        fireworkMeta.addEffect(FireworkEffect.builder().withColor(KColors.BLUE.bukkitColor).flicker(true).build())
 
         firework.fireworkMeta = fireworkMeta
         firework.detonate()

@@ -14,7 +14,7 @@ object BakeCake : Battle() {
     @EventHandler
     fun onCraft(event: CraftItemEvent) {
         if (event.currentItem!!.type == Material.CAKE) {
-            win(event.whoClicked as Player, id, arrayOf(event.whoClicked.name))
+            win(event.whoClicked as Player, listOf(event.whoClicked.name()))
         }
     }
 }

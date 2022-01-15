@@ -7,7 +7,7 @@ import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerToggleSneakEvent
-import java.util.*
+import java.util.Locale
 
 object NoSneak : Challenge() {
 
@@ -23,7 +23,7 @@ object NoSneak : Challenge() {
             return
         }
         if (event.isSneaking) {
-            lose(id, arrayOf(event.player.name))
+            lose(listOf(event.player.name()))
         }
     }
 }

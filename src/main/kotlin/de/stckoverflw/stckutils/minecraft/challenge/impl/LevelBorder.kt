@@ -3,34 +3,47 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 import com.comphenix.protocol.PacketType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.addComponent
+import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isInArea
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
-import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import de.stckoverflw.stckutils.util.placeHolderItemWhite
 import de.stckoverflw.stckutils.util.settingsGUI
 import net.axay.kspigot.extensions.onlinePlayers
-import net.axay.kspigot.gui.*
+import net.axay.kspigot.gui.ForInventoryFiveByNine
+import net.axay.kspigot.gui.GUI
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
+import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.axay.kspigot.runnables.task
+import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.PlayerExpChangeEvent
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerLevelChangeEvent
+import org.bukkit.event.player.PlayerRespawnEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import java.lang.reflect.InvocationTargetException
-import java.util.*
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -209,11 +222,7 @@ object LevelBorder : Challenge(true) {
     }
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = ChallengeManager.translationsProvider.translate(
-            nameKey,
-            locale,
-            id
-        )
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -222,9 +231,9 @@ object LevelBorder : Challenge(true) {
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), 1) }
+            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFive, resetItem(locale)) {
+            button(Slots.RowThreeSlotFive, resetItem()) {
                 it.bukkitEvent.isCancelled = true
                 isFirstRun = true
                 xpLevel = 0
@@ -237,21 +246,11 @@ object LevelBorder : Challenge(true) {
         }
     }
 
-    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
+    private fun resetItem() = itemStack(Material.BARRIER) {
         meta {
-            name = ChallengeManager.translationsProvider.translate(
-                "reset_item.name",
-                locale,
-                id
-            )
+            name = translatable("$id.reset_item.name")
             addLore {
-                ChallengeManager.translationsProvider.translate(
-                    "reset_item.lore",
-                    locale,
-                    id
-                ).split("\n").forEach {
-                    +it
-                }
+                addComponent(translatable("$id.reset_item.lore"))
             }
         }
     }

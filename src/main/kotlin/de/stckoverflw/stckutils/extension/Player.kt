@@ -1,38 +1,24 @@
 package de.stckoverflw.stckutils.extension
 
-import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.util.*
-import net.axay.kspigot.extensions.geometry.LocationArea
+import de.stckoverflw.stckutils.util.Namespaces
+import de.stckoverflw.stckutils.util.get
+import de.stckoverflw.stckutils.util.has
+import de.stckoverflw.stckutils.util.remove
+import de.stckoverflw.stckutils.util.set
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.KSpigotMainInstance
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.Component.text
-import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import org.bukkit.util.Vector
 
 fun Player.resetWorlds() {
     Config.resetSettingsConfig.shouldReset = true
     onlinePlayers.forEach {
-        it.kick(
-            Component.join(
-                JoinConfiguration.separator(text("\n")),
-                Component.newline(),
-                text(
-                    StckUtilsPlugin.translationsProvider.translate(
-                        "player.reset_worlds",
-                        it.language,
-                        "messages",
-                        arrayOf(name)
-                    )
-                )
-            )
-        )
+        it.kick(successTranslatable("player.reset_worlds", name()))
     }
     Bukkit.getServer().spigot().restart()
 }
@@ -91,16 +77,12 @@ fun Player.reveal() {
 
 fun Player.isPlaying() = !this.hidden && this.gameMode == GameMode.SURVIVAL
 
-fun Player.isInArea(location: Location, radius: Double): Boolean {
-    val add = Location(location.world, location.x - radius, 0.0, location.z + radius)
-    val sub = Location(location.world, location.x + radius, 0.0, location.z - radius)
-
-    return LocationArea(add.toBlockLocation(), sub.toBlockLocation()).isInArea(this.location, false, 0)
+fun Player.isInArea(location1: Location, radius: Double): Boolean {
+    return location.toVector().isInSphere(location1.toVector(), radius)
 }
 
-fun Player.isInArea(location: Location, location2: Location): Boolean =
-    LocationArea(location, location2).isInArea(this.location, false, 0)
-
-var Player.language: Locale
-    get() = Config.languageConfig.getLanguage(this)
-    set(value) = Config.languageConfig.setLanguage(this, value)
+fun Player.isInArea(location1: Location, location2: Location): Boolean {
+    val vector1 = location1.toVector()
+    val vector2 = location2.toVector()
+    return location.toVector().isInAABB(Vector.getMinimum(vector1, vector2), Vector.getMaximum(vector1, vector2))
+}

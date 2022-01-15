@@ -4,7 +4,6 @@ import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Namespaces
 import de.stckoverflw.stckutils.util.get
 import de.stckoverflw.stckutils.util.set
-import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -40,10 +39,8 @@ class RespawnListener : Listener {
 
             val location = Location(Bukkit.getWorld(deathWorld)!!, deathLocationX, deathLocationY, deathLocationZ)
 
-            taskRunLater(2, true) {
-                player.gameMode = GameMode.SPECTATOR
-                player.teleportAsync(location)
-            }
+            player.gameMode = GameMode.SPECTATOR
+            player.teleportAsync(location)
         }
     }
 }

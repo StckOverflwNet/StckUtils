@@ -7,7 +7,7 @@ import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
-import java.util.*
+import java.util.Locale
 
 object NoXP : Challenge() {
 
@@ -22,6 +22,6 @@ object NoXP : Challenge() {
         if (!event.player.isPlaying()) {
             return
         }
-        lose(id, arrayOf(event.player.name))
+        lose(listOf(event.player.name()))
     }
 }
