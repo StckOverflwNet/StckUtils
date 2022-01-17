@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.util.GUIPage
@@ -45,7 +46,7 @@ object BlockExplode : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey).render(locale).coloredString()
 
         page(1) {
             // Placeholders at the Border of the Inventory
@@ -56,7 +57,7 @@ object BlockExplode : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFour, generateChanceItem()) {
+            button(Slots.RowThreeSlotFour, generateChanceItem(locale)) {
                 if (it.bukkitEvent.isLeftClick) {
                     if (chance <= 95) {
                         chance += 5
@@ -66,12 +67,12 @@ object BlockExplode : Challenge() {
                         chance -= 5
                     }
                 }
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateChanceItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateChanceItem(locale))
             }
 
-            button(Slots.RowThreeSlotSix, generateFireItem()) {
+            button(Slots.RowThreeSlotSix, generateFireItem(locale)) {
                 isFire = !isFire
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateFireItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateFireItem(locale))
             }
         }
     }
@@ -86,18 +87,23 @@ object BlockExplode : Challenge() {
         }
     }
 
-    private fun generateChanceItem() = itemStack(Material.SPRUCE_SIGN) {
+    private fun generateChanceItem(locale: Locale) = itemStack(Material.SPRUCE_SIGN) {
         meta {
             name = translatable("$id.chance_item.name")
+                .render(locale)
             addLore {
-                addComponent(translatable("$id.chance_item.lore", text(chance)))
+                addComponent(
+                    translatable("$id.chance_item.lore", text(chance))
+                        .render(locale)
+                )
             }
         }
     }
 
-    private fun generateFireItem() = itemStack(Material.FIRE_CHARGE) {
+    private fun generateFireItem(locale: Locale) = itemStack(Material.FIRE_CHARGE) {
         meta {
             name = translatable("$id.fire_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
@@ -113,6 +119,7 @@ object BlockExplode : Challenge() {
                             )
                         )
                     )
+                        .render(locale)
                 )
             }
         }

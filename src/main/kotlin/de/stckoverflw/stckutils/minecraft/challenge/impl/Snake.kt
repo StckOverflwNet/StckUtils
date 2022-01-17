@@ -5,6 +5,8 @@ import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.getKey
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.render
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.util.GUIPage
@@ -66,7 +68,7 @@ object Snake : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey).render(locale).coloredString()
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -77,33 +79,34 @@ object Snake : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotThree, visibleItem()) {
+            button(Slots.RowThreeSlotThree, visibleItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isVisible = !isVisible
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, visibleItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, visibleItem(locale))
             }
 
-            button(Slots.RowThreeSlotFive, breakableItem()) {
+            button(Slots.RowThreeSlotFive, breakableItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isBreakable = !isBreakable
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, breakableItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, breakableItem(locale))
             }
 
-            button(Slots.RowThreeSlotSeven, colorsItem()) {
+            button(Slots.RowThreeSlotSeven, colorsItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 isColored = !isColored
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, colorsItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, colorsItem(locale))
             }
         }
     }
 
-    private fun visibleItem() = itemStack(Material.WHITE_BANNER) {
+    private fun visibleItem(locale: Locale) = itemStack(Material.WHITE_BANNER) {
         meta {
             name = translatable("$id.visible_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
-                        "$id.colors_item.lore",
+                        "$id.visible_item.lore",
                         listOf(
                             if (isVisible) {
                                 translatable("$id.visible", TextColor.color(Color.GREEN.asRGB()))
@@ -112,18 +115,20 @@ object Snake : Challenge() {
                             }
                         )
                     )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun breakableItem() = itemStack(Material.WOODEN_PICKAXE) {
+    private fun breakableItem(locale: Locale) = itemStack(Material.WOODEN_PICKAXE) {
         meta {
             name = translatable("$id.breakable_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
-                        "$id.colors_item.lore",
+                        "$id.breakable_item.lore",
                         listOf(
                             if (isBreakable) {
                                 translatable("$id.breakable", TextColor.color(Color.GREEN.asRGB()))
@@ -132,14 +137,16 @@ object Snake : Challenge() {
                             }
                         )
                     )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun colorsItem() = itemStack(Material.PINK_CONCRETE) {
+    private fun colorsItem(locale: Locale) = itemStack(Material.PINK_CONCRETE) {
         meta {
             name = translatable("$id.colors_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
@@ -152,6 +159,7 @@ object Snake : Challenge() {
                             }
                         )
                     )
+                        .render(locale)
                 )
             }
         }
@@ -163,7 +171,7 @@ object Snake : Challenge() {
                 if (playerMaterials.containsKey(player)) return
                 if (materials.isEmpty()) {
                     player.gameMode = GameMode.SPECTATOR
-                    player.sendMessage(
+                    player.sendPrefixMessage(
                         translatable("$id.no_material_left")
                     )
                 }

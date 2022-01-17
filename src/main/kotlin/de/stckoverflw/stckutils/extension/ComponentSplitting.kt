@@ -2,7 +2,7 @@
  * Taken out of an unpublished Adventure API Addition,
  * once it gets added to the Adventure API, we'll remove this,
  * until then thanks to syldium for developing this
- * original source: https://github.com/syldium/adventure/blob/feature/split/api/src/test/java/net/kyori/adventure/text/ComponentSplittingTest.java
+ * original source: https://github.com/syldium/adventure/blob/feature/split/api/src/main/java/net/kyori/adventure/text/ComponentSplitting.java
  */
 package de.stckoverflw.stckutils.extension
 

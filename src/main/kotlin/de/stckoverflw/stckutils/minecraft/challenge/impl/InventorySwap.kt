@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
@@ -47,7 +48,7 @@ object InventorySwap : Challenge() {
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey).render(locale).coloredString()
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -58,7 +59,7 @@ object InventorySwap : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFour, minusItem()) {
+            button(Slots.RowThreeSlotFour, minusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (period - 1 < minPeriod)
@@ -71,36 +72,37 @@ object InventorySwap : Challenge() {
                     else
                         period -= 10
                 }
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem()) {
+            button(Slots.RowThreeSlotFive, resetItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 period = 60
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotSix, plusItem()) {
+            button(Slots.RowThreeSlotSix, plusItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     period += 1
                 } else if (it.bukkitEvent.isRightClick) {
                     period += 10
                 }
-                updateInventory(it.bukkitEvent.inventory)
+                updateInventory(it.bukkitEvent.inventory, locale)
             }
         }
     }
 
-    private fun updateInventory(inv: Inventory) {
-        inv.setItem(21, minusItem())
-        inv.setItem(22, resetItem())
-        inv.setItem(23, plusItem())
+    private fun updateInventory(inv: Inventory, locale: Locale) {
+        inv.setItem(21, minusItem(locale))
+        inv.setItem(22, resetItem(locale))
+        inv.setItem(23, plusItem(locale))
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
             name = translatable("$id.reset_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
@@ -109,34 +111,39 @@ object InventorySwap : Challenge() {
                             text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a")
                         )
                     )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun plusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun plusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
             name = translatable("$id.plus_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
                         "$id.plus_item.lore",
                         listOf(text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a"))
                     )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun minusItem() = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
+    private fun minusItem(locale: Locale) = itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
         meta {
             name = translatable("$id.minus_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
                         "$id.minus_item.lore",
                         listOf(text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a"))
                     )
+                        .render(locale)
                 )
             }
         }

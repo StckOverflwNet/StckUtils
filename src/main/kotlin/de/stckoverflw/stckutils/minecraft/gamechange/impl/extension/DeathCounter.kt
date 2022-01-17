@@ -20,6 +20,7 @@ import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.inventory.ItemFlag
 import java.util.Locale
 
 object DeathCounter : GameExtension() {
@@ -62,6 +63,14 @@ object DeathCounter : GameExtension() {
                 + "Shift Right-click to lower the deaths"
                  */
             }
+            addItemFlags(
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_UNBREAKABLE,
+                ItemFlag.HIDE_POTION_EFFECTS
+            )
         }
     }
 

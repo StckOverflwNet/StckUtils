@@ -16,6 +16,7 @@ import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import java.util.Locale
 
@@ -47,6 +48,14 @@ object KeepInventory : GameRule() {
                         .render(locale)
                 )
             }
+            addItemFlags(
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_UNBREAKABLE,
+                ItemFlag.HIDE_POTION_EFFECTS
+            )
         }
     }
 

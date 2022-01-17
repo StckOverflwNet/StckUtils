@@ -5,6 +5,7 @@ import de.stckoverflw.stckutils.extension.errorTranslatable
 import de.stckoverflw.stckutils.extension.hidden
 import de.stckoverflw.stckutils.extension.hide
 import de.stckoverflw.stckutils.extension.reveal
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.Permissions
@@ -26,24 +27,24 @@ class HideCommand {
         fun sendResponse(player: Player, target: Player) {
             if (target.hidden) {
                 target.reveal()
-                target.sendMessage(
+                target.sendPrefixMessage(
                     if (player != target) {
                         successTranslatable("hide.revealed_by.target", player.name())
                     } else {
                         successTranslatable("hide.revealed.target")
                     }
                 )
-                player.sendMessage(successTranslatable("hide.revealed.player", target.name()))
+                player.sendPrefixMessage(successTranslatable("hide.revealed.player", target.name()))
             } else {
                 target.hide()
-                target.sendMessage(
+                target.sendPrefixMessage(
                     if (player != target) {
                         successTranslatable("hide.hidden_by.target", player.name())
                     } else {
                         successTranslatable("hide.hidden.target")
                     }
                 )
-                player.sendMessage(successTranslatable("hide.hidden.player", target.name()))
+                player.sendPrefixMessage(successTranslatable("hide.hidden.player", target.name()))
             }
         }
     }
@@ -64,7 +65,7 @@ class HideCommand {
                 }
                 runs runs@{
                     val target = Bukkit.getPlayer(getArgument<String>("player"))
-                        ?: return@runs player.sendMessage(
+                        ?: return@runs player.sendPrefixMessage(
                             errorTranslatable("general.player_not_found")
                         )
                     val perm = if (player == target) {

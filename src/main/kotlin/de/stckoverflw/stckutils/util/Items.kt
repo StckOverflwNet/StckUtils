@@ -107,9 +107,11 @@ fun getGoBackItem(locale: Locale) =
 
             addLore {
                 +""
-                +translatable("gui.back.lore")
-                    .color(Colors.GO_BACK_SECONDARY)
-                    .render(locale)
+                addComponent(
+                    translatable("gui.back.lore")
+                        .color(Colors.GO_BACK_SECONDARY)
+                        .render(locale)
+                )
             }
 
             flags(
@@ -479,13 +481,20 @@ fun generateColorCompoundItem(chatColor: ChatColor, locale: Locale) =
                 )
             }
 
+            persistentDataContainer.set(Namespaces.COLOR_COMPOUND_VALUE, TextColor.color(chatColor.javaAwtColor.rgb).value())
+
+            if (Timer.color == TextColor.color(chatColor.javaAwtColor.rgb)) {
+                addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
+            }
+
             flags(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_DYE,
                 ItemFlag.HIDE_PLACED_ON,
                 ItemFlag.HIDE_UNBREAKABLE,
-                ItemFlag.HIDE_POTION_EFFECTS
+                ItemFlag.HIDE_POTION_EFFECTS,
+                ItemFlag.HIDE_ENCHANTS
             )
         }
     }
@@ -547,14 +556,12 @@ fun generateItemForChallenge(challenge: Challenge, locale: Locale) =
                     }
                     if (challenge.configurationGUI(Config.languageConfig.defaultLanguage) != null) {
                         addComponent(
-                            translatable(
-                                "gui.challenge.lore.config_gui",
-                                listOf(
+                            translatable("gui.challenge.lore.config_gui")
+                                .color(Colors.SECONDARY)
+                                .args(
                                     translatable(challenge.nameKey)
                                         .color(Colors.CONFIGURATION)
                                 )
-                            )
-                                .color(Colors.CONFIGURATION)
                                 .render(locale)
                         )
                     }

@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils.command
 import com.mojang.brigadier.arguments.StringArgumentType
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.config.data.PositionData
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.util.Permissions
 import net.axay.kspigot.commands.argument
@@ -39,7 +40,7 @@ class PositionCommand {
                         )
                     )
                     onlinePlayers.forEach {
-                        it.sendMessage(
+                        it.sendPrefixMessage(
                             successTranslatable(
                                 "position.create",
                                 player.name(),
@@ -56,7 +57,7 @@ class PositionCommand {
                         it.name == getArgument<String>("name")
                     } ?: return@runs
                     val location = position.location
-                    player.sendMessage(
+                    player.sendPrefixMessage(
                         successTranslatable(
                             "position.show",
                             text(position.name),

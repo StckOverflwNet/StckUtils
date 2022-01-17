@@ -28,6 +28,7 @@ import org.bukkit.World
 import org.bukkit.block.Biome
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerRespawnEvent
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import java.util.Locale
 import java.util.UUID
@@ -81,6 +82,14 @@ object SpawnWorld : GameRule() {
                         .render(locale)
                 )
             }
+            addItemFlags(
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_UNBREAKABLE,
+                ItemFlag.HIDE_POTION_EFFECTS
+            )
         }
     }
 

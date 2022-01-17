@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.challenge
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -69,7 +70,7 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
         Timer.stop()
         Bukkit.getOnlinePlayers().forEach {
             it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
-            it.sendMessage(
+            it.sendPrefixMessage(
                 translatable(
                     "challenge.lose",
                     listOf(

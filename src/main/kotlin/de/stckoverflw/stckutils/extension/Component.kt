@@ -6,14 +6,17 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.TranslatableComponent
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.kyori.adventure.translation.GlobalTranslator
 import net.md_5.bungee.api.ChatColor
 import java.util.Locale
 import java.util.regex.Pattern
 
-fun Component.coloredString(): String {
-    return ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.legacy('&').serialize(this))
-}
+fun Component.plainText(): String =
+    PlainTextComponentSerializer.plainText().serialize(this)
+
+fun Component.coloredString(): String =
+    ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.legacy('&').serialize(this))
 
 fun TranslatableComponent.coloredString(locale: Locale = Config.languageConfig.defaultLanguage): String {
     return GlobalTranslator.render(

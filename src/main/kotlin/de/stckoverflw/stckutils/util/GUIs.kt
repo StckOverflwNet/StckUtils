@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.resetWorlds
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
@@ -17,7 +18,7 @@ import de.stckoverflw.stckutils.minecraft.goal.active
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
-import net.axay.kspigot.extensions.bukkit.bukkitColor
+import net.axay.kspigot.extensions.bukkit.javaAwtColor
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
@@ -32,7 +33,6 @@ import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemFlag
 import java.util.Locale
 import org.bukkit.ChatColor as BukkitChatColor
 
@@ -145,7 +145,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
-                        player.sendMessage(
+                        player.sendPrefixMessage(
                             translatable("gui.timer_not_paused")
                         )
                     } else {
@@ -155,7 +155,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                             clickEvent.bukkitEvent.clickedInventory!!
                                 .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge, locale))
                         } else {
-                            player.sendMessage(
+                            player.sendPrefixMessage(
                                 translatable("gui.depend.protocol_lib")
                             )
                         }
@@ -166,7 +166,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                         if (challenge.active) {
                             player.openGUI(configGUI)
                         } else {
-                            player.sendMessage(
+                            player.sendPrefixMessage(
                                 translatable("gui.challenge.config.challenge_not_activated")
                             )
                         }
@@ -206,14 +206,6 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             Slots.RowFourSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = iconGenerator@{
                 val item = it.item(locale)
-                item.addItemFlags(
-                    ItemFlag.HIDE_ATTRIBUTES,
-                    ItemFlag.HIDE_DESTROYS,
-                    ItemFlag.HIDE_DYE,
-                    ItemFlag.HIDE_PLACED_ON,
-                    ItemFlag.HIDE_UNBREAKABLE,
-                    ItemFlag.HIDE_POTION_EFFECTS
-                )
                 return@iconGenerator item
             },
             onClick = { clickEvent, extension ->
@@ -227,14 +219,6 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
             iconGenerator = iconGenerator@{
                 val item = it.item(locale)
-                item.addItemFlags(
-                    ItemFlag.HIDE_ATTRIBUTES,
-                    ItemFlag.HIDE_DESTROYS,
-                    ItemFlag.HIDE_DYE,
-                    ItemFlag.HIDE_PLACED_ON,
-                    ItemFlag.HIDE_UNBREAKABLE,
-                    ItemFlag.HIDE_POTION_EFFECTS
-                )
                 return@iconGenerator item
             },
             onClick = { clickEvent, rule ->
@@ -299,7 +283,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
-                        player.sendMessage(
+                        player.sendPrefixMessage(
                             translatable("gui.timer_not_paused")
                         )
                     } else {
@@ -481,7 +465,8 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             },
             onClick = { clickEvent, chatColor ->
                 clickEvent.bukkitEvent.isCancelled = true
-                Timer.color = TextColor.color(chatColor.bukkitColor.asRGB())
+                Timer.color = TextColor.color(chatColor.javaAwtColor.rgb)
+                clickEvent.guiInstance.reloadCurrentPage()
             }
         )
 
@@ -544,7 +529,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                     Permissions.HIDE_OTHER
                 }
                 if (!player.hasPermission(perm)) {
-                    return@click player.sendMessage(
+                    return@click player.sendPrefixMessage(
                         translatable("generic.missing_permission", listOf(text(perm)))
                     )
                 }

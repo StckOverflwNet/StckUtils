@@ -5,6 +5,7 @@ import de.stckoverflw.stckutils.extension.hidden
 import de.stckoverflw.stckutils.extension.hide
 import de.stckoverflw.stckutils.extension.reveal
 import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
@@ -12,6 +13,8 @@ import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
+import net.axay.kspigot.extensions.bukkit.title
+import net.axay.kspigot.runnables.task
 import net.kyori.adventure.text.Component.text
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -38,7 +41,14 @@ class ConnectionListener : Listener {
         if (!Timer.running) {
             event.joinMessage(text("[+] ${player.name}"))
             if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
-                player.inventory.setItem(8, getSettingsItem(player.locale()))
+                player.title("Loading your settings")
+                task(
+                    sync = false,
+                    delay = 10
+                ) {
+                    player.title("Loaded!", fadeIn = 5, stay = 15, fadeOut = 5)
+                    player.inventory.setItem(8, getSettingsItem(player.locale()))
+                }
             }
         } else {
             player.setSavedInventory()
@@ -107,7 +117,7 @@ class ConnectionListener : Listener {
             }
         }
         player.gameMode = GameMode.SPECTATOR
-        player.sendMessage(
+        player.sendPrefixMessage(
             successTranslatable("connect.spectator")
         )
     }

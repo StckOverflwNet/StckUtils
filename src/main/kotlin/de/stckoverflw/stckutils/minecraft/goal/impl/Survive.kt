@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.goal.impl
 
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.Battle
 import net.axay.kspigot.extensions.onlinePlayers
 import net.kyori.adventure.text.Component.translatable
@@ -17,7 +18,7 @@ object Survive : Battle() {
     fun onDeath(event: PlayerDeathEvent) {
         val player = event.entity
         player.gameMode = GameMode.SPECTATOR
-        player.sendMessage(
+        player.sendPrefixMessage(
             translatable("$id.died")
         )
         val alivePlayers = onlinePlayers.filter { it.gameMode == GameMode.SURVIVAL }

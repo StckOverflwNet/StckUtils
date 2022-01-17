@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -68,7 +69,7 @@ object RandomItem : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey).render(locale).coloredString()
         defaultPage = 0
         page(0) {
             // Placeholders at the Border of the Inventory
@@ -79,21 +80,21 @@ object RandomItem : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFour, distanceItem()) {
+            button(Slots.RowThreeSlotFour, distanceItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     isDistance = !isDistance
-                    it.bukkitEvent.currentItem = distanceItem()
+                    it.bukkitEvent.currentItem = distanceItem(locale)
                 } else if (it.bukkitEvent.isRightClick) {
                     it.guiInstance.gotoPage(1)
                 }
             }
 
-            button(Slots.RowThreeSlotSix, timeItem()) {
+            button(Slots.RowThreeSlotSix, timeItem(locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     isTime = !isTime
-                    it.bukkitEvent.currentItem = timeItem()
+                    it.bukkitEvent.currentItem = timeItem(locale)
                 } else if (it.bukkitEvent.isRightClick) {
                     it.guiInstance.gotoPage(2)
                 }
@@ -109,23 +110,23 @@ object RandomItem : Challenge() {
             // Go back Item
             pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), 0, null, null)
 
-            button(Slots.RowThreeSlotSix, plusItem("distance", "${distanceUnit}m", "10m", "100m")) {
+            button(Slots.RowThreeSlotSix, plusItem("distance", "${distanceUnit}m", "10m", "100m", locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     distanceUnit += 10
                 } else if (it.bukkitEvent.isRightClick) {
                     distanceUnit += 100
                 }
-                updateInventory(it.bukkitEvent.inventory, false)
+                updateInventory(it.bukkitEvent.inventory, false, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem("distance", "${distanceUnit}m", "500m")) {
+            button(Slots.RowThreeSlotFive, resetItem("distance", "${distanceUnit}m", "500m", locale)) {
                 it.bukkitEvent.isCancelled = true
                 distanceUnit = 500
-                updateInventory(it.bukkitEvent.inventory, false)
+                updateInventory(it.bukkitEvent.inventory, false, locale)
             }
 
-            button(Slots.RowThreeSlotFour, minusItem("distance", "${distanceUnit}m", "10m", "100m")) {
+            button(Slots.RowThreeSlotFour, minusItem("distance", "${distanceUnit}m", "10m", "100m", locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (distanceUnit - 10 < minDistance)
@@ -138,7 +139,7 @@ object RandomItem : Challenge() {
                     else
                         distanceUnit -= 100
                 }
-                updateInventory(it.bukkitEvent.inventory, false)
+                updateInventory(it.bukkitEvent.inventory, false, locale)
             }
         }
         // time settings
@@ -151,23 +152,23 @@ object RandomItem : Challenge() {
             // Go back Item
             pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), 0, null, null)
 
-            button(Slots.RowThreeSlotSix, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m")) {
+            button(Slots.RowThreeSlotSix, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     timeUnit += 10
                 } else if (it.bukkitEvent.isRightClick) {
                     timeUnit += 60
                 }
-                updateInventory(it.bukkitEvent.inventory, true)
+                updateInventory(it.bukkitEvent.inventory, true, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3m")) {
+            button(Slots.RowThreeSlotFive, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3m", locale)) {
                 it.bukkitEvent.isCancelled = true
                 timeUnit = 300
-                updateInventory(it.bukkitEvent.inventory, true)
+                updateInventory(it.bukkitEvent.inventory, true, locale)
             }
 
-            button(Slots.RowThreeSlotFour, minusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m")) {
+            button(Slots.RowThreeSlotFour, minusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale)) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (timeUnit - 10 < minTime)
@@ -180,71 +181,78 @@ object RandomItem : Challenge() {
                     else
                         timeUnit -= 60
                 }
-                updateInventory(it.bukkitEvent.inventory, true)
+                updateInventory(it.bukkitEvent.inventory, true, locale)
             }
         }
     }
 
-    private fun updateInventory(inv: Inventory, isTime: Boolean) {
+    private fun updateInventory(inv: Inventory, isTime: Boolean, locale: Locale) {
         if (isTime) {
-            inv.setItem(21, minusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m"))
-            inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3m"))
-            inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m"))
+            inv.setItem(21, minusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale))
+            inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3m", locale))
+            inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale))
         } else {
-            inv.setItem(21, minusItem("distance", "${distanceUnit}m", "10m", "100m"))
-            inv.setItem(22, resetItem("distance", "${distanceUnit}m", "500m"))
-            inv.setItem(23, plusItem("distance", "${distanceUnit}m", "10m", "100m"))
+            inv.setItem(21, minusItem("distance", "${distanceUnit}m", "10m", "100m", locale))
+            inv.setItem(22, resetItem("distance", "${distanceUnit}m", "500m", locale))
+            inv.setItem(23, plusItem("distance", "${distanceUnit}m", "10m", "100m", locale))
         }
     }
 
-    private fun resetItem(description: String, value: String, default: String) =
+    private fun resetItem(description: String, value: String, default: String, locale: Locale) =
         itemStack(Material.BARRIER) {
             meta {
                 name = translatable("$id.reset_item.name")
+                    .render(locale)
                 addLore {
                     addComponent(
                         translatable(
                             "$id.reset_item.lore",
                             listOf(text(description), text(value), text(default))
                         )
+                            .render(locale)
                     )
                 }
             }
         }
 
-    private fun plusItem(description: String, value: String, leftClick: String, rightClick: String) =
+    private fun plusItem(description: String, value: String, leftClick: String, rightClick: String, locale: Locale) =
         itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
             meta {
                 name = translatable("$id.plus_item.name")
+                    .render(locale)
                 addLore {
                     addComponent(
                         translatable(
                             "$id.plus_item.lore",
                             listOf(text(description), text(value), text(leftClick), text(rightClick))
                         )
+                            .render(locale)
                     )
                 }
             }
         }
 
-    private fun minusItem(description: String, value: String, leftClick: String, rightClick: String) =
+    private fun minusItem(description: String, value: String, leftClick: String, rightClick: String, locale: Locale) =
         itemStack(Material.POLISHED_BLACKSTONE_BUTTON) {
             meta {
                 name = translatable("$id.minus_item.name")
+                    .render(locale)
                 addLore {
                     addComponent(
                         translatable(
                             "$id.minus_item.lore",
                             listOf(text(description), text(value), text(leftClick), text(rightClick))
                         )
+                            .render(locale)
                     )
                 }
             }
         }
 
-    private fun distanceItem() = itemStack(Material.GOLDEN_BOOTS) {
+    private fun distanceItem(locale: Locale) = itemStack(Material.GOLDEN_BOOTS) {
         meta {
             name = translatable("$id.distance_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
@@ -258,14 +266,16 @@ object RandomItem : Challenge() {
                             }
                         )
                     )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun timeItem() = itemStack(Material.CLOCK) {
+    private fun timeItem(locale: Locale) = itemStack(Material.CLOCK) {
         meta {
             name = translatable("$id.time_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable(
@@ -279,6 +289,7 @@ object RandomItem : Challenge() {
                             }
                         )
                     )
+                        .render(locale)
                 )
             }
         }

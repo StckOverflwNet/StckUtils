@@ -1,5 +1,6 @@
 package de.stckoverflw.stckutils.extension
 
+import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.util.Namespaces
 import de.stckoverflw.stckutils.util.get
@@ -8,6 +9,7 @@ import de.stckoverflw.stckutils.util.remove
 import de.stckoverflw.stckutils.util.set
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.KSpigotMainInstance
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -86,3 +88,7 @@ fun Player.isInArea(location1: Location, location2: Location): Boolean {
     val vector2 = location2.toVector()
     return location.toVector().isInAABB(Vector.getMinimum(vector1, vector2), Vector.getMaximum(vector1, vector2))
 }
+
+fun Player.sendPrefixMessage(meessage: String) = sendPrefixMessage(Component.text(meessage))
+
+fun Player.sendPrefixMessage(message: Component) = sendMessage(StckUtilsPlugin.prefix.append(message))

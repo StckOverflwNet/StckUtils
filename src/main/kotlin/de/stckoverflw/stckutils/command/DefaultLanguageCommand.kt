@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.command
 
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.successTranslatable
 import de.stckoverflw.stckutils.util.Permissions
 import net.axay.kspigot.commands.command
@@ -15,7 +16,7 @@ class DefaultLanguageCommand {
     fun register() = command("default-language", true) {
         requiresPermission(Permissions.LANGUAGE_COMMAND)
         runs {
-            player.sendMessage(
+            player.sendPrefixMessage(
                 successTranslatable("language.current", text(Config.languageConfig.defaultLanguage.displayLanguage))
             )
         }
@@ -23,7 +24,7 @@ class DefaultLanguageCommand {
             literal(it.displayLanguage) {
                 runs {
                     Config.languageConfig.defaultLanguage = it
-                    player.sendMessage(successTranslatable("language.set", text(literal)))
+                    player.sendPrefixMessage(successTranslatable("language.set", text(literal)))
                 }
             }
         }

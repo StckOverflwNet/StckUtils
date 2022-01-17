@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -112,7 +113,7 @@ object AllMobs : TeamGoal() {
                 nextMob = randomMob()
                 it.guiInstance.reloadCurrentPage()
                 onlinePlayers.forEach { player ->
-                    player.sendMessage(
+                    player.sendPrefixMessage(
                         translatable("$id.reset_progress", listOf(it.bukkitEvent.whoClicked.name()))
                     )
                 }
@@ -318,7 +319,7 @@ object AllMobs : TeamGoal() {
 
     private fun collected(key: String, replacements: List<Component> = listOf(), markCollected: Boolean = true) {
         onlinePlayers.forEach {
-            it.sendMessage(
+            it.sendPrefixMessage(
                 translatable(key, replacements)
             )
         }

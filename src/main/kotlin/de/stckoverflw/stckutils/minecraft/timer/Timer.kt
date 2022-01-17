@@ -1,8 +1,8 @@
 package de.stckoverflw.stckutils.minecraft.timer
 
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.fromKey
+import de.stckoverflw.stckutils.extension.plainText
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
@@ -13,9 +13,11 @@ import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.task
+import net.kyori.adventure.text.Component.space
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.TextColor
@@ -97,14 +99,17 @@ object Timer {
     private fun broadcastTimer() {
         Bukkit.getOnlinePlayers().forEach {
             it.sendActionBar(
-                text(
-                    this.formatTime() + if (additionalInfo.isNotEmpty()) " (${
-                    additionalInfo.joinToString(
-                        " "
-                    )
-                    })" else "",
-                    color
-                )
+                literalText {
+                    text(formatTime())
+                    if (additionalInfo.isNotEmpty()) {
+                        component(space())
+                        text("(")
+                        text(additionalInfo.joinToString(" "))
+                        text(")")
+                    }
+                    color = this@Timer.color
+                    bold = true
+                }
             )
         }
     }
@@ -112,7 +117,11 @@ object Timer {
     private fun broadcastIdle() {
         Bukkit.getOnlinePlayers().forEach {
             it.sendActionBar(
-                translatable("timer.idle", color)
+                literalText {
+                    component(translatable("timer.idle"))
+                    color = this@Timer.color
+                    bold = true
+                }
             )
         }
     }
@@ -199,10 +208,9 @@ object Timer {
                         (if (days != 0L) "${days}d " else "") +
                             (if (hours != 0) "${hours}h " else "") +
                             (if (min != 0) "${min}m " else "") +
-                            if (sec != 0) "$sec" + if (days + hours + min == 0L) " second" + if (sec != 1) "s" else "" else "s" else "",
-                        color
+                            if (sec != 0) "$sec" + if (days + hours + min == 0L) " second" + if (sec != 1) "s" else "" else "s" else ""
                     )
-                        .coloredString()
+                        .plainText()
                     )
             }
         )

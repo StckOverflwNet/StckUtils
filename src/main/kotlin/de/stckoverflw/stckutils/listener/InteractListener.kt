@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
 import de.stckoverflw.stckutils.extension.errorTranslatable
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
 import de.stckoverflw.stckutils.util.settingsGUI
@@ -22,7 +23,7 @@ class InteractListener : Listener {
             player.inventory.itemInMainHand.isSimilar(getSettingsItem(player.locale()))
         ) {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
-                return player.sendMessage(
+                return player.sendPrefixMessage(
                     errorTranslatable("generic.missing_permission", text(Permissions.SETTINGS_GUI))
                 )
             }

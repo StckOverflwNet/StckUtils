@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.command
 
 import de.stckoverflw.stckutils.extension.errorTranslatable
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.goal.impl.AllAdvancements
 import de.stckoverflw.stckutils.minecraft.goal.impl.AllItems
@@ -26,7 +27,7 @@ class AllXCommand {
                     AllAdvancements.resetFilter(player)
                     player.openGUI(AllAdvancements.gui(player.locale()))
                 }
-                else -> player.sendMessage(errorTranslatable("allx.not_enabled"))
+                else -> player.sendPrefixMessage(errorTranslatable("allx.not_enabled"))
             }
         }
     }

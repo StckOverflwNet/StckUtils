@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.minecraft.goal
 
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.bukkitColor
@@ -54,7 +55,7 @@ abstract class TeamGoal : Goal() {
         if (Timer.running) {
             spawnFireworks()
             onlinePlayers.forEach {
-                it.sendMessage(
+                it.sendPrefixMessage(
                     translatable(
                         "team_goal.win",
                         listOf(
@@ -74,7 +75,7 @@ abstract class Battle : Goal() {
         if (Timer.running) {
             spawnFireworks()
             onlinePlayers.forEach {
-                it.sendMessage(
+                it.sendPrefixMessage(
                     translatable(
                         "battle.win",
                         listOf(

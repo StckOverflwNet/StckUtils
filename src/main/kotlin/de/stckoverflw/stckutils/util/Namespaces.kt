@@ -28,7 +28,7 @@ fun <T, Z> PersistentDataContainer.remove(typedNamespace: TypedNamespace<T, Z>) 
 
 object Namespaces {
 
-    val CHALLENGE_FUNCTION_HIDDEN = TypedNamespace("challenge-function-hidden", PersistentDataType.BYTE)
+    val COLOR_COMPOUND_VALUE = TypedNamespace("color-compound-value", PersistentDataType.INTEGER)
     val CHALLENGE_INVENTORY_CONTENTS = TypedNamespace("challenge-inventory-contents", PersistentDataType.STRING)
     val DEATH_LOCATION_WORLD = TypedNamespace("death_location_world", PersistentDataType.STRING)
     val DEATH_LOCATION_X = TypedNamespace("death_location_x", PersistentDataType.DOUBLE)

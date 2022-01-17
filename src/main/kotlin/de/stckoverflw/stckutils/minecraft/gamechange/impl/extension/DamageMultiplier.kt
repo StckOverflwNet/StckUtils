@@ -34,6 +34,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemFlag
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -71,6 +72,14 @@ object DamageMultiplier : GameExtension() {
                         .render(locale)
                 )
             }
+            addItemFlags(
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_UNBREAKABLE,
+                ItemFlag.HIDE_POTION_EFFECTS
+            )
         }
     }
 

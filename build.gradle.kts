@@ -11,6 +11,7 @@ group = "de.stckoverflw"
 version = "1.3.2"
 
 repositories {
+    // remove when KSpigot 1.18.1 gets officially released
     mavenLocal()
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/")
@@ -49,8 +50,7 @@ tasks {
         enabled = false
     }
     build {
-        dependsOn(reobfJar)
-        dependsOn(shadowJar)
+        dependsOn(reobfJar, shadowJar)
     }
     // Relocating KSpigot to prevent conflicts with multiple Plugins using KSpigot
     shadowJar {

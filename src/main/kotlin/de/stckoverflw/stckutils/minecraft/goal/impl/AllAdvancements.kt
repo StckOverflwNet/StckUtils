@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
@@ -115,7 +116,7 @@ object AllAdvancements : TeamGoal() {
                 formattedAdvancement = formatAdvancement(nextAdvancement)
                 it.guiInstance.reloadCurrentPage()
                 onlinePlayers.forEach { player ->
-                    player.sendMessage(
+                    player.sendPrefixMessage(
                         translatable("$id.message.reset_progress", listOf(it.bukkitEvent.whoClicked.name()))
                     )
                 }
@@ -341,7 +342,7 @@ object AllAdvancements : TeamGoal() {
     @OptIn(DelicateCoroutinesApi::class)
     private fun done(key: String, replacements: List<Component> = listOf(), markCollected: Boolean = true) {
         onlinePlayers.forEach {
-            it.sendMessage(
+            it.sendPrefixMessage(
                 translatable(key, replacements)
             )
         }

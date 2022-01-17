@@ -24,9 +24,12 @@ import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.space
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Bukkit
@@ -37,7 +40,24 @@ import kotlin.io.path.div
 class StckUtilsPlugin : KSpigot() {
 
     companion object {
-        const val prefix: String = "StckUtils | "
+        val prefix: Component =
+            literalText {
+                component(
+                    literalText {
+                        text("StckUtils")
+                        color = KColors.WHITE.asTextColor()
+                        bold = true
+                    }
+                )
+                component(space())
+                component(
+                    literalText {
+                        text("|")
+                        color = KColors.GRAY.asTextColor()
+                    }
+                )
+                component(space())
+            }
         var protocolManager: ProtocolManager? = null
         var isProtocolLib: Boolean = false
         val translationsProvider = TranslationsProvider()

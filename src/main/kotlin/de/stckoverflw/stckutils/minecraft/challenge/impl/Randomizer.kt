@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
 import de.stckoverflw.stckutils.util.GUIPage
@@ -42,7 +43,7 @@ object Randomizer : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey).render(locale).coloredString()
         defaultPage = 1
         page(1) {
             // Placeholders at the Border of the Inventory
@@ -53,9 +54,9 @@ object Randomizer : Challenge() {
             // Go back Item
             button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
 
-            button(Slots.RowThreeSlotFive, randomizerSettingsItem()) {
+            button(Slots.RowThreeSlotFive, randomizerSettingsItem(locale)) {
                 randomizeEverything = !randomizeEverything
-                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, randomizerSettingsItem())
+                it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, randomizerSettingsItem(locale))
             }
         }
     }
@@ -80,19 +81,27 @@ object Randomizer : Challenge() {
         }
     }
 
-    private fun randomizerSettingsItem() =
+    private fun randomizerSettingsItem(locale: Locale) =
         if (randomizeEverything) itemStack(Material.SUNFLOWER) {
             meta {
                 name = translatable("$id.randomizer_item.name")
+                    .render(locale)
                 addLore {
-                    addComponent(translatable("$id.randomizer_item.lore.random"))
+                    addComponent(
+                        translatable("$id.randomizer_item.lore.random")
+                            .render(locale)
+                    )
                 }
             }
         } else itemStack(Material.MINECART) {
             meta {
                 name = translatable("$id.randomizer_item.name")
+                    .render(locale)
                 addLore {
-                    addComponent(translatable("$id.randomizer_item.lore.all_random"))
+                    addComponent(
+                        translatable("$id.randomizer_item.lore.all_random")
+                            .render(locale)
+                    )
                 }
             }
         }
