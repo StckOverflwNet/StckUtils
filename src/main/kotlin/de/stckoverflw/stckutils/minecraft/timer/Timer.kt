@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.fromKey
 import de.stckoverflw.stckutils.extension.plainText
 import de.stckoverflw.stckutils.extension.saveInventory
+import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.setSavedInventory
 import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.challenge.active
@@ -22,6 +23,7 @@ import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
+import org.bukkit.Sound
 import org.bukkit.entity.Creature
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -77,7 +79,20 @@ object Timer {
                     TimerDirection.BACKWARDS -> {
                         if (time == 0L) {
                             sync {
-                                ChallengeManager.challenges.first().lose()
+                                stop()
+                                Bukkit.getOnlinePlayers().forEach {
+                                    it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
+                                    it.sendPrefixMessage(
+                                        translatable(
+                                            "challenge.lose",
+                                            listOf(
+                                                translatable("timer.backwards.time_up"),
+                                                text(toString())
+                                            )
+                                        )
+                                    )
+                                }
+                                backwardsStartTime = 0
                             }
                         } else {
                             time--
