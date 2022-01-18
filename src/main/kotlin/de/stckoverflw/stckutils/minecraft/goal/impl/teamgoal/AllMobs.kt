@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
@@ -15,11 +15,12 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.items.addLore
-import net.axay.kspigot.items.flag
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.space
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.TextColor
@@ -95,32 +96,38 @@ object AllMobs : TeamGoal() {
         title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
 
             val compound = createRectCompound<EntityType>(
-                Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
+                Slots.RowTwoSlotTwo,
+                Slots.RowFourSlotEight,
                 iconGenerator = {
                     generateAllMobsItem(it)
-                }, onClick = { clickEvent, _ ->
-                clickEvent.bukkitEvent.isCancelled = true
-            }
+                },
+                onClick = { clickEvent, _ ->
+                    clickEvent.bukkitEvent.isCancelled = true
+                }
             )
 
-            // Reset Item
-            button(Slots.RowTwoSlotNine, resetItem()) {
+            button(
+                Slots.RowTwoSlotNine,
+                resetItem()
+            ) {
                 allMobs = listOf()
                 nextMob = randomMob()
                 it.guiInstance.reloadCurrentPage()
                 onlinePlayers.forEach { player ->
                     player.sendPrefixMessage(
-                        translatable("$id.reset_progress", listOf(it.bukkitEvent.whoClicked.name()))
+                        translatable("$id.reset_progress")
+                            .args(it.bukkitEvent.whoClicked.name())
                     )
                 }
             }
 
-            // Filter Button (Filter only collected/only not collected/all)
-            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
+            button(
+                Slots.RowFourSlotNine,
+                filterItem(Pair(Filter.ALL, Filter.ASCENDING))
+            ) { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
                 if (filter[player.uniqueId] == null) resetFilter(player)
@@ -162,19 +169,25 @@ object AllMobs : TeamGoal() {
                 clickEvent.guiInstance.reloadCurrentPage()
 
                 clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
-            })
+            }
             if (!isWon()) {
                 button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
                             "$id.skipped",
-                            listOf(clickEvent.player.name(), text(formatMob(nextMob))),
+                            listOf(
+                                clickEvent.player.name(),
+                                text(formatMob(nextMob))
+                            ),
                             false
                         )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
                             "$id.marked",
-                            listOf(clickEvent.player.name(), text(formatMob(nextMob))),
+                            listOf(
+                                clickEvent.player.name(),
+                                text(formatMob(nextMob))
+                            ),
                             false
                         )
                     }
@@ -223,9 +236,13 @@ object AllMobs : TeamGoal() {
 
     private fun skipItem() = itemStack(Material.BEDROCK) {
         meta {
-            name = translatable("$id.skip_item.name", listOf(text(formatMob(nextMob))))
+            name = translatable("$id.skip_item.name")
+                .args(text(formatMob(nextMob)))
             addLore {
-                addComponent(translatable("$id.skip_item.lore", listOf(text(formatMob(nextMob)))))
+                addComponent(
+                    translatable("$id.skip_item.lore")
+                        .args(text(formatMob(nextMob)))
+                )
             }
         }
     }
@@ -243,7 +260,7 @@ object AllMobs : TeamGoal() {
         meta {
             name = text(formatMob(entity))
             addLore {
-                +" "
+                +space()
                 addComponent(
                     if (isKilled(entity)) {
                         translatable("$id.killed")
@@ -254,14 +271,16 @@ object AllMobs : TeamGoal() {
             }
             if (isKilled(entity)) {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-                flag(ItemFlag.HIDE_ENCHANTS)
             }
-            flag(ItemFlag.HIDE_ATTRIBUTES)
-            flag(ItemFlag.HIDE_DESTROYS)
-            flag(ItemFlag.HIDE_DYE)
-            flag(ItemFlag.HIDE_PLACED_ON)
-            flag(ItemFlag.HIDE_POTION_EFFECTS)
-            flag(ItemFlag.HIDE_UNBREAKABLE)
+            flags(
+                ItemFlag.HIDE_ENCHANTS,
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_POTION_EFFECTS,
+                ItemFlag.HIDE_UNBREAKABLE
+            )
         }
     }
 
@@ -270,9 +289,8 @@ object AllMobs : TeamGoal() {
             name = translatable("$id.filter_item.name")
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.filter_item.lore",
-                        listOf(
+                    translatable("$id.filter_item.lore")
+                        .args(
                             text(
                                 filter.first.name,
                                 TextColor.color(
@@ -286,7 +304,6 @@ object AllMobs : TeamGoal() {
                                 )
                             )
                         )
-                    )
                 )
             }
         }

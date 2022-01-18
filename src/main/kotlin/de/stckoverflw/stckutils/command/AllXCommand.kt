@@ -3,9 +3,9 @@ package de.stckoverflw.stckutils.command
 import de.stckoverflw.stckutils.extension.errorTranslatable
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
-import de.stckoverflw.stckutils.minecraft.goal.impl.AllAdvancements
-import de.stckoverflw.stckutils.minecraft.goal.impl.AllItems
-import de.stckoverflw.stckutils.minecraft.goal.impl.AllMobs
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.AllAdvancements
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.AllItems
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.AllMobs
 import net.axay.kspigot.commands.command
 import net.axay.kspigot.commands.runs
 import net.axay.kspigot.gui.openGUI

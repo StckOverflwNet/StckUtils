@@ -23,7 +23,6 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -224,16 +223,22 @@ object LevelBorder : Challenge(true) {
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
         title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
+
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotFive, resetItem()) {
+            button(
+                Slots.RowThreeSlotFive,
+                resetItem()
+            ) {
                 it.bukkitEvent.isCancelled = true
                 isFirstRun = true
                 xpLevel = 0
@@ -249,6 +254,7 @@ object LevelBorder : Challenge(true) {
     private fun resetItem() = itemStack(Material.BARRIER) {
         meta {
             name = translatable("$id.reset_item.name")
+
             addLore {
                 addComponent(translatable("$id.reset_item.lore"))
             }

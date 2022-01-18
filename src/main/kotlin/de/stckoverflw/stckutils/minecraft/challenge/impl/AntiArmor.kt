@@ -19,9 +19,7 @@ object AntiArmor : Challenge() {
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 
-    /*
-     * PlayerArmorChangeEvent is currently not supported
-     */
+    /* PlayerArmorChangeEvent is currently unsupported */
     override fun update() {
         onlinePlayers.filter { it.isPlaying() }.forEach { player ->
             handlePlayerArmor(player.inventory, player)
@@ -58,6 +56,6 @@ object AntiArmor : Challenge() {
             Material.DIAMOND_BOOTS -> 4
             else -> 0
         }
-        player.healthScale = 20.toDouble() - toRemovingHealth
+        player.damage(toRemovingHealth.toDouble())
     }
 }

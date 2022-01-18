@@ -1,7 +1,6 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.render
@@ -9,6 +8,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
 import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
+import de.stckoverflw.stckutils.util.Colors
 import de.stckoverflw.stckutils.util.GUIPage
 import de.stckoverflw.stckutils.util.getGoBackItem
 import de.stckoverflw.stckutils.util.placeHolderItemGray
@@ -23,6 +23,7 @@ import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
 import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
@@ -54,11 +55,11 @@ object DamageMultiplier : GameExtension() {
             name = translatable(nameKey)
                 .color(Colors.GOAL_COMPOUND)
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        descriptionKey,
-                        listOf(
+                    translatable(descriptionKey)
+                        .args(
                             if (active) {
                                 translatable("generic.activated")
                                     .color(Colors.ACTIVE)
@@ -67,12 +68,12 @@ object DamageMultiplier : GameExtension() {
                                     .color(Colors.INACTIVE)
                             }
                         )
-                    )
                         .color(Colors.GOAL_COMPOUND_SECONDARY)
                         .render(locale)
                 )
             }
-            addItemFlags(
+
+            flags(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_DYE,
@@ -135,12 +136,11 @@ object DamageMultiplier : GameExtension() {
         meta {
             name = translatable("$id.reset_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.reset_item.lore",
-                        listOf(text(String.format("%.1f", multiplier)))
-                    )
+                    translatable("$id.reset_item.lore")
+                        .args(text(String.format("%.1f", multiplier)))
                         .render(locale)
                 )
             }
@@ -151,12 +151,11 @@ object DamageMultiplier : GameExtension() {
         meta {
             name = translatable("$id.plus_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.plus_item.lore",
-                        listOf(text(String.format("%.1f", multiplier)))
-                    )
+                    translatable("$id.plus_item.lore")
+                        .args(text(String.format("%.1f", multiplier)))
                         .render(locale)
                 )
             }
@@ -167,12 +166,11 @@ object DamageMultiplier : GameExtension() {
         meta {
             name = translatable("$id.minus_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.minus_item.lore",
-                        listOf(text(String.format("%.1f", multiplier)))
-                    )
+                    translatable("$id.minus_item.lore")
+                        .args(text(String.format("%.1f", multiplier)))
                         .render(locale)
                 )
             }
@@ -208,7 +206,6 @@ object DamageMultiplier : GameExtension() {
     }
 
     override fun run() {
-        // since this method is empty we don't ever call it
     }
 
     @EventHandler

@@ -27,11 +27,10 @@ object RandomEffect : Challenge() {
             return
         }
         val player = event.entity as Player
-        if (!player.isPlaying()) {
-            return
-        }
-
-        if (event.cause == EntityDamageEvent.DamageCause.POISON || event.cause == EntityDamageEvent.DamageCause.WITHER) {
+        if (!player.isPlaying() ||
+            event.cause == EntityDamageEvent.DamageCause.POISON ||
+            event.cause == EntityDamageEvent.DamageCause.WITHER
+        ) {
             return
         }
 

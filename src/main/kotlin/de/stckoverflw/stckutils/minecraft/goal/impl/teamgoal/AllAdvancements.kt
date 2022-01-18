@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
@@ -17,7 +17,7 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.items.addLore
-import net.axay.kspigot.items.flag
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
@@ -96,7 +96,6 @@ object AllAdvancements : TeamGoal() {
         title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
 
             val compound = createRectCompound<Advancement>(
@@ -109,7 +108,6 @@ object AllAdvancements : TeamGoal() {
                 }
             )
 
-            // Reset Item
             button(Slots.RowTwoSlotNine, resetItem(), onClick = {
                 allAdvancements = listOf()
                 nextAdvancement = randomAdvancement()
@@ -117,12 +115,12 @@ object AllAdvancements : TeamGoal() {
                 it.guiInstance.reloadCurrentPage()
                 onlinePlayers.forEach { player ->
                     player.sendPrefixMessage(
-                        translatable("$id.message.reset_progress", listOf(it.bukkitEvent.whoClicked.name()))
+                        translatable("$id.message.reset_progress")
+                            .args(it.bukkitEvent.whoClicked.name())
                     )
                 }
             })
 
-            // Filter Button (Filter only collected/only not collected/all)
             button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
@@ -173,13 +171,19 @@ object AllAdvancements : TeamGoal() {
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         done(
                             "$id.message.skipped_advancement",
-                            listOf(clickEvent.player.name(), text(formattedAdvancement)),
+                            listOf(
+                                clickEvent.player.name(),
+                                text(formattedAdvancement)
+                            ),
                             false
                         )
                     } else {
                         done(
                             "$id.message.mark_advancement_collected",
-                            listOf(clickEvent.player.name(), text(formattedAdvancement))
+                            listOf(
+                                clickEvent.player.name(),
+                                text(formattedAdvancement)
+                            )
                         )
                         compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))
 //                        clickEvent.guiInstance.reloadCurrentPage()
@@ -228,9 +232,13 @@ object AllAdvancements : TeamGoal() {
     private fun skipItem(): ItemStack {
         val item = itemStack(Material.BEDROCK) {
             meta {
-                name = translatable("$id.skip_item.name", listOf(text(formattedAdvancement)))
+                name = translatable("$id.skip_item.name")
+                    .args(text(formattedAdvancement))
                 addLore {
-                    addComponent(translatable("$id.skip_item.lore", listOf(text(formattedAdvancement))))
+                    addComponent(
+                        translatable("$id.skip_item.lore")
+                            .args(text(formattedAdvancement))
+                    )
                 }
             }
         }
@@ -245,9 +253,8 @@ object AllAdvancements : TeamGoal() {
                 name = text(formatAdvancement(advancement))
                 addLore {
                     addComponent(
-                        translatable(
-                            "$id.all_advancements_item.lore",
-                            listOf(
+                        translatable("$id.all_advancements_item.lore")
+                            .args(
                                 text(formatAdvancementCategory(advancement)),
                                 if (isDone(advancement)) {
                                     translatable("$id.done")
@@ -255,19 +262,20 @@ object AllAdvancements : TeamGoal() {
                                     translatable("$id.not_done")
                                 }
                             )
-                        )
                     )
                 }
                 if (isDone(advancement)) {
                     addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-                    flag(ItemFlag.HIDE_ENCHANTS)
                 }
-                flag(ItemFlag.HIDE_ATTRIBUTES)
-                flag(ItemFlag.HIDE_DESTROYS)
-                flag(ItemFlag.HIDE_DYE)
-                flag(ItemFlag.HIDE_PLACED_ON)
-                flag(ItemFlag.HIDE_POTION_EFFECTS)
-                flag(ItemFlag.HIDE_UNBREAKABLE)
+                flags(
+                    ItemFlag.HIDE_ENCHANTS,
+                    ItemFlag.HIDE_ATTRIBUTES,
+                    ItemFlag.HIDE_DESTROYS,
+                    ItemFlag.HIDE_DYE,
+                    ItemFlag.HIDE_PLACED_ON,
+                    ItemFlag.HIDE_POTION_EFFECTS,
+                    ItemFlag.HIDE_UNBREAKABLE
+                )
             }
         }
 
@@ -285,9 +293,8 @@ object AllAdvancements : TeamGoal() {
             name = translatable("$id.filter_item.name")
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.filter_item.lore",
-                        listOf(
+                    translatable("$id.filter_item.lore")
+                        .args(
                             text(
                                 filter.first.name,
                                 TextColor.color(
@@ -299,7 +306,6 @@ object AllAdvancements : TeamGoal() {
                                 TextColor.color((if (filter.second == Filter.ASCENDING) Color.GREEN else Color.RED).asRGB())
                             )
                         )
-                    )
                 )
             }
         }
@@ -363,7 +369,10 @@ object AllAdvancements : TeamGoal() {
                     if (hasAdvancement(it, nextAdvancement)) {
                         done(
                             "$id.message.already_got_advancement",
-                            listOf(it.name(), text(formattedAdvancement))
+                            listOf(
+                                it.name(),
+                                text(formattedAdvancement)
+                            )
                         )
                         return@launch
                     }
@@ -374,7 +383,6 @@ object AllAdvancements : TeamGoal() {
 
     private fun hasAdvancement(player: Player, advancement: Advancement): Boolean {
         return player.getAdvancementProgress(advancement).isDone
-        // returns true or false.
     }
 
     private fun getAdvancement(name: String): Advancement? {
@@ -386,7 +394,10 @@ object AllAdvancements : TeamGoal() {
         if (event.player.isPlaying() && event.advancement == nextAdvancement) {
             done(
                 "$id.message.got_advancement",
-                listOf(event.player.name(), text(formattedAdvancement))
+                listOf(
+                    event.player.name(),
+                    text(formattedAdvancement)
+                )
             )
         }
     }

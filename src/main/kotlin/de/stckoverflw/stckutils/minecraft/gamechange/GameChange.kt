@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.Locale
 
 sealed class GameChange : Listener {
+
     /**
      * this is the id of the challenge, it has to be unique
      * it is used to get the information about the gamechange from the gamechanges.yml

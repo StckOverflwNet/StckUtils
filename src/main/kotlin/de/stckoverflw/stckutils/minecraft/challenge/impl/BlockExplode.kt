@@ -46,18 +46,24 @@ object BlockExplode : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).render(locale).coloredString()
+        title = translatable(nameKey).coloredString(locale)
+        defaultPage = 0
 
-        page(1) {
-            // Placeholders at the Border of the Inventory
+        page(0) {
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
             placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotFour, generateChanceItem(locale)) {
+            button(
+                Slots.RowThreeSlotFour,
+                generateChanceItem(locale)
+            ) {
                 if (it.bukkitEvent.isLeftClick) {
                     if (chance <= 95) {
                         chance += 5
@@ -70,7 +76,10 @@ object BlockExplode : Challenge() {
                 it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateChanceItem(locale))
             }
 
-            button(Slots.RowThreeSlotSix, generateFireItem(locale)) {
+            button(
+                Slots.RowThreeSlotSix,
+                generateFireItem(locale)
+            ) {
                 isFire = !isFire
                 it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateFireItem(locale))
             }
@@ -91,9 +100,11 @@ object BlockExplode : Challenge() {
         meta {
             name = translatable("$id.chance_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable("$id.chance_item.lore", text(chance))
+                    translatable("$id.chance_item.lore")
+                        .args(text(chance))
                         .render(locale)
                 )
             }
@@ -104,11 +115,11 @@ object BlockExplode : Challenge() {
         meta {
             name = translatable("$id.fire_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.fire_item.lore",
-                        listOf(
+                    translatable("$id.fire_item.lore")
+                        .args(
                             text(
                                 isFire,
                                 if (isFire) {
@@ -118,7 +129,6 @@ object BlockExplode : Challenge() {
                                 }
                             )
                         )
-                    )
                         .render(locale)
                 )
             }

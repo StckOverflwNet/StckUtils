@@ -9,7 +9,6 @@ import de.stckoverflw.stckutils.command.PositionCommand
 import de.stckoverflw.stckutils.command.SettingsCommand
 import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.asTextColor
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.saveInventory
@@ -22,7 +21,7 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.util.getSettingsItem
+import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
@@ -34,6 +33,7 @@ import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Bukkit
 import org.bukkit.StructureType
+import org.bukkit.World
 import java.nio.file.Files
 import kotlin.io.path.div
 
@@ -79,6 +79,11 @@ class StckUtilsPlugin : KSpigot() {
     }
 
     override fun startup() {
+        if (onlinePlayers.isNotEmpty()) {
+            logger.warning("It looks like you've reloaded, please restart instead!")
+            pluginManager.disablePlugin(this)
+        }
+
         if (server.pluginManager.getPlugin("ProtocolLib") != null) {
             protocolManager = ProtocolLibrary.getProtocolManager()
             isProtocolLib = true
@@ -87,9 +92,9 @@ class StckUtilsPlugin : KSpigot() {
         Config.reloadPositions()
 
         if (Config.resetSettingsConfig.villageSpawn && wasReset) {
-            val world = Bukkit.getWorld("world")!!
-            val nearestVillage = world.locateNearestStructure(world.spawnLocation, StructureType.VILLAGE, 10000, true)
-            world.spawnLocation = nearestVillage!!
+            val world = server.worlds.first { it.environment == World.Environment.NORMAL }
+            val nearestVillage = world.locateNearestStructure(world.spawnLocation, StructureType.VILLAGE, 10000, false)
+            world.spawnLocation = nearestVillage ?: world.spawnLocation
             wasReset = false
         }
 
@@ -114,22 +119,22 @@ class StckUtilsPlugin : KSpigot() {
         val pluginDescription = this.description
 
         logger.info(
-            translatable(
-                "console.enabled.enabled",
-                listOf(
+            translatable("console.enabled.enabled")
+                .color(Colors.SECONDARY)
+                .args(
                     text(pluginDescription.name)
                         .color(Colors.PRIMARY),
                     text(pluginDescription.version)
                         .color(Colors.PRIMARY)
                 )
-            )
-                .color(KColors.YELLOW.asTextColor())
                 .coloredString()
         )
         logger.info(
             translatable(
-                "console.enabled.authors",
-                listOf(
+                "console.enabled.authors"
+            )
+                .color(Colors.SECONDARY)
+                .args(
                     text(
                         if (pluginDescription.authors.size <= 1) {
                             pluginDescription.authors.joinToString("")
@@ -142,44 +147,35 @@ class StckUtilsPlugin : KSpigot() {
                             authors.joinToString(" ")
                         }
                     )
-                        .color(Colors.PRIMARY)
                 )
-            )
-                .color(KColors.YELLOW.asTextColor())
+                .color(Colors.PRIMARY)
                 .coloredString()
         )
         if (pluginDescription.apiVersion != null) {
             logger.info(
                 translatable(
-                    "console.enabled.api_version",
-                    listOf(
+                    "console.enabled.api_version"
+                )
+                    .color(Colors.SECONDARY)
+                    .args(
                         text(pluginDescription.apiVersion ?: "n/a")
                             .color(Colors.PRIMARY)
                     )
-                )
-                    .color(KColors.YELLOW.asTextColor())
                     .coloredString()
             )
         }
         if (pluginDescription.website != null) {
             logger.info(
                 translatable(
-                    "console.enabled.website",
-                    listOf(
+                    "console.enabled.website"
+                )
+                    .color(Colors.SECONDARY)
+                    .args(
                         text(pluginDescription.website ?: "n/a")
                             .color(Colors.PRIMARY)
                     )
-                )
-                    .color(KColors.YELLOW.asTextColor())
                     .coloredString()
             )
-        }
-
-        onlinePlayers.forEach {
-            it.inventory.clear()
-            if (it.isOp) {
-                it.inventory.setItem(8, getSettingsItem(it.locale()))
-            }
         }
     }
 
@@ -201,13 +197,13 @@ class StckUtilsPlugin : KSpigot() {
         } catch (e: Exception) {
             logger.warning(
                 translatable(
-                    "error.delete_worlds",
-                    listOf(
+                    "error.delete_worlds"
+                )
+                    .color(Colors.ERROR)
+                    .args(
                         text(world)
                             .color(Colors.ERROR_ARGS)
                     )
-                )
-                    .color(Colors.ERROR)
                     .coloredString()
             )
             logger.warning(e.stackTraceToString())

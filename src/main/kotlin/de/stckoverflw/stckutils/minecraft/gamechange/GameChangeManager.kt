@@ -1,4 +1,5 @@
 package de.stckoverflw.stckutils.minecraft.gamechange
+
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DamageMultiplier
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.DeathCounter
 import de.stckoverflw.stckutils.minecraft.gamechange.impl.extension.MaxHealth

@@ -3,6 +3,9 @@ package de.stckoverflw.stckutils.util
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.config.Config
+import de.stckoverflw.stckutils.extension.coloredString
+import de.stckoverflw.stckutils.extension.errorTranslatable
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
@@ -20,6 +23,7 @@ import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
 import net.axay.kspigot.extensions.bukkit.javaAwtColor
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.extensions.server
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.gui.GUIType
@@ -27,7 +31,6 @@ import net.axay.kspigot.gui.PageChangeEffect
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.TextColor
@@ -50,92 +53,104 @@ object GUIPage {
 }
 
 /**
- * The Method to generate a new Instance of the Settings GUI
+ * Generates a new Instance of the Settings GUI for a [locale]
+ *
+ * @param locale Locale to render the itemStacks in
  */
 fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-    title = "Settings"
+    title = translatable("settings.name")
+        .color(Colors.SETTINGS)
+        .render(locale)
+        .coloredString()
     defaultPage = GUIPage.settingsPageNumber
 
-    // Default Settings Page
     page(GUIPage.settingsPageNumber) {
-        // Placeholders at the Border of the Inventory
         placeholder(Slots.Border, placeHolderItemGray)
-        // Placeholders in the Middle field of the Inventory
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Item for opening the Challenges Page
         pageChanger(
             Slots.RowThreeSlotThree,
             generateChallengeGuiItem(locale),
-            GUIPage.challengesPageNumber, null, null
+            GUIPage.challengesPageNumber,
+            null,
+            null
         )
 
-        // Item for opening the GameChanges Page
         pageChanger(
             Slots.RowThreeSlotFive,
             generateGameChangeGuiItem(locale),
-            GUIPage.gameChangesPage, null, null
+            GUIPage.gameChangesPage,
+            null,
+            null
         )
 
-        // Item for opening the Goals Page
         pageChanger(
             Slots.RowThreeSlotSeven,
             generateGoalGuiItem(locale),
-            GUIPage.goalsPage, null, null
+            GUIPage.goalsPage,
+            null,
+            null
         )
 
-        // Item for opening the Page with More settings
         pageChanger(
             Slots.RowOneSlotFive,
             generateMoreSettingsGuiItem(locale),
-            GUIPage.moreSettingsPageNumber, null, null
+            GUIPage.moreSettingsPageNumber,
+            null,
+            null
         )
     }
 
-    // More settings Page
     page(GUIPage.moreSettingsPageNumber) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders at the Border of the Inventory
         placeholder(Slots.Border, placeHolderItemGray)
-        // Placeholders in the Middle field of the Inventory
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Go back Item
-        pageChanger(Slots.RowFiveSlotFive, getGoBackItem(locale), defaultPage, null, null)
+        pageChanger(
+            Slots.RowFiveSlotFive,
+            getGoBackItem(locale),
+            defaultPage,
+            null,
+            null
+        )
 
-        // Item for opening the World reset Settings Page
         pageChanger(
             Slots.RowThreeSlotThree,
             generateWorldResetGuiItem(locale),
-            GUIPage.worldResetPageNumber, null, null
+            GUIPage.worldResetPageNumber,
+            null,
+            null
         )
 
-        // Item for opening the Timer Settings Page
         pageChanger(
             Slots.RowThreeSlotSeven,
             generateTimerSettingsGuiItem(locale),
-            GUIPage.timerPageNumber, null, null
+            GUIPage.timerPageNumber,
+            null,
+            null
         )
     }
 
-    // Challenges Page
     page(GUIPage.challengesPageNumber) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
-        // Placeholders at the left Border
         placeholder(Slots.Border, placeHolderItemGray)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Go back Item
-        pageChanger(Slots.RowThreeSlotNine, getGoBackItem(locale), defaultPage, null, null)
+        pageChanger(
+            Slots.RowThreeSlotNine,
+            getGoBackItem(locale),
+            defaultPage,
+            null,
+            null
+        )
 
-        // Compound for displaying the Challenges
         val compound = createRectCompound<Challenge>(
-            Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
+            Slots.RowTwoSlotTwo,
+            Slots.RowFourSlotEight,
             iconGenerator = {
                 generateItemForChallenge(it, locale)
             },
@@ -146,17 +161,20 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
                         player.sendPrefixMessage(
-                            translatable("gui.timer_not_paused")
+                            errorTranslatable("gui.timer_not_paused")
                         )
                     } else {
                         if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
                             challenge.active = !challenge.active
                             challenge.onToggle()
                             clickEvent.bukkitEvent.clickedInventory!!
-                                .setItem(clickEvent.bukkitEvent.slot, generateItemForChallenge(challenge, locale))
+                                .setItem(
+                                    clickEvent.bukkitEvent.slot,
+                                    generateItemForChallenge(challenge, locale)
+                                )
                         } else {
                             player.sendPrefixMessage(
-                                translatable("gui.depend.protocol_lib")
+                                errorTranslatable("gui.depend.protocol_lib")
                             )
                         }
                     }
@@ -167,7 +185,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                             player.openGUI(configGUI)
                         } else {
                             player.sendPrefixMessage(
-                                translatable("gui.challenge.config.challenge_not_activated")
+                                errorTranslatable("gui.challenge.config.challenge_not_activated")
                             )
                         }
                     }
@@ -178,89 +196,103 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
 
         compoundScroll(
             Slots.RowOneSlotNine,
-            getScrollDownItem(locale), compound, scrollTimes = 1
+            getScrollDownItem(locale),
+            compound,
+            scrollTimes = 1
         )
         compoundScroll(
             Slots.RowFiveSlotNine,
-            getScrollUpItem(locale), compound, scrollTimes = 1, reverse = true
+            getScrollUpItem(locale),
+            compound,
+            scrollTimes = 1,
+            reverse = true
         )
     }
 
-    // GameChange Page
     page(GUIPage.gameChangesPage) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders at the Border
         placeholder(Slots.Border, placeHolderItemGray)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Placeholders in the Middle
-        placeholder(Slots.RowThreeSlotTwo rectTo Slots.RowThreeSlotEight, placeHolderItemWhite)
+        pageChanger(
+            Slots.RowOneSlotFive,
+            getGoBackItem(locale),
+            defaultPage,
+            null,
+            null
+        )
 
-        // Go back Item
-        pageChanger(Slots.RowOneSlotFive, getGoBackItem(locale), defaultPage, null, null)
-
-        // Compound for displaying the GameExtensions
         val gameExtensionCompound = createRectCompound<GameExtension>(
             Slots.RowFourSlotTwo, Slots.RowFourSlotEight,
-            iconGenerator = iconGenerator@{
-                val item = it.item(locale)
-                return@iconGenerator item
+            iconGenerator = {
+                it.item(locale)
             },
             onClick = { clickEvent, extension ->
                 clickEvent.bukkitEvent.isCancelled = true
                 extension.click(clickEvent)
             }
         )
+        gameExtensionCompound
+            .addContent(GameChangeManager.gameChanges.filterIsInstance<GameExtension>())
 
-        // Compound for displaying the Minecraft GameRules
+        compoundScroll(
+            Slots.RowTwoSlotNine,
+            getScrollRightItem(locale),
+            gameExtensionCompound,
+            scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowTwoSlotOne,
+            getScrollLeftItem(locale),
+            gameExtensionCompound,
+            scrollTimes = 1,
+            reverse = true
+        )
+
         val gameRuleCompound = createRectCompound<GameRule>(
             Slots.RowTwoSlotTwo, Slots.RowTwoSlotEight,
-            iconGenerator = iconGenerator@{
-                val item = it.item(locale)
-                return@iconGenerator item
+            iconGenerator = {
+                it.item(locale)
             },
             onClick = { clickEvent, rule ->
                 clickEvent.bukkitEvent.isCancelled = true
                 rule.click(clickEvent)
             }
         )
-        gameExtensionCompound
-            .addContent(GameChangeManager.gameChanges.filterIsInstance<GameExtension>())
         gameRuleCompound
             .addContent(GameChangeManager.gameChanges.filterIsInstance<GameRule>())
 
         compoundScroll(
             Slots.RowFourSlotNine,
-            getScrollRightItem(locale), gameRuleCompound, scrollTimes = 1
+            getScrollRightItem(locale),
+            gameRuleCompound,
+            scrollTimes = 1
         )
         compoundScroll(
             Slots.RowFourSlotOne,
-            getScrollLeftItem(locale), gameRuleCompound, scrollTimes = 1, reverse = true
-        )
-
-        compoundScroll(
-            Slots.RowTwoSlotNine,
-            getScrollRightItem(locale), gameExtensionCompound, scrollTimes = 1
-        )
-        compoundScroll(
-            Slots.RowTwoSlotOne,
-            getScrollLeftItem(locale), gameExtensionCompound, scrollTimes = 1, reverse = true
+            getScrollLeftItem(locale),
+            gameRuleCompound,
+            scrollTimes = 1,
+            reverse = true
         )
     }
 
-    // Goals Page
     page(GUIPage.goalsPage) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
-        // Placeholder
-        placeholder(Slots.RowOneSlotOne rectTo Slots.RowFiveSlotNine, placeHolderItemGray)
+        placeholder(Slots.Border, placeHolderItemGray)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Go back Item
-        pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), defaultPage, null, null)
+        pageChanger(
+            Slots.RowThreeSlotOne,
+            getGoBackItem(locale),
+            defaultPage,
+            null,
+            null
+        )
 
         placeholder(
             Slots.RowFourSlotOne,
@@ -272,7 +304,6 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             generateBattleGoalItem(locale)
         )
 
-        // Compound for the Goals
         val teamGoalCompound = createRectCompound<TeamGoal>(
             Slots.RowFourSlotFour, Slots.RowFourSlotEight,
             iconGenerator = {
@@ -280,11 +311,12 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             },
             onClick = { clickEvent, goal ->
                 val player = clickEvent.player
+
                 clickEvent.bukkitEvent.isCancelled = true
                 if (clickEvent.bukkitEvent.isLeftClick) {
                     if (Timer.running) {
                         player.sendPrefixMessage(
-                            translatable("gui.timer_not_paused")
+                            errorTranslatable("gui.timer_not_paused")
                         )
                     } else {
                         if (GoalManager.activeGoal != goal) {
@@ -300,12 +332,26 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                         }
                     }
                 }
-
                 clickEvent.guiInstance.reloadCurrentPage()
             }
         )
+        teamGoalCompound
+            .addContent(GoalManager.goals.filterIsInstance<TeamGoal>())
 
-        // Compound for the Goals
+        compoundScroll(
+            Slots.RowFourSlotNine,
+            getScrollRightItem(locale),
+            teamGoalCompound,
+            scrollTimes = 1
+        )
+        compoundScroll(
+            Slots.RowFourSlotThree,
+            getScrollLeftItem(locale),
+            teamGoalCompound,
+            scrollTimes = 1,
+            reverse = true
+        )
+
         val battleCompound = createRectCompound<Battle>(
             Slots.RowTwoSlotFour, Slots.RowTwoSlotEight,
             iconGenerator = {
@@ -321,55 +367,51 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 clickEvent.guiInstance.reloadCurrentPage()
             }
         )
-        battleCompound.addContent(GoalManager.goals.filterIsInstance<Battle>())
-        teamGoalCompound.addContent(GoalManager.goals.filterIsInstance<TeamGoal>())
-
-        compoundScroll(
-            Slots.RowFourSlotNine,
-            getScrollRightItem(locale), teamGoalCompound, scrollTimes = 1
-        )
-        compoundScroll(
-            Slots.RowFourSlotThree,
-            getScrollLeftItem(locale), teamGoalCompound, scrollTimes = 1, reverse = true
-        )
+        battleCompound
+            .addContent(GoalManager.goals.filterIsInstance<Battle>())
 
         compoundScroll(
             Slots.RowTwoSlotNine,
-            getScrollRightItem(locale), battleCompound, scrollTimes = 1
+            getScrollRightItem(locale),
+            battleCompound,
+            scrollTimes = 1
         )
         compoundScroll(
             Slots.RowTwoSlotThree,
-            getScrollLeftItem(locale), battleCompound, scrollTimes = 1, reverse = true
+            getScrollLeftItem(locale),
+            battleCompound,
+            scrollTimes = 1,
+            reverse = true
         )
     }
 
-    // Settings Page for the Timer
     page(GUIPage.timerPageNumber) {
-
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // go back Item
-        pageChanger(Slots.RowFiveSlotFive, getGoBackItem(locale), GUIPage.moreSettingsPageNumber, null, null)
+        pageChanger(
+            Slots.RowFiveSlotFive,
+            getGoBackItem(locale),
+            GUIPage.moreSettingsPageNumber,
+            null,
+            null
+        )
 
-        // Item for starting/stopping the Timer
         button(
             Slots.RowFourSlotThree,
             generateStartStopTimerItem(locale)
         ) {
             if (Timer.running) {
                 Timer.stop()
-                Bukkit.broadcast(
+                server.broadcast(
                     translatable("timer.stopped")
                 )
             } else {
                 Timer.start()
-                Bukkit.broadcast(
+                server.broadcast(
                     translatable("timer.started")
                 )
             }
@@ -377,7 +419,6 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem(locale))
         }
 
-        // Item for changing the Time
         button(
             Slots.RowFourSlotFive,
             generateTimerItem(locale)
@@ -388,12 +429,13 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             } else if (it.bukkitEvent.isRightClick) {
                 if (Timer.time >= 60) {
                     Timer.time -= 60
+                } else {
+                    Timer.time = 0
                 }
             }
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateTimerItem(locale))
         }
 
-        // Item for toggling the only OP join when Timer is running
         pageChanger(
             Slots.RowTwoSlotFive,
             generateJoinWhileRunningGuiItem(locale),
@@ -402,7 +444,6 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             null
         )
 
-        // Item for resetting the Timer
         button(
             Slots.RowTwoSlotThree,
             generateResetTimerGuiItem(locale)
@@ -443,21 +484,21 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         }
     }
 
-    // Settings Page for the Timer color
     page(GUIPage.timerColorPageNumber) {
-
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_HORIZONTALLY
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
-        // Placeholders
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // go back Item
-        pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), GUIPage.timerPageNumber, null, null)
+        pageChanger(
+            Slots.RowThreeSlotOne,
+            getGoBackItem(locale),
+            GUIPage.timerPageNumber,
+            null,
+            null
+        )
 
-        // Color compound
         val compound = createRectCompound<BukkitChatColor>(
             Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = { chatColor ->
@@ -473,26 +514,29 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         compound.addContent(BukkitChatColor.values().filter { it.isColor })
     }
 
-    // Settings Page for World reset
     page(GUIPage.worldResetPageNumber) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Go back Item
-        pageChanger(Slots.RowFiveSlotFive, getGoBackItem(locale), GUIPage.moreSettingsPageNumber, null, null)
+        pageChanger(
+            Slots.RowFiveSlotFive,
+            getGoBackItem(locale),
+            GUIPage.moreSettingsPageNumber,
+            null,
+            null
+        )
 
-        // Item for activating/deactivating Village Spawn
-        button(Slots.RowThreeSlotThree, generateVillageSpawnItem(locale)) {
+        button(
+            Slots.RowThreeSlotThree,
+            generateVillageSpawnItem(locale)
+        ) {
             Config.resetSettingsConfig.villageSpawn = !Config.resetSettingsConfig.villageSpawn
             it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, generateVillageSpawnItem(locale))
         }
 
-        // Item for running a World reset
         button(
             Slots.RowThreeSlotSeven,
             generateWorldResetItem(locale)
@@ -501,22 +545,24 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         }
     }
 
-    // Settings page for Hide functionality
     page(GUIPage.hidePageNumber) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Go back Item
-        pageChanger(Slots.RowFiveSlotFive, getGoBackItem(locale), GUIPage.moreSettingsPageNumber, null, null)
+        pageChanger(
+            Slots.RowFiveSlotFive,
+            getGoBackItem(locale),
+            GUIPage.moreSettingsPageNumber,
+            null,
+            null
+        )
 
-        // Compound for displaying the players
         val compound = createRectCompound<Player>(
-            Slots.RowOneSlotOne, Slots.RowFiveSlotEight,
+            Slots.RowOneSlotOne,
+            Slots.RowFiveSlotEight,
             iconGenerator = {
                 generateItemForHide(it, locale)
             },
@@ -530,7 +576,8 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 }
                 if (!player.hasPermission(perm)) {
                     return@click player.sendPrefixMessage(
-                        translatable("generic.missing_permission", listOf(text(perm)))
+                        errorTranslatable("generic.missing_permission")
+                            .args(text(perm))
                     )
                 }
                 HideCommand.sendResponse(player, target)
@@ -541,26 +588,33 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
 
         compoundScroll(
             Slots.RowOneSlotNine,
-            getScrollDownItem(locale), compound, scrollTimes = 1
+            getScrollDownItem(locale),
+            compound,
+            scrollTimes = 1
         )
         compoundScroll(
             Slots.RowFiveSlotNine,
-            getScrollUpItem(locale), compound, scrollTimes = 1, reverse = true
+            getScrollUpItem(locale),
+            compound,
+            scrollTimes = 1,
+            reverse = true
         )
     }
 
-    // Settings page for join while Timer is Running functionality
     page(GUIPage.timerJoinWhileRunningPageNumber) {
-        // Transitions
         this.transitionTo = PageChangeEffect.SLIDE_VERTICALLY
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
-        // Placeholders
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-        // Go back Item
-        pageChanger(Slots.RowFiveSlotFive, getGoBackItem(locale), GUIPage.timerPageNumber, null, null)
+        pageChanger(
+            Slots.RowFiveSlotFive,
+            getGoBackItem(locale),
+            GUIPage.timerPageNumber,
+            null,
+            null
+        )
 
         val compound = createRectCompound<AccessLevel>(
             Slots.RowFourSlotTwo,
@@ -597,11 +651,16 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
 
         compoundScroll(
             Slots.RowOneSlotNine,
-            getScrollDownItem(locale), compound, scrollTimes = 1
+            getScrollDownItem(locale),
+            compound,
+            scrollTimes = 1
         )
         compoundScroll(
             Slots.RowFiveSlotNine,
-            getScrollUpItem(locale), compound, scrollTimes = 1, reverse = true
+            getScrollUpItem(locale),
+            compound,
+            scrollTimes = 1,
+            reverse = true
         )
     }
 }

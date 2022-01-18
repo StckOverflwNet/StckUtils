@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl.battle
 
 import de.stckoverflw.stckutils.minecraft.goal.Battle
 import org.bukkit.Material

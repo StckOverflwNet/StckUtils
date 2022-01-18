@@ -2,7 +2,6 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
 import com.destroystokyo.paper.MaterialTags
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.asTextColor
 import de.stckoverflw.stckutils.extension.isPlaying
@@ -12,16 +11,18 @@ import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
 import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.extensions.server
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component.translatable
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
@@ -65,9 +66,8 @@ object SpawnWorld : GameRule() {
                 .render(locale)
             addLore {
                 addComponent(
-                    translatable(
-                        descriptionKey,
-                        listOf(
+                    translatable(descriptionKey)
+                        .args(
                             translatable(
                                 when (environment) {
                                     World.Environment.NORMAL -> "$id.overworld"
@@ -77,12 +77,11 @@ object SpawnWorld : GameRule() {
                             )
                                 .color(KColors.DARKGRAY.asTextColor())
                         )
-                    )
                         .color(Colors.GAME_CHANGE_COMPOUND_SECONDARY)
                         .render(locale)
                 )
             }
-            addItemFlags(
+            flags(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_DYE,
@@ -112,7 +111,7 @@ object SpawnWorld : GameRule() {
     }
 
     private fun getSpawnLocation(): Location {
-        val locationWorld = Bukkit.getWorlds().first { it.environment == environment }
+        val locationWorld = server.worlds.first { it.environment == environment }
         return when (environment) {
             World.Environment.NORMAL,
             World.Environment.NETHER,

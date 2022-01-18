@@ -1,17 +1,18 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.asTextColor
 import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
 import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
+import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
@@ -39,18 +40,17 @@ object Difficulty : GameRule() {
                 .render(locale)
             addLore {
                 addComponent(
-                    translatable(
-                        descriptionKey,
-                        listOf(
+                    translatable(descriptionKey)
+                        .args(
                             translatable(difficulty.translationKey())
                                 .color(KColors.DARKGRAY.asTextColor())
                         )
-                    )
                         .color(Colors.GOAL_COMPOUND_SECONDARY)
                         .render(locale)
                 )
             }
-            addItemFlags(
+
+            flags(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_DYE,

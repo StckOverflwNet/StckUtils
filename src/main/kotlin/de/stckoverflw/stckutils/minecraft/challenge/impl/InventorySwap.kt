@@ -21,14 +21,11 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
-import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -48,18 +45,24 @@ object InventorySwap : Challenge() {
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).render(locale).coloredString()
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
+
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotFour, minusItem(locale)) {
+            button(
+                Slots.RowThreeSlotFour,
+                minusItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (period - 1 < minPeriod)
@@ -75,13 +78,19 @@ object InventorySwap : Challenge() {
                 updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem(locale)) {
+            button(
+                Slots.RowThreeSlotFive,
+                resetItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 period = 60
                 updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotSix, plusItem(locale)) {
+            button(
+                Slots.RowThreeSlotSix,
+                plusItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     period += 1
@@ -103,14 +112,11 @@ object InventorySwap : Challenge() {
         meta {
             name = translatable("$id.reset_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.reset_item.lore",
-                        listOf(
-                            text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a")
-                        )
-                    )
+                    translatable("$id.reset_item.lore")
+                        .args(Timer.formatTime(period.toLong()))
                         .render(locale)
                 )
             }
@@ -121,12 +127,11 @@ object InventorySwap : Challenge() {
         meta {
             name = translatable("$id.plus_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.plus_item.lore",
-                        listOf(text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a"))
-                    )
+                    translatable("$id.plus_item.lore")
+                        .args(Timer.formatTime(period.toLong()))
                         .render(locale)
                 )
             }
@@ -137,12 +142,11 @@ object InventorySwap : Challenge() {
         meta {
             name = translatable("$id.minus_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.minus_item.lore",
-                        listOf(text(ChatColor.stripColor(Timer.formatTime(period.toLong())) ?: "n/a"))
-                    )
+                    translatable("$id.minus_item.lore")
+                        .args(Timer.formatTime(period.toLong()))
                         .render(locale)
                 )
             }

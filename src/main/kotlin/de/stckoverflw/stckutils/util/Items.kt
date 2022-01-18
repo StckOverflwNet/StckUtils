@@ -4,9 +4,9 @@ import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.hidden
+import de.stckoverflw.stckutils.extension.plainText
 import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
@@ -77,25 +77,33 @@ val placeHolderItemWhite =
 fun getScrollRightItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_RIGHT_B64,
-        translatable("gui.scroll_right", Colors.ACCENT_AQUA).render(locale)
+        translatable("gui.scroll_right")
+            .color(Colors.ACCENT_AQUA)
+            .render(locale)
     )
 
 fun getScrollLeftItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_LEFT_B64,
-        translatable("gui.scroll_left", Colors.ACCENT_AQUA).render(locale)
+        translatable("gui.scroll_left")
+            .color(Colors.ACCENT_AQUA)
+            .render(locale)
     )
 
 fun getScrollUpItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_UP_B64,
-        translatable("gui.scroll_up", Colors.ACCENT_AQUA).render(locale)
+        translatable("gui.scroll_up")
+            .color(Colors.ACCENT_AQUA)
+            .render(locale)
     )
 
 fun getScrollDownItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_DOWN_B64,
-        translatable("gui.scroll_down", Colors.ACCENT_AQUA).render(locale)
+        translatable("gui.scroll_down")
+            .color(Colors.ACCENT_AQUA)
+            .render(locale)
     )
 
 fun getGoBackItem(locale: Locale) =
@@ -462,21 +470,13 @@ fun generateColorCompoundItem(chatColor: ChatColor, locale: Locale) =
             addLore {
                 +space()
                 addComponent(
-                    translatable(
-                        "gui.color_compound.lore",
-                        listOf(
-                            text(
-                                chatColor.toString().plus(
-                                    chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                                )
-                            ),
-                            text(
-                                net.md_5.bungee.api.ChatColor.stripColor(Timer.formatTime(90061.toLong())) ?: "n/a", // 1d 1h 1m 1s
-                                TextColor.color(chatColor.asBungee().color.rgb)
-                            )
-                        )
-                    )
+                    translatable("gui.color_compound.lore")
                         .color(Colors.COLOR_COMPOUND_SECONDARY)
+                        .args(
+                            text(chatColor.toString().plus(chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })),
+                            text(Timer.formatTime(90061L).plainText()) // 1d 1h 1m 1s
+                                .color(TextColor.color(chatColor.asBungee().color.rgb))
+                        )
                         .render(locale)
                 )
             }
@@ -637,8 +637,12 @@ fun generateTimerItem(locale: Locale) =
             addLore {
                 +space()
                 addComponent(
-                    translatable("gui.timer.lore", listOf(text(Timer.toString()).color(Timer.color)))
+                    translatable("gui.timer.lore")
                         .color(Colors.TIMER_ITEM_SECONDARY)
+                        .args(
+                            text(Timer.toString())
+                                .color(Timer.color)
+                        )
                         .render(locale)
                 )
             }
@@ -829,9 +833,9 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale) =
                     }
                 }
                 addComponent(
-                    translatable(
-                        "gui.join_while_running.lore",
-                        listOf(
+                    translatable("gui.join_while_running.lore")
+                        .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
+                        .args(
                             if (Timer.joinWhileRunning.contains(accessLevel)) {
                                 translatable("generic.disable")
                                     .color(Colors.INACTIVE)
@@ -840,8 +844,6 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale) =
                                     .color(Colors.ACTIVE)
                             }
                         )
-                    )
-                        .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
                         .render(locale)
                 )
             }
@@ -865,20 +867,16 @@ fun generateItemForHide(player: Player, locale: Locale): ItemStack {
         +space()
         if (player.hidden) {
             addComponent(
-                translatable(
-                    "gui.hide.hidden.lore",
-                    listOf(player.name())
-                )
+                translatable("gui.hide.hidden.lore")
                     .color(Colors.INACTIVE)
+                    .args(player.name())
                     .render(locale)
             )
         } else {
             addComponent(
-                translatable(
-                    "gui.hide.revealed.lore",
-                    listOf(player.name())
-                )
+                translatable("gui.hide.revealed.lore")
                     .color(Colors.ACTIVE)
+                    .args(player.name())
                     .render(locale)
             )
         }

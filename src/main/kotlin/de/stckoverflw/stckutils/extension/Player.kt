@@ -14,13 +14,15 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
 fun Player.resetWorlds() {
     Config.resetSettingsConfig.shouldReset = true
     onlinePlayers.forEach {
-        it.kick(successTranslatable("player.reset_worlds", name()))
+        it.kick(
+            successTranslatable("player.reset_worlds")
+                .args(name())
+        )
     }
     Bukkit.getServer().spigot().restart()
 }
@@ -28,20 +30,18 @@ fun Player.resetWorlds() {
 fun Player.setSavedInventory() {
     if (persistentDataContainer.has(Namespaces.CHALLENGE_INVENTORY_CONTENTS)) {
         inventory.clear()
-        @Suppress("UNCHECKED_CAST")
         inventory.setContents(
             persistentDataContainer.get(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
-                ?.let { fromBase64(it) } as Array<out ItemStack>
+                ?.let { fromBase64(it) }?.filterNotNull()?.toTypedArray() ?: arrayOf()
         )
         persistentDataContainer.remove(Namespaces.CHALLENGE_INVENTORY_CONTENTS)
     }
 }
 
 fun Player.saveInventory() {
-    @Suppress("UNCHECKED_CAST")
     persistentDataContainer.set(
         Namespaces.CHALLENGE_INVENTORY_CONTENTS,
-        toBase64(inventory.contents as Array<ItemStack>)
+        toBase64(inventory.contents?.filterNotNull()?.toTypedArray() ?: arrayOf())
     )
 }
 

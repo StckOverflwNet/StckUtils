@@ -4,6 +4,7 @@ import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
+import de.stckoverflw.stckutils.extension.plainText
 import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.nameKey
@@ -22,7 +23,6 @@ import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.gotoPage
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -69,18 +69,23 @@ object RandomItem : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).render(locale).coloredString()
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotFour, distanceItem(locale)) {
+            button(
+                Slots.RowThreeSlotFour,
+                distanceItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     isDistance = !isDistance
@@ -90,7 +95,10 @@ object RandomItem : Challenge() {
                 }
             }
 
-            button(Slots.RowThreeSlotSix, timeItem(locale)) {
+            button(
+                Slots.RowThreeSlotSix,
+                timeItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     isTime = !isTime
@@ -100,17 +108,24 @@ object RandomItem : Challenge() {
                 }
             }
         }
+
         // distance settings
         page(1) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), 0, null, null)
+            pageChanger(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale),
+                0,
+                null,
+                null
+            )
 
-            button(Slots.RowThreeSlotSix, plusItem("distance", "${distanceUnit}m", "10m", "100m", locale)) {
+            button(
+                Slots.RowThreeSlotSix,
+                plusItem("distance", "${distanceUnit}m", "10m", "100m", locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     distanceUnit += 10
@@ -120,13 +135,19 @@ object RandomItem : Challenge() {
                 updateInventory(it.bukkitEvent.inventory, false, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem("distance", "${distanceUnit}m", "500m", locale)) {
+            button(
+                Slots.RowThreeSlotFive,
+                resetItem("distance", "${distanceUnit}m", "500m", locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 distanceUnit = 500
                 updateInventory(it.bukkitEvent.inventory, false, locale)
             }
 
-            button(Slots.RowThreeSlotFour, minusItem("distance", "${distanceUnit}m", "10m", "100m", locale)) {
+            button(
+                Slots.RowThreeSlotFour,
+                minusItem("distance", "${distanceUnit}m", "10m", "100m", locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (distanceUnit - 10 < minDistance)
@@ -142,17 +163,24 @@ object RandomItem : Challenge() {
                 updateInventory(it.bukkitEvent.inventory, false, locale)
             }
         }
+
         // time settings
         page(2) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            pageChanger(Slots.RowThreeSlotOne, getGoBackItem(locale), 0, null, null)
+            pageChanger(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale),
+                0,
+                null,
+                null
+            )
 
-            button(Slots.RowThreeSlotSix, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale)) {
+            button(
+                Slots.RowThreeSlotSix,
+                plusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     timeUnit += 10
@@ -162,13 +190,19 @@ object RandomItem : Challenge() {
                 updateInventory(it.bukkitEvent.inventory, true, locale)
             }
 
-            button(Slots.RowThreeSlotFive, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3m", locale)) {
+            button(
+                Slots.RowThreeSlotFive,
+                resetItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "3m", locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 timeUnit = 300
                 updateInventory(it.bukkitEvent.inventory, true, locale)
             }
 
-            button(Slots.RowThreeSlotFour, minusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale)) {
+            button(
+                Slots.RowThreeSlotFour,
+                minusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
                     if (timeUnit - 10 < minTime)
@@ -188,9 +222,9 @@ object RandomItem : Challenge() {
 
     private fun updateInventory(inv: Inventory, isTime: Boolean, locale: Locale) {
         if (isTime) {
-            inv.setItem(21, minusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale))
-            inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong()), "3m", locale))
-            inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong()), "10s", "1m", locale))
+            inv.setItem(21, minusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale))
+            inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "3m", locale))
+            inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale))
         } else {
             inv.setItem(21, minusItem("distance", "${distanceUnit}m", "10m", "100m", locale))
             inv.setItem(22, resetItem("distance", "${distanceUnit}m", "500m", locale))
@@ -203,12 +237,15 @@ object RandomItem : Challenge() {
             meta {
                 name = translatable("$id.reset_item.name")
                     .render(locale)
+
                 addLore {
                     addComponent(
-                        translatable(
-                            "$id.reset_item.lore",
-                            listOf(text(description), text(value), text(default))
-                        )
+                        translatable("$id.reset_item.lore")
+                            .args(
+                                text(description),
+                                text(value),
+                                text(default)
+                            )
                             .render(locale)
                     )
                 }
@@ -220,12 +257,16 @@ object RandomItem : Challenge() {
             meta {
                 name = translatable("$id.plus_item.name")
                     .render(locale)
+
                 addLore {
                     addComponent(
-                        translatable(
-                            "$id.plus_item.lore",
-                            listOf(text(description), text(value), text(leftClick), text(rightClick))
-                        )
+                        translatable("$id.plus_item.lore")
+                            .args(
+                                text(description),
+                                text(value),
+                                text(leftClick),
+                                text(rightClick)
+                            )
                             .render(locale)
                     )
                 }
@@ -237,12 +278,16 @@ object RandomItem : Challenge() {
             meta {
                 name = translatable("$id.minus_item.name")
                     .render(locale)
+
                 addLore {
                     addComponent(
-                        translatable(
-                            "$id.minus_item.lore",
-                            listOf(text(description), text(value), text(leftClick), text(rightClick))
-                        )
+                        translatable("$id.minus_item.lore")
+                            .args(
+                                text(description),
+                                text(value),
+                                text(leftClick),
+                                text(rightClick)
+                            )
                             .render(locale)
                     )
                 }
@@ -253,11 +298,11 @@ object RandomItem : Challenge() {
         meta {
             name = translatable("$id.distance_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.distance_item.lore",
-                        listOf(
+                    translatable("$id.distance_item.lore")
+                        .args(
                             if (isDistance) {
                                 translatable("generic.enabled", TextColor.color(Color.GREEN.asRGB()))
                                     .append(text("($distanceUnit)m", TextColor.color(Color.GRAY.asRGB())))
@@ -265,7 +310,6 @@ object RandomItem : Challenge() {
                                 translatable("generic.disabled", TextColor.color(Color.RED.asRGB()))
                             }
                         )
-                    )
                         .render(locale)
                 )
             }
@@ -276,11 +320,11 @@ object RandomItem : Challenge() {
         meta {
             name = translatable("$id.time_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.distance_item.lore",
-                        listOf(
+                    translatable("$id.distance_item.lore")
+                        .args(
                             if (isDistance) {
                                 translatable("generic.enabled", TextColor.color(Color.GREEN.asRGB()))
                                     .append(text("($timeUnit)s", TextColor.color(Color.GRAY.asRGB())))
@@ -288,7 +332,6 @@ object RandomItem : Challenge() {
                                 translatable("generic.enabled", TextColor.color(Color.RED.asRGB()))
                             }
                         )
-                    )
                         .render(locale)
                 )
             }
@@ -297,25 +340,18 @@ object RandomItem : Challenge() {
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
-        if (!isDistance) {
-            return
-        }
-
-        if (!event.player.isPlaying()) {
-            return
-        }
-
-        if (!event.hasChangedBlock()) {
+        if (!isDistance ||
+            !event.player.isPlaying() ||
+            !event.hasChangedBlock()
+        ) {
             return
         }
 
         distance++
         if (distance >= distanceUnit) {
             distance = 0
-            onlinePlayers.forEach { player ->
-                if (player.isPlaying()) {
-                    player.give(ItemStack(materials.random()))
-                }
+            onlinePlayers.filter { it.isPlaying() }.forEach { player ->
+                player.give(ItemStack(materials.random()))
             }
         }
     }
@@ -325,10 +361,8 @@ object RandomItem : Challenge() {
         time++
         if (time >= timeUnit) {
             time = 0
-            onlinePlayers.forEach { player ->
-                if (player.isPlaying()) {
-                    player.give(ItemStack(materials.random()))
-                }
+            onlinePlayers.filter { it.isPlaying() }.forEach { player ->
+                player.give(ItemStack(materials.random()))
             }
         }
     }

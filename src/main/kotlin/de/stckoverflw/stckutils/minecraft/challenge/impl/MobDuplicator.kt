@@ -18,7 +18,6 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -27,7 +26,6 @@ import net.kyori.adventure.text.Component.empty
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import org.bukkit.Material
-import org.bukkit.entity.EnderDragon
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -48,18 +46,24 @@ object MobDuplicator : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).render(locale).coloredString()
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
+
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotFive, exponentialItem(locale)) {
+            button(
+                Slots.RowThreeSlotFive,
+                exponentialItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isShiftClick) {
                     exponentialAmount = 2
@@ -75,11 +79,11 @@ object MobDuplicator : Challenge() {
         meta {
             name = translatable("$id.exponential_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.exponential_item.lore",
-                        listOf(
+                    translatable("$id.exponential_item.lore")
+                        .args(
                             if (isExponential) {
                                 text(" \nShift Click to reset amount\n")
                             } else {
@@ -91,7 +95,6 @@ object MobDuplicator : Challenge() {
                                 translatable("generic.disabled")
                             }
                         )
-                    )
                         .render(locale)
                 )
             }
@@ -106,13 +109,9 @@ object MobDuplicator : Challenge() {
         val mob = event.entity as Mob
         val player = event.damager as Player
 
-        // ignore players that are currently not playing
-        if (!player.isPlaying()) {
-            return
-        }
-
-        // ignore the EnderDragon and mobs that do not die after the damage is applied
-        if (mob is EnderDragon || mob.health - event.damage > 0) {
+        if (!player.isPlaying() ||
+            mob.health - event.damage > 0
+        ) {
             return
         }
 

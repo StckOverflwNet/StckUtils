@@ -234,7 +234,8 @@ fun Material.isObtainableInSurvival(): Boolean {
         Material.ZOMBIE_SPAWN_EGG,
         Material.ZOMBIE_VILLAGER_SPAWN_EGG,
         Material.ZOMBIE_WALL_HEAD,
-        Material.ZOMBIFIED_PIGLIN_SPAWN_EGG -> false
+        Material.ZOMBIFIED_PIGLIN_SPAWN_EGG,
+        -> false
         // </editor-fold>
         else -> true
     }

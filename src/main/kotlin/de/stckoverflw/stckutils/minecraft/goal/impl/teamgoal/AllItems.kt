@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
@@ -17,7 +17,7 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.items.addLore
-import net.axay.kspigot.items.flag
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
@@ -89,7 +89,6 @@ object AllItems : TeamGoal() {
         title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
 
             val compound = createRectCompound<Material>(
@@ -101,7 +100,6 @@ object AllItems : TeamGoal() {
             }
             )
 
-            // Reset Item
             button(Slots.RowTwoSlotNine, resetItem(locale)) {
                 allItems = listOf()
                 nextMaterial = randomMaterial()
@@ -113,7 +111,6 @@ object AllItems : TeamGoal() {
                 }
             }
 
-            // Filter Button (Filter only collected/only not collected/all)
             button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING), locale), onClick = { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
@@ -162,13 +159,19 @@ object AllItems : TeamGoal() {
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
                             "$id.skipped",
-                            listOf(clickEvent.player.name(), text(formatMaterial(nextMaterial))),
+                            listOf(
+                                clickEvent.player.name(),
+                                text(formatMaterial(nextMaterial))
+                            ),
                             false
                         )
                     } else if (clickEvent.bukkitEvent.isRightClick) {
                         collected(
                             "$id.marked",
-                            listOf(clickEvent.player.name(), text(formatMaterial(nextMaterial)))
+                            listOf(
+                                clickEvent.player.name(),
+                                text(formatMaterial(nextMaterial))
+                            )
                         )
                     }
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.name }
@@ -216,11 +219,13 @@ object AllItems : TeamGoal() {
 
     private fun skipItem(locale: Locale) = itemStack(Material.BEDROCK) {
         meta {
-            name = translatable("$id.skip_item.name", listOf(text(formatMaterial(nextMaterial))))
+            name = translatable("$id.skip_item.name")
+                .args(text(formatMaterial(nextMaterial)))
                 .render(locale)
             addLore {
                 addComponent(
-                    translatable("$id.skip_item.lore", listOf(text(formatMaterial(nextMaterial))))
+                    translatable("$id.skip_item.lore")
+                        .args(text(formatMaterial(nextMaterial)))
                         .render(locale)
                 )
             }
@@ -244,14 +249,16 @@ object AllItems : TeamGoal() {
             }
             if (isCollected(material)) {
                 addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-                flag(ItemFlag.HIDE_ENCHANTS)
             }
-            flag(ItemFlag.HIDE_ATTRIBUTES)
-            flag(ItemFlag.HIDE_DESTROYS)
-            flag(ItemFlag.HIDE_DYE)
-            flag(ItemFlag.HIDE_PLACED_ON)
-            flag(ItemFlag.HIDE_POTION_EFFECTS)
-            flag(ItemFlag.HIDE_UNBREAKABLE)
+            flags(
+                ItemFlag.HIDE_ENCHANTS,
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_POTION_EFFECTS,
+                ItemFlag.HIDE_UNBREAKABLE
+            )
         }
     }
 
@@ -261,9 +268,8 @@ object AllItems : TeamGoal() {
                 .render(locale)
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.filter_item.lore",
-                        listOf(
+                    translatable("$id.filter_item.lore")
+                        .args(
                             text(
                                 filter.first.name,
                                 TextColor.color(
@@ -277,7 +283,6 @@ object AllItems : TeamGoal() {
                                 )
                             )
                         )
-                    )
                         .render(locale)
                 )
             }

@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import org.bukkit.Material
@@ -20,7 +20,9 @@ object FindDiamond : TeamGoal() {
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (event.currentItem == null) return
+        if (event.currentItem == null) {
+            return
+        }
         if (event.currentItem!!.type == Material.DIAMOND) {
             win(listOf(event.whoClicked.name()))
         }

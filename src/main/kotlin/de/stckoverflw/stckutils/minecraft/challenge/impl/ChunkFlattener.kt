@@ -19,7 +19,6 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -56,36 +55,51 @@ object ChunkFlattener : Challenge() {
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).render(locale).coloredString()
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 0
+
         page(0) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotSeven, plusItem(locale)) {
+            button(
+                Slots.RowThreeSlotSeven,
+                plusItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 handleUpdateClick(it.bukkitEvent, true)
                 updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotSix, resetItem(locale)) {
+            button(
+                Slots.RowThreeSlotSix,
+                resetItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 period = 10
                 updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotFive, minusItem(locale)) {
+            button(
+                Slots.RowThreeSlotFive,
+                minusItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 handleUpdateClick(it.bukkitEvent, false)
                 updateInventory(it.bukkitEvent.inventory, locale)
             }
 
-            button(Slots.RowThreeSlotThree, dropItem(locale)) {
+            button(
+                Slots.RowThreeSlotThree,
+                dropItem(locale)
+            ) {
                 it.bukkitEvent.isCancelled = true
                 doDrop = !doDrop
                 updateInventory(it.bukkitEvent.inventory, locale)
@@ -104,18 +118,17 @@ object ChunkFlattener : Challenge() {
         meta {
             name = translatable("$id.drop_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        "$id.drop_item.lore",
-                        listOf(
+                    translatable("$id.drop_item.lore")
+                        .args(
                             if (doDrop) {
                                 translatable("generic.activated", TextColor.color(Color.GREEN.asRGB()))
                             } else {
                                 translatable("generic.activated", TextColor.color(Color.RED.asRGB()))
                             }
                         )
-                    )
                         .render(locale)
                 )
             }
@@ -126,9 +139,11 @@ object ChunkFlattener : Challenge() {
         meta {
             name = translatable("$id.reset_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable("$id.reset_item.lore", listOf(text(period)))
+                    translatable("$id.reset_item.lore")
+                        .args(text(period))
                         .render(locale)
                 )
             }
@@ -139,9 +154,11 @@ object ChunkFlattener : Challenge() {
         meta {
             name = translatable("$id.plus_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable("$id.plus_item.lore", listOf(text(period)))
+                    translatable("$id.plus_item.lore")
+                        .args(text(period))
                         .render(locale)
                 )
             }
@@ -152,9 +169,11 @@ object ChunkFlattener : Challenge() {
         meta {
             name = translatable("$id.minus_item.name")
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable("$id.minus_item.lore", listOf(text(period)))
+                    translatable("$id.minus_item.lore")
+                        .args(text(period))
                         .render(locale)
                 )
             }

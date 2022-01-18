@@ -27,13 +27,9 @@ object MobMagnet : Challenge() {
         val mob = event.entity as Mob
         val player = event.damager as Player
 
-        // ignore players that are currently not playing
-        if (!player.isPlaying()) {
-            return
-        }
-
-        // ignore mobs that do not die after the damage is applied
-        if (mob.health - event.damage > 0) {
+        if (!player.isPlaying() ||
+            mob.health - event.damage > 0
+        ) {
             return
         }
 

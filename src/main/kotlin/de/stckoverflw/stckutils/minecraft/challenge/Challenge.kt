@@ -71,13 +71,11 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
         Bukkit.getOnlinePlayers().forEach {
             it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
             it.sendPrefixMessage(
-                translatable(
-                    "challenge.lose",
-                    listOf(
+                translatable("challenge.lose")
+                    .args(
                         translatable(loseKey, replacements),
                         text(Timer.toString())
                     )
-                )
             )
         }
         Timer.backwardsStartTime = 0

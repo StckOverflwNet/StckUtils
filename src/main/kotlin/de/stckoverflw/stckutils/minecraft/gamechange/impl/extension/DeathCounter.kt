@@ -1,16 +1,17 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.extension
 
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameExtension
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
 import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
+import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
@@ -41,11 +42,11 @@ object DeathCounter : GameExtension() {
             name = translatable(nameKey)
                 .color(Colors.GOAL_COMPOUND)
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        descriptionKey,
-                        listOf(
+                    translatable(descriptionKey)
+                        .args(
                             if (active) {
                                 translatable("generic.activated")
                                     .color(Colors.ACTIVE)
@@ -54,7 +55,6 @@ object DeathCounter : GameExtension() {
                                     .color(Colors.INACTIVE)
                             }
                         )
-                    )
                         .color(Colors.GOAL_COMPOUND_SECONDARY)
                         .render(locale)
                 )
@@ -63,7 +63,8 @@ object DeathCounter : GameExtension() {
                 + "Shift Right-click to lower the deaths"
                  */
             }
-            addItemFlags(
+
+            flags(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_DYE,
@@ -97,7 +98,10 @@ object DeathCounter : GameExtension() {
                 it.showBossBar(bossbar)
                 bossbar.progress(1.0F)
             }
-            bossbar.name(translatable("deaths", listOf(text(deaths))))
+            bossbar.name(
+                translatable("deaths")
+                    .args(text(deaths))
+            )
         } else {
             onlinePlayers.forEach {
                 it.hideBossBar(bossbar)

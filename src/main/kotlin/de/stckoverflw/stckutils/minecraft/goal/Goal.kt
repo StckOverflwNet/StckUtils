@@ -9,7 +9,6 @@ import net.axay.kspigot.extensions.onlinePlayers
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
-import org.bukkit.ChatColor
 import org.bukkit.FireworkEffect
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -56,16 +55,14 @@ abstract class TeamGoal : Goal() {
             spawnFireworks()
             onlinePlayers.forEach {
                 it.sendPrefixMessage(
-                    translatable(
-                        "team_goal.win",
-                        listOf(
+                    translatable("team_goal.win")
+                        .args(
                             translatable(winKey, replacements),
-                            text(ChatColor.stripColor(Timer.toString())!!)
+                            text(Timer.toString())
                         )
-                    )
                 )
-                Timer.stop()
             }
+            Timer.stop()
         }
     }
 }
@@ -76,14 +73,12 @@ abstract class Battle : Goal() {
             spawnFireworks()
             onlinePlayers.forEach {
                 it.sendPrefixMessage(
-                    translatable(
-                        "battle.win",
-                        listOf(
+                    translatable("battle.win")
+                        .args(
                             translatable(winKey, replacements),
                             player.name(),
-                            text(ChatColor.stripColor(Timer.toString())!!)
+                            text(Timer.toString())
                         )
-                    )
                 )
             }
             Timer.stop()

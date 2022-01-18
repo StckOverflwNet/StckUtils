@@ -6,5 +6,5 @@ import java.util.UUID
 data class PositionData(
     val name: String,
     val creator: UUID,
-    val location: Location
+    val location: Location,
 )

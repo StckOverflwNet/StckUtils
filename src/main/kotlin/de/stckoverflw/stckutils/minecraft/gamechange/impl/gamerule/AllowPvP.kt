@@ -1,15 +1,16 @@
 package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
-import de.stckoverflw.stckutils.extension.Colors
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
 import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
+import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
+import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
@@ -29,11 +30,11 @@ object AllowPvP : GameRule() {
             name = translatable(nameKey)
                 .color(Colors.GOAL_COMPOUND)
                 .render(locale)
+
             addLore {
                 addComponent(
-                    translatable(
-                        descriptionKey,
-                        listOf(
+                    translatable(descriptionKey)
+                        .args(
                             if (active) {
                                 translatable("$id.players_can_not_attack_each_other")
                                     .color(Colors.INACTIVE)
@@ -42,12 +43,12 @@ object AllowPvP : GameRule() {
                                     .color(Colors.ACTIVE)
                             }
                         )
-                    )
                         .color(Colors.GOAL_COMPOUND_SECONDARY)
                         .render(locale)
                 )
             }
-            addItemFlags(
+
+            flags(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_DYE,

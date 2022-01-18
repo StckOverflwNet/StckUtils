@@ -15,5 +15,5 @@ object Permissions {
     const val TIMER_COMMAND = "stckutils.command.timer"
     const val TIMER_RESET = "stckutils.function.timer.reset"
     const val TIMER_START = "stckutils.function.timer.start"
-    const val TIMER_PAUSE = "stckutils.function.timer.stop"
+    const val TIMER_PAUSE = "stckutils.function.timer.pause"
 }

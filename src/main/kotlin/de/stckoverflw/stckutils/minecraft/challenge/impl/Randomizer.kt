@@ -18,7 +18,6 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -43,18 +42,23 @@ object Randomizer : Challenge() {
     override val usesEvents: Boolean = true
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).render(locale).coloredString()
+        title = translatable(nameKey).coloredString(locale)
         defaultPage = 1
         page(1) {
-            // Placeholders at the Border of the Inventory
             placeholder(Slots.Border, placeHolderItemGray)
-            // Placeholders in the Middle field of the Inventory
-            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
+            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
 
-            // Go back Item
-            button(Slots.RowThreeSlotOne, getGoBackItem(locale)) { it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber) }
+            button(
+                Slots.RowThreeSlotOne,
+                getGoBackItem(locale)
+            ) {
+                it.player.openGUI(settingsGUI(locale), GUIPage.challengesPageNumber)
+            }
 
-            button(Slots.RowThreeSlotFive, randomizerSettingsItem(locale)) {
+            button(
+                Slots.RowThreeSlotFive,
+                randomizerSettingsItem(locale)
+            ) {
                 randomizeEverything = !randomizeEverything
                 it.bukkitEvent.clickedInventory!!.setItem(it.bukkitEvent.slot, randomizerSettingsItem(locale))
             }
@@ -86,6 +90,7 @@ object Randomizer : Challenge() {
             meta {
                 name = translatable("$id.randomizer_item.name")
                     .render(locale)
+
                 addLore {
                     addComponent(
                         translatable("$id.randomizer_item.lore.random")
@@ -97,6 +102,7 @@ object Randomizer : Challenge() {
             meta {
                 name = translatable("$id.randomizer_item.name")
                     .render(locale)
+
                 addLore {
                     addComponent(
                         translatable("$id.randomizer_item.lore.all_random")

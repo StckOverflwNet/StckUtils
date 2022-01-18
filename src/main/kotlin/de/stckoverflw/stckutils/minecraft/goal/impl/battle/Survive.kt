@@ -1,4 +1,4 @@
-package de.stckoverflw.stckutils.minecraft.goal.impl
+package de.stckoverflw.stckutils.minecraft.goal.impl.battle
 
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.Battle
@@ -17,13 +17,14 @@ object Survive : Battle() {
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         val player = event.entity
+        val alivePlayers = onlinePlayers.filter { it.gameMode == GameMode.SURVIVAL }
+
         player.gameMode = GameMode.SPECTATOR
         player.sendPrefixMessage(
             translatable("$id.died")
         )
-        val alivePlayers = onlinePlayers.filter { it.gameMode == GameMode.SURVIVAL }
         if (alivePlayers.size == 1) {
-            val winningPlayer = alivePlayers[0]
+            val winningPlayer = alivePlayers.first()
             win(winningPlayer, listOf(winningPlayer.name()))
         }
     }

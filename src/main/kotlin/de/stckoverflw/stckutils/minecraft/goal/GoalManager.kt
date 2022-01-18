@@ -1,13 +1,13 @@
 package de.stckoverflw.stckutils.minecraft.goal
 
-import de.stckoverflw.stckutils.minecraft.goal.impl.AllAdvancements
-import de.stckoverflw.stckutils.minecraft.goal.impl.AllItems
-import de.stckoverflw.stckutils.minecraft.goal.impl.AllMobs
-import de.stckoverflw.stckutils.minecraft.goal.impl.BakeCake
-import de.stckoverflw.stckutils.minecraft.goal.impl.FindDiamond
-import de.stckoverflw.stckutils.minecraft.goal.impl.GoToNether
-import de.stckoverflw.stckutils.minecraft.goal.impl.KillEnderdragon
-import de.stckoverflw.stckutils.minecraft.goal.impl.Survive
+import de.stckoverflw.stckutils.minecraft.goal.impl.battle.BakeCake
+import de.stckoverflw.stckutils.minecraft.goal.impl.battle.Survive
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.AllAdvancements
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.AllItems
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.AllMobs
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.FindDiamond
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.GoToNether
+import de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal.KillEnderdragon
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigotMainInstance
