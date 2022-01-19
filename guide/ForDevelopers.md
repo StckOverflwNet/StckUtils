@@ -405,7 +405,7 @@ Those should be self explaining.
 
 - Coming soon -
 
-For now just have a look [here](../../src/main/kotlin/de/stckoverflw/stckutils/extension)
+For now just have a look [here](../../../tree/main/src/main/kotlin/de/stckoverflw/stckutils/extension)
 
 ## Using the Config
 
