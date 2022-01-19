@@ -31,6 +31,7 @@ import net.axay.kspigot.gui.PageChangeEffect
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.TextColor
@@ -66,7 +67,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
 
     page(GUIPage.settingsPageNumber) {
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowThreeSlotThree,
@@ -106,7 +107,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowFiveSlotFive,
@@ -138,7 +139,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowThreeSlotNine,
@@ -214,7 +215,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowOneSlotFive,
@@ -284,7 +285,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowThreeSlotOne,
@@ -390,7 +391,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowFiveSlotFive,
@@ -489,7 +490,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_HORIZONTALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowThreeSlotOne,
@@ -519,7 +520,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowFiveSlotFive,
@@ -550,7 +551,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowFiveSlotFive,
@@ -606,7 +607,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         this.transitionFrom = PageChangeEffect.SLIDE_VERTICALLY
 
         placeholder(Slots.Border, placeHolderItemGray)
-        placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+        placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
         pageChanger(
             Slots.RowFiveSlotFive,

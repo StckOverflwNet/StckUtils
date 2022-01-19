@@ -22,6 +22,8 @@ import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Colors
+import de.stckoverflw.stckutils.util.Permissions
+import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
@@ -80,8 +82,7 @@ class StckUtilsPlugin : KSpigot() {
 
     override fun startup() {
         if (onlinePlayers.isNotEmpty()) {
-            logger.warning("It looks like you've reloaded, please restart instead!")
-            pluginManager.disablePlugin(this)
+            logger.severe("It looks like you've reloaded, please restart instead!")
         }
 
         if (server.pluginManager.getPlugin("ProtocolLib") != null) {
@@ -177,6 +178,11 @@ class StckUtilsPlugin : KSpigot() {
                     .coloredString()
             )
         }
+
+        onlinePlayers.filter { it.hasPermission(Permissions.SETTINGS_ITEM) && it.inventory.isEmpty }
+            .forEach {
+                it.inventory.setItem(8, getSettingsItem(it.locale()))
+            }
     }
 
     override fun shutdown() {

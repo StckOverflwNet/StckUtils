@@ -4,10 +4,12 @@
 
 - [Prerequirities](#prerequirities)
 - [Overview](#overview)
+- [Translations](#translations)
 - [Creating new Challenges](#creating-new-challenges)
 - [Creating new GameChanges](#creating-new-gamechanges)
 - [Goals](#creating-new-goals)
 - [Using the Timer](#using-the-timer)
+- [Useful Extensions](#useful-extensions)
 - [Using the Config](#using-the-config)
 
 ## Prerequirities
@@ -23,6 +25,47 @@ You'll need to install the Kotlin plugin and use a java 17 jdk as project and gr
 Challenges, GameChanges and Goals are located in
 the [minecraft](https://github.com/StckOverflwNet/StckUtils/tree/master/src/main/kotlin/de/stckoverflw/stckutils/minecraft)
 package.
+
+## Translations
+
+We use ResourceBundles (.properties) to provide multilanguage support.
+Those are stored in `src/main/resources/translations`.
+You'll need to add new translations for challenges, gamgechanges and goals you create.
+Creating one is pretty easy, just create one in the `minecraft` folder under challenge, gamechange or goal,
+the .properties should be named like the id of the challenge, gamechange or goal:
+
+> challenge-id.description
+> challenge-id.name
+
+example-challenge.properties:
+```properties
+challenge-id.description=\n\
+This is the lore of the challenge's item in the challenges gui.
+challenge-id.name=This is the name of the challenge's item in the challenges gui.
+```
+You can of course add more translations to this, make sure that the key must start with the corresponding id:
+`challenge-id.key=value`
+
+You don't have to worry about registering those translations btw!
+
+We use TranslatableComponents to use those translations at runtime.
+You can create one for (i.e. the challenge) name like this:
+```kotlin
+import net.kyori.adventure.text.Component.translatable
+
+translatable("challenge-id.name")
+```
+You can send this to a Player.
+If you plan to use translations in ItemStacks you have to render them for a locale, like this:
+```kotlin
+import net.kyori.adventure.text.Component.translatable
+
+translatable("challenge-id.name").render(Locale)
+```
+You can get a locale from a Player with `Player#locale()`
+
+If you need a translation as String (idk why you would need this tbh):
+`translatable("challenge-id.name").render(Locale).plainText()`
 
 ## Creating new Challenges
 
@@ -44,19 +87,9 @@ Then you'll need to implement the members of Challenge:
 > The id must be unique. It represents the challenge in (data) configs.
 
 > ```kotlin
-> override val name: String
-> ```
-> The name is used as the Challenge's item display name in the settings gui.
-
-> ```kotlin
 > override val material: Material
 > ```
 > The material is used as the Challenge's item material in the settings gui.
-
-> ```kotlin
-> override val description: List<String>
-> ```
-> The description is used as the Challenge's item lore in the settings gui.
 
 > ```kotlin
 > override val usesEvents: Boolean
@@ -71,6 +104,13 @@ Then you'll need to implement the members of Challenge:
 > It's accessible through the settings gui.
 > When your challenge is activated the user can right click onto the Challenge's item to open it.
 
+You'd also need to add translations for the name and description.
+Just create a new ResourceBundle at `/resources/translations/minecraft/challenges` with the challenge id as name:
+
+> challenge-id.description=\n\
+> Your description.
+> challenge-id.name=ChallengeName
+
 so an Example would look like this:
 
 ```kotlin
@@ -78,16 +118,17 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 object ExampleChallenge : Challenge() {
     override val id: String = "example-challenge"
-    override val name: String = "§aExampleChallenge"
     override val material: Material = Material.STONE
-    override val description: List<String> = listOf(
-        " ",
-        "§7This is just an example challenge."
-    )
     override val usesEvents: Boolean = false
 
     override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
 }
+```
+example-challenge.properties:
+```properties
+example-challenge.description=\n\
+This is just an example challenge.
+example-challenge.name=ExampleChallenge
 ```
 
 now you can further add some logic to it, like an EventHandler (make sure to set `usesEvents` to `true`):
@@ -171,7 +212,7 @@ Then you'll need to implement the members of GameChange:
 > The id must be unique. It represents the gamechange in (data) configs.
 
 > ```kotlin
-> override fun item(): ItemStack
+> override fun item(locale: Locale): ItemStack
 > ```
 > This is the item that will appear in the settings gui.
 
@@ -197,16 +238,17 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 object ExampleGameRule : GameExtension() {
     override val id: String = "example-game-extension"
-    override val name: String = "§aExampleGameExtension"
     override val material: Material = Material.STONE
-    override val description: List<String> = listOf(
-        " ",
-        "§7This is just an example game extension."
-    )
     override val usesEvents: Boolean = false
 
-    override fun configurationGUI(): GUI<ForInventoryFiveByNine>? = null
+    override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine>? = null
 }
+```
+example-game-extension.properties:
+```properties
+example-game-extension.description=\n\
+This is just an example game extension.
+example-game-extension.name=ExampleGameExtension
 ```
 
 There are also some more useful things you might want to use:
@@ -256,16 +298,6 @@ object BattleName : Battle() {
 > The id must be unique. It represents the Goal in (data) configs.
 
 > ```kotlin
-> override val name: String
-> ```
-> The name is used as the Goal's item display name in the settings gui.
-
-> ```kotlin
-> override val description: List<String>
-> ```
-> The description is used as the Goal's item lore in the settings gui.
-
-> ```kotlin
 > override val material: Material
 > ```
 > The material is used as the Goal's item material in the settings gui.
@@ -277,13 +309,14 @@ package de.stckoverflw.stckutils.minecraft.goal.impl
 
 object ExampleGoal : TeamGoal() {
     override val id: String = "example-goal"
-    override val name: String = "§aExampleGoal"
-    override val description: List<String> = listOf(
-        " ",
-        "§7"
-    )
     override val material: Material = Material.STONE
 }
+```
+example-goal.properties:
+```properties
+example-goal.description=\n\
+This is just an example goal.
+example-goal.name=ExampleGoal
 ```
 
 There are also some more useful things you might want to use:
@@ -337,7 +370,7 @@ Timer.additionalInfo: ArrayList<String>
 If not empty this will be displayed behind the time in the actionbar when the Timer is running.
 
 ```kotlin
-Timer.color: String
+Timer.color: TextColor
 ```
 
 This is the Color the Timer is displayed in.
@@ -355,7 +388,7 @@ Timer.direction: TimerDirection
 This is the Direction the Timer is running to.
 
 ```kotlin
-Timer.formatTime(seconds): String
+Timer.formatTime(seconds): Component
 ```
 
 This formats a Long (defaults to Timer.time) to a pretty String in the current Color (like `3d 4h 50m 10s` or `51 seconds`).
@@ -367,6 +400,12 @@ Timer.reset()
 ```
 
 Those should be self explaining.
+
+## Useful Extensions
+
+- Coming soon -
+
+For now just have a look [here](../../src/main/kotlin/de/stckoverflw/stckutils/extension)
 
 ## Using the Config
 

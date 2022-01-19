@@ -4,7 +4,8 @@ StckUtils is a challenge plugin inspired by DerBanko's BUtils. It works in a sim
 StckUtils has a Timer, Challenges, GameChanges and Goals.
 
 If you have ideas for new features or ideas on how to improve something, you can reach us by creating an issue or
-contacting us on Discord ([StckOverflw](https://discordapp.com/users/816989010836717599), [l4zs](https://discordapp.com/users/275995368733278218))
+contacting us on Discord ([StckOverflw](https://discordapp.com/users/816989010836717599)
+, [l4zs](https://discordapp.com/users/275995368733278218))
 
 - [General](#general)
 - [Timer](#timer)
@@ -18,7 +19,8 @@ contacting us on Discord ([StckOverflw](https://discordapp.com/users/81698901083
 
 If you are unable to find some features, please check if you gave yourself the required [permissions](#permissions) for
 the specific feature. If you're still unable to find it, you can reach us by creating an issue or contacting us on
-Discord ([StckOverflw](https://discordapp.com/users/816989010836717599), [l4zs](https://discordapp.com/users/275995368733278218))
+Discord ([StckOverflw](https://discordapp.com/users/816989010836717599)
+, [l4zs](https://discordapp.com/users/275995368733278218))
 
 <br>
 
@@ -49,7 +51,7 @@ The Timer gui looks like this:
     </ul>
 </details>
 
-You can also use the Timer command to start, stop and reset the Timer easily (`/timer <resume|stop|reset>`).
+You can also use the Timer command to start, stop and reset the Timer easily (`/timer <start|pause|reset>`).
 
 ## Challenges
 
@@ -63,8 +65,9 @@ Here you can activate (left-click) and configure (right-click on activated chall
 multiple at once)
 
 <details>
-    <summary>Heres a list of all challenges included (as of v1.3.2)..</summary>
+    <summary>Heres a list of all challenges included (as of v1.4.0)..</summary>
     <ul>
+       <li>AntiArmor</li>
        <li>AdvancementDamage</li>
        <li>BalanceLife</li>
        <li>BlockExplode</li>
@@ -109,7 +112,7 @@ The GameChange gui looks like this:
 Here you can configure the gamechanges.
 
 <details>
-    <summary>Heres a list of all gamechanges included (as of v1.3.2)..</summary>
+    <summary>Heres a list of all gamechanges included (as of v1.4.0)..</summary>
     <ul>
        <li>AllowPvP</li>
        <li>DamageMultiplier</li>
@@ -133,7 +136,7 @@ Here you can activate (left-click) and configure (right-click on activated chall
 TeamGoal (coop, all win when reached) or a Battle (pvp, first to reach wins).
 
 <details>
-    <summary>Heres a list of all goals included (as of v1.3.2)..</summary>
+    <summary>Heres a list of all goals included (as of v1.4.0)..</summary>
     <ul>
        <li>AllAdvancements</li>
        <li>AllItems</li>
@@ -149,6 +152,7 @@ TeamGoal (coop, all win when reached) or a Battle (pvp, first to reach wins).
 ## Other Features
 
 - Hide players with the hide command (`/hide <player>`)
+    - There's also a gui for this (open with `/hide`)
 - Create (and show saved) positions to remove the hassle of remembering coordinates (`/position <name>`)
 
 ## Permissions
@@ -158,24 +162,32 @@ TeamGoal (coop, all win when reached) or a Battle (pvp, first to reach wins).
 ---
 
 `/hide` - stckutils.command.hide
+
 - Hide yourself - stckutils.function.hide.self
 - Hide other Players - stckutils.function.hide.other
 
 ---
 
 `/position` - stckutils.command.position
+
 - Create a position - stckutils.function.position.create
 - Show an already created position: stckutils.function.position.show
 
 ---
 
 `/settings` - stckutils.command.settings
+
 - Being able to open the settings gui - stckutils.function.settings.gui
 - Get the Settings Item while the Timer is paused - stckutils.function.settings.item
 
 ---
 
 `/timer` - stckutils.command.timer
+
 - Reset the Timer - stckutils.function.timer.reset
 - Start the Timer - stckutils.function.timer.start
-- Stop the Timer - stckutils.function.timer.stop
+- Pause the Timer - stckutils.function.timer.pause
+
+---
+
+`/default-language` - stckutils.command.language

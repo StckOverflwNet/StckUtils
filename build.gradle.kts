@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "de.stckoverflw"
-version = "1.3.2"
+version = "1.4.0"
 
 repositories {
     // remove when KSpigot 1.18.1 gets officially released
@@ -52,7 +52,6 @@ tasks {
     build {
         dependsOn(reobfJar, shadowJar)
     }
-    // Relocating KSpigot to prevent conflicts with multiple Plugins using KSpigot
     shadowJar {
     }
     withType<KotlinCompile> {

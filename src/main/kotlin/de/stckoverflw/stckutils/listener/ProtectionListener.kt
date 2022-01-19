@@ -1,6 +1,7 @@
 package de.stckoverflw.stckutils.listener
 
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -19,7 +20,7 @@ class ProtectionListener : Listener {
 
     @EventHandler
     fun onRespawn(event: PlayerRespawnEvent) {
-        if (!Timer.running && event.player.isOp) {
+        if (!Timer.running && event.player.hasPermission(Permissions.SETTINGS_ITEM)) {
             event.player.inventory.setItem(8, getSettingsItem(event.player.locale()))
         }
     }

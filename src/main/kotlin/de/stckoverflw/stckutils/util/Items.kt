@@ -474,7 +474,7 @@ fun generateColorCompoundItem(chatColor: ChatColor, locale: Locale) =
                         .color(Colors.COLOR_COMPOUND_SECONDARY)
                         .args(
                             text(chatColor.toString().plus(chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })),
-                            text(Timer.formatTime(90061L).plainText()) // 1d 1h 1m 1s
+                            text(Timer.formatTime(90061L, locale).plainText()) // 1d 1h 1m 1s
                                 .color(TextColor.color(chatColor.asBungee().color.rgb))
                         )
                         .render(locale)

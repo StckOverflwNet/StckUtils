@@ -23,6 +23,7 @@ import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.gotoPage
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -73,7 +74,7 @@ object RandomItem : Challenge() {
         defaultPage = 0
         page(0) {
             placeholder(Slots.Border, placeHolderItemGray)
-            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             button(
                 Slots.RowThreeSlotOne,
@@ -112,7 +113,7 @@ object RandomItem : Challenge() {
         // distance settings
         page(1) {
             placeholder(Slots.Border, placeHolderItemGray)
-            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             pageChanger(
                 Slots.RowThreeSlotOne,
@@ -167,7 +168,7 @@ object RandomItem : Challenge() {
         // time settings
         page(2) {
             placeholder(Slots.Border, placeHolderItemGray)
-            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             pageChanger(
                 Slots.RowThreeSlotOne,
@@ -179,7 +180,7 @@ object RandomItem : Challenge() {
 
             button(
                 Slots.RowThreeSlotSix,
-                plusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale)
+                plusItem("time", Timer.formatTime(timeUnit.toLong(), locale).plainText(), "10s", "1m", locale)
             ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
@@ -192,7 +193,7 @@ object RandomItem : Challenge() {
 
             button(
                 Slots.RowThreeSlotFive,
-                resetItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "3m", locale)
+                resetItem("time", Timer.formatTime(timeUnit.toLong(), locale).plainText(), "3m", locale)
             ) {
                 it.bukkitEvent.isCancelled = true
                 timeUnit = 300
@@ -201,7 +202,7 @@ object RandomItem : Challenge() {
 
             button(
                 Slots.RowThreeSlotFour,
-                minusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale)
+                minusItem("time", Timer.formatTime(timeUnit.toLong(), locale).plainText(), "10s", "1m", locale)
             ) {
                 it.bukkitEvent.isCancelled = true
                 if (it.bukkitEvent.isLeftClick) {
@@ -222,9 +223,9 @@ object RandomItem : Challenge() {
 
     private fun updateInventory(inv: Inventory, isTime: Boolean, locale: Locale) {
         if (isTime) {
-            inv.setItem(21, minusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale))
-            inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "3m", locale))
-            inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong()).plainText(), "10s", "1m", locale))
+            inv.setItem(21, minusItem("time", Timer.formatTime(timeUnit.toLong(), locale).plainText(), "10s", "1m", locale))
+            inv.setItem(22, resetItem("time", Timer.formatTime(timeUnit.toLong(), locale).plainText(), "3m", locale))
+            inv.setItem(23, plusItem("time", Timer.formatTime(timeUnit.toLong(), locale).plainText(), "10s", "1m", locale))
         } else {
             inv.setItem(21, minusItem("distance", "${distanceUnit}m", "10m", "100m", locale))
             inv.setItem(22, resetItem("distance", "${distanceUnit}m", "500m", locale))

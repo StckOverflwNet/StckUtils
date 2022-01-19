@@ -4,11 +4,12 @@ authors:
   - StckOverflw
   - l4zs
 main: de.stckoverflw.stckutils.StckUtilsPlugin
-version: 1.3.2
+website: https://github.com/StckOverflwNet/StckUtils/
+version: 1.4.0
 libraries:
-  - "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
-  - "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-RC2"
-  - "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0-RC2"
+  - "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+  - "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+  - "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0"
   - "com.mojang:brigadier:1.0.18"
   - "com.google.code.gson:gson:2.8.9"
 

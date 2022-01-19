@@ -23,6 +23,7 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -226,7 +227,7 @@ object LevelBorder : Challenge(true) {
 
         page(0) {
             placeholder(Slots.Border, placeHolderItemGray)
-            placeholder(Slots.BorderPaddingOne, placeHolderItemWhite)
+            placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
             button(
                 Slots.RowThreeSlotOne,

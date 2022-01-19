@@ -3,6 +3,7 @@ package de.stckoverflw.stckutils.minecraft.timer
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.fromKey
 import de.stckoverflw.stckutils.extension.plainText
+import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.setSavedInventory
@@ -26,6 +27,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Sound
 import org.bukkit.entity.Creature
+import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
@@ -107,7 +109,7 @@ object Timer {
                 broadcastTimer()
             } else {
                 broadcastIdle()
-                onlinePlayers.filter { it.isOp && !it.inventory.contains(getSettingsItem(it.locale())) }.forEach {
+                onlinePlayers.filter { it.hasPermission(Permissions.SETTINGS_ITEM) && !it.inventory.contains(getSettingsItem(it.locale())) }.forEach {
                     it.inventory.setItem(8, getSettingsItem(it.locale()))
                 }
             }
@@ -224,6 +226,7 @@ object Timer {
     @OptIn(ExperimentalTime::class)
     fun formatTime(
         time: Long = this.time,
+        locale: Locale = Config.languageConfig.defaultLanguage
     ): Component {
         val duration = time.seconds
         duration.toComponents(
@@ -232,18 +235,22 @@ object Timer {
                     if (days != 0L) {
                         text(days.toString())
                         if (hours + minutes + seconds == 0) {
+                            component(space())
                             if (days > 1L) {
                                 component(
                                     translatable("generic.long.days")
+                                        .render(locale)
                                 )
                             } else {
                                 component(
                                     translatable("generic.long.day")
+                                        .render(locale)
                                 )
                             }
                         } else {
                             component(
                                 translatable("generic.short.day")
+                                    .render(locale)
                             )
                         }
                         component(space())
@@ -251,18 +258,22 @@ object Timer {
                     if (hours != 0) {
                         text(hours.toString())
                         if (days + minutes + seconds == 0L) {
+                            component(space())
                             if (hours > 1L) {
                                 component(
                                     translatable("generic.long.hours")
+                                        .render(locale)
                                 )
                             } else {
                                 component(
                                     translatable("generic.long.hour")
+                                        .render(locale)
                                 )
                             }
                         } else {
                             component(
                                 translatable("generic.short.hour")
+                                    .render(locale)
                             )
                         }
                         component(space())
@@ -270,18 +281,22 @@ object Timer {
                     if (minutes != 0) {
                         text(minutes.toString())
                         if (days + hours + seconds == 0L) {
+                            component(space())
                             if (minutes > 1L) {
                                 component(
                                     translatable("generic.long.minutes")
+                                        .render(locale)
                                 )
                             } else {
                                 component(
                                     translatable("generic.long.minute")
+                                        .render(locale)
                                 )
                             }
                         } else {
                             component(
                                 translatable("generic.short.minute")
+                                    .render(locale)
                             )
                         }
                         component(space())
@@ -289,18 +304,22 @@ object Timer {
                     if (seconds != 0) {
                         text(seconds.toString())
                         if (days + hours + minutes == 0L) {
+                            component(space())
                             if (seconds > 1L) {
                                 component(
                                     translatable("generic.long.seconds")
+                                        .render(locale)
                                 )
                             } else {
                                 component(
                                     translatable("generic.long.second")
+                                        .render(locale)
                                 )
                             }
                         } else {
                             component(
                                 translatable("generic.short.second")
+                                    .render(locale)
                             )
                         }
                     }
