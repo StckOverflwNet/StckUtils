@@ -22,7 +22,8 @@ dependencies {
     paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.18.1")
+    // implementation("net.axay", "kspigot", "1.18.1")
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     // ProtocolLib
     implementation("com.comphenix.protocol", "ProtocolLib", "4.7.0")
