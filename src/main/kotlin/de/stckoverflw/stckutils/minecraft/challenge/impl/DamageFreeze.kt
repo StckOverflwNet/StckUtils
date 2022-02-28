@@ -35,6 +35,6 @@ object DamageFreeze : Challenge() {
             duration += player.getPotionEffect(PotionEffectType.SLOW)!!.duration
         }
         player.addPotionEffect(PotionEffect(PotionEffectType.SLOW, duration, 100000, false, false, false))
-        player.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration, 100000))
+        player.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration, 100000, false, false, false))
     }
 }

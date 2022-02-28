@@ -47,11 +47,6 @@ object IceWalker : Challenge() {
     }
 
     private fun sendBlockBreakAnimations() {
-        // ClientboundBlockDestructionPacket(entityId, blockPos, progress)
-        // entityId: has to be unique, can be random generated
-        // blockPos: position of the block
-        // progress: 0-9
-
         val toRemove = ArrayList<Block>()
         breakingBlocks.forEach {
             if (it.value > 8) {
@@ -87,6 +82,11 @@ object IceWalker : Challenge() {
     }
 
     private fun sendBlockBreak(id: Int, location: Location, value: Int) {
+        // ClientboundBlockDestructionPacket(entityId, blockPos, progress)
+        // entityId: has to be unique, can be random generated
+        // blockPos: position of the block
+        // progress: 0-9
+
         val packet = net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket(
             id,
             BlockPos(location),

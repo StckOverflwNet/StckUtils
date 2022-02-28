@@ -5,6 +5,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
     id("io.papermc.paperweight.userdev") version "1.3.3"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 group = "de.stckoverflw"
@@ -64,4 +65,26 @@ tasks {
         options.encoding = "UTF-8"
         options.release.set(17)
     }
+}
+
+bukkit {
+    name = "StckUtils"
+    apiVersion = "1.18"
+    authors = listOf(
+        "StckOverflw",
+        "l4zs",
+    )
+    main = "$group.stckutils.StckUtilsPlugin"
+    website = "https://github.com/StckOverflwNet/StckUtils/"
+    version = getVersion().toString()
+    libraries = listOf(
+        "org.jetbrains.kotlin:kotlin-stdlib:1.6.10",
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0",
+        "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0",
+        "com.mojang:brigadier:1.0.18",
+        "com.google.code.gson:gson:2.8.9",
+    )
+    softDepend = listOf(
+        "ProtocolLib",
+    )
 }
