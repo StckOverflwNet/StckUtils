@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isInArea
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
@@ -222,7 +221,7 @@ object LevelBorder : Challenge(true) {
     }
 
     override fun configurationGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey)
         defaultPage = 0
 
         page(0) {

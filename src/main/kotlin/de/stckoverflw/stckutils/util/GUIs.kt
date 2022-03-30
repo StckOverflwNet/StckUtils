@@ -3,9 +3,7 @@ package de.stckoverflw.stckutils.util
 import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.command.HideCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.errorTranslatable
-import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.extension.resetWorlds
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
@@ -21,7 +19,6 @@ import de.stckoverflw.stckutils.minecraft.goal.active
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
-import net.axay.kspigot.extensions.bukkit.javaAwtColor
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.server
 import net.axay.kspigot.gui.ForInventoryFiveByNine
@@ -34,11 +31,10 @@ import net.axay.kspigot.gui.openGUI
 import net.axay.kspigot.gui.rectTo
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
-import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.Locale
-import org.bukkit.ChatColor as BukkitChatColor
 
 object GUIPage {
     const val goalsPage = 2
@@ -61,8 +57,6 @@ object GUIPage {
 fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
     title = translatable("settings.name")
         .color(Colors.SETTINGS)
-        .render(locale)
-        .coloredString()
     defaultPage = GUIPage.settingsPageNumber
 
     page(GUIPage.settingsPageNumber) {
@@ -500,19 +494,32 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
             null
         )
 
-        val compound = createRectCompound<BukkitChatColor>(
+        val compound = createRectCompound<NamedTextColor>(
             Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
             iconGenerator = { chatColor ->
                 generateColorCompoundItem(chatColor, locale)
             },
-            onClick = { clickEvent, chatColor ->
+            onClick = { clickEvent, textColor ->
                 clickEvent.bukkitEvent.isCancelled = true
-                Timer.color = TextColor.color(chatColor.javaAwtColor.rgb)
+                Timer.color = textColor
                 clickEvent.guiInstance.reloadCurrentPage()
             }
         )
 
-        compound.addContent(BukkitChatColor.values().filter { it.isColor })
+        compound.addContent(
+            NamedTextColor::class.java.fields
+                .filter { it.type == NamedTextColor::class.java }
+                .map { field ->
+                    try {
+                        return@map field.get(null) as NamedTextColor
+                    } catch (ignored: IllegalArgumentException) {
+                        return@map null
+                    } catch (ignored: IllegalAccessException) {
+                        return@map null
+                    }
+                }
+                .filterNotNull()
+        )
     }
 
     page(GUIPage.worldResetPageNumber) {

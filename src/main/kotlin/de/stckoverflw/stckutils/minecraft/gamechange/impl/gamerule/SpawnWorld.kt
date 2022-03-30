@@ -3,9 +3,7 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 import com.destroystokyo.paper.MaterialTags
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
-import de.stckoverflw.stckutils.extension.asTextColor
 import de.stckoverflw.stckutils.extension.isPlaying
-import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.gamechange.active
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
@@ -13,6 +11,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.server
 import net.axay.kspigot.gui.ForInventoryFiveByNine
@@ -75,7 +74,7 @@ object SpawnWorld : GameRule() {
                                     else -> "$id.end"
                                 }
                             )
-                                .color(KColors.DARKGRAY.asTextColor())
+                                .color(KColors.DARKGRAY)
                         )
                         .color(Colors.GAME_CHANGE_COMPOUND_SECONDARY)
                         .render(locale)

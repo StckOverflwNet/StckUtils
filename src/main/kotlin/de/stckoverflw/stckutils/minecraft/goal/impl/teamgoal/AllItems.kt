@@ -2,16 +2,15 @@ package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isObtainableInSurvival
 import de.stckoverflw.stckutils.extension.isPlaying
-import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
 import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
@@ -86,7 +85,7 @@ object AllItems : TeamGoal() {
     }
 
     fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey)
         defaultPage = 0
         page(0) {
             placeholder(Slots.Border, placeHolderItemGray)
@@ -273,13 +272,13 @@ object AllItems : TeamGoal() {
                             text(
                                 filter.first.name,
                                 TextColor.color(
-                                    (if (filter.first == Filter.ALL) KColors.PURPLE else if (filter.first == Filter.COLLECTED) KColors.GREEN else KColors.RED).color.rgb
+                                    (if (filter.first == Filter.ALL) KColors.PURPLE else if (filter.first == Filter.COLLECTED) KColors.GREEN else KColors.RED)
                                 )
                             ),
                             text(
                                 filter.second.name,
                                 TextColor.color(
-                                    (if (filter.second == Filter.ASCENDING) KColors.GREEN else KColors.RED).color.rgb
+                                    (if (filter.second == Filter.ASCENDING) KColors.GREEN else KColors.RED)
                                 )
                             )
                         )

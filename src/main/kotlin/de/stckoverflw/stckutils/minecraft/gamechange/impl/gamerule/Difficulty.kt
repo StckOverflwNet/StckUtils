@@ -2,13 +2,12 @@ package de.stckoverflw.stckutils.minecraft.gamechange.impl.gamerule
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
-import de.stckoverflw.stckutils.extension.asTextColor
-import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.gamechange.GameRule
 import de.stckoverflw.stckutils.minecraft.gamechange.descriptionKey
 import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
 import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -43,7 +42,7 @@ object Difficulty : GameRule() {
                     translatable(descriptionKey)
                         .args(
                             translatable(difficulty.translationKey())
-                                .color(KColors.DARKGRAY.asTextColor())
+                                .color(KColors.DARKGRAY)
                         )
                         .color(Colors.GOAL_COMPOUND_SECONDARY)
                         .render(locale)

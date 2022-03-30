@@ -22,6 +22,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.time.Duration
 
 class ConnectionListener : Listener {
 
@@ -41,12 +42,12 @@ class ConnectionListener : Listener {
         if (!Timer.running) {
             event.joinMessage(text("[+] ${player.name}"))
             if (player.hasPermission(Permissions.SETTINGS_ITEM)) {
-                player.title("Loading your settings")
+                player.title(text("Loading your settings"))
                 task(
                     sync = false,
                     delay = 10
                 ) {
-                    player.title("Loaded!", fadeIn = 5, stay = 15, fadeOut = 5)
+                    player.title(text("Loaded!"), fadeIn = Duration.ofMillis(250), stay = Duration.ofMillis(750), fadeOut = Duration.ofMillis(250))
                     player.inventory.setItem(8, getSettingsItem(player.locale()))
                 }
             }

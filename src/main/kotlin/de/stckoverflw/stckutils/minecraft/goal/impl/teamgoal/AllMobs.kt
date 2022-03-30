@@ -2,7 +2,6 @@ package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
@@ -10,6 +9,7 @@ import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.placeHolderItemGray
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
@@ -93,7 +93,7 @@ object AllMobs : TeamGoal() {
     }
 
     fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey)
         defaultPage = 0
         page(0) {
             placeholder(Slots.Border, placeHolderItemGray)
@@ -102,7 +102,7 @@ object AllMobs : TeamGoal() {
                 Slots.RowTwoSlotTwo,
                 Slots.RowFourSlotEight,
                 iconGenerator = {
-                    generateAllMobsItem(it)
+                    generateAllMobsItem(it, locale)
                 },
                 onClick = { clickEvent, _ ->
                     clickEvent.bukkitEvent.isCancelled = true
@@ -111,7 +111,7 @@ object AllMobs : TeamGoal() {
 
             button(
                 Slots.RowTwoSlotNine,
-                resetItem()
+                resetItem(locale)
             ) {
                 allMobs = listOf()
                 nextMob = randomMob()
@@ -126,7 +126,7 @@ object AllMobs : TeamGoal() {
 
             button(
                 Slots.RowFourSlotNine,
-                filterItem(Pair(Filter.ALL, Filter.ASCENDING))
+                filterItem(Pair(Filter.ALL, Filter.ASCENDING), locale)
             ) { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
@@ -168,10 +168,10 @@ object AllMobs : TeamGoal() {
                 compound.setContent(getContent(filter[player.uniqueId]!!))
                 clickEvent.guiInstance.reloadCurrentPage()
 
-                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
+                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!, locale)
             }
             if (!isWon()) {
-                button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
+                button(Slots.RowThreeSlotOne, skipItem(locale), onClick = { clickEvent ->
                     if (clickEvent.bukkitEvent.isLeftClick) {
                         collected(
                             "$id.skipped",
@@ -195,7 +195,7 @@ object AllMobs : TeamGoal() {
                     compound.setContent(getContent(filter[clickEvent.player.uniqueId]!!))
                     clickEvent.guiInstance.reloadCurrentPage()
                     if (!isWon()) {
-                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem()
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem(locale)
                     } else {
                         clickEvent.guiInstance[Slots.RowThreeSlotOne] = placeHolderItemGray
                     }
@@ -234,20 +234,22 @@ object AllMobs : TeamGoal() {
         }
     }
 
-    private fun skipItem() = itemStack(Material.BEDROCK) {
+    private fun skipItem(locale: Locale) = itemStack(Material.BEDROCK) {
         meta {
             name = translatable("$id.skip_item.name")
                 .args(text(formatMob(nextMob)))
+                .render(locale)
             addLore {
                 addComponent(
                     translatable("$id.skip_item.lore")
                         .args(text(formatMob(nextMob)))
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun generateAllMobsItem(entity: EntityType) = itemStack(
+    private fun generateAllMobsItem(entity: EntityType, locale: Locale) = itemStack(
         when (entity) {
             EntityType.SNOWMAN -> Material.SNOW_BLOCK
             EntityType.IRON_GOLEM -> Material.IRON_BLOCK
@@ -267,6 +269,7 @@ object AllMobs : TeamGoal() {
                     } else {
                         translatable("$id.not_killed")
                     }
+                        .render(locale)
                 )
             }
             if (isKilled(entity)) {
@@ -284,9 +287,10 @@ object AllMobs : TeamGoal() {
         }
     }
 
-    private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
+    private fun filterItem(filter: Pair<Filter, Filter>, locale: Locale) = itemStack(Material.HOPPER) {
         meta {
             name = translatable("$id.filter_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable("$id.filter_item.lore")
@@ -294,26 +298,31 @@ object AllMobs : TeamGoal() {
                             text(
                                 filter.first.name,
                                 TextColor.color(
-                                    (if (filter.first == Filter.ALL) KColors.PURPLE else if (filter.first == Filter.KILLED) KColors.GREEN else KColors.RED).color.rgb
+                                    (if (filter.first == Filter.ALL) KColors.PURPLE else if (filter.first == Filter.KILLED) KColors.GREEN else KColors.RED)
                                 )
                             ),
                             text(
                                 filter.second.name,
                                 TextColor.color(
-                                    (if (filter.second == Filter.ASCENDING) KColors.GREEN else KColors.RED).color.rgb
+                                    (if (filter.second == Filter.ASCENDING) KColors.GREEN else KColors.RED)
                                 )
                             )
                         )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
             name = translatable("$id.reset_item.name")
+                .render(locale)
             addLore {
-                addComponent(translatable("$id.reset_item.lore"))
+                addComponent(
+                    translatable("$id.reset_item.lore")
+                        .render(locale)
+                )
             }
         }
     }

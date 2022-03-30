@@ -9,8 +9,6 @@ import de.stckoverflw.stckutils.command.PositionCommand
 import de.stckoverflw.stckutils.command.SettingsCommand
 import de.stckoverflw.stckutils.command.TimerCommand
 import de.stckoverflw.stckutils.config.Config
-import de.stckoverflw.stckutils.extension.asTextColor
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.i18n.TranslationsProvider
 import de.stckoverflw.stckutils.listener.ConnectionListener
@@ -21,11 +19,12 @@ import de.stckoverflw.stckutils.minecraft.challenge.ChallengeManager
 import de.stckoverflw.stckutils.minecraft.gamechange.GameChangeManager
 import de.stckoverflw.stckutils.minecraft.goal.GoalManager
 import de.stckoverflw.stckutils.minecraft.timer.Timer
-import de.stckoverflw.stckutils.util.Colors
 import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
+import net.axay.kspigot.extensions.bukkit.plainText
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
@@ -37,6 +36,7 @@ import org.bukkit.Bukkit
 import org.bukkit.StructureType
 import org.bukkit.World
 import java.nio.file.Files
+import java.util.Locale
 import kotlin.io.path.div
 
 class StckUtilsPlugin : KSpigot() {
@@ -47,7 +47,7 @@ class StckUtilsPlugin : KSpigot() {
                 component(
                     literalText {
                         text("StckUtils")
-                        color = KColors.WHITE.asTextColor()
+                        color = KColors.WHITE
                         bold = true
                     }
                 )
@@ -55,7 +55,7 @@ class StckUtilsPlugin : KSpigot() {
                 component(
                     literalText {
                         text("|")
-                        color = KColors.GRAY.asTextColor()
+                        color = KColors.GRAY
                     }
                 )
                 component(space())
@@ -121,20 +121,17 @@ class StckUtilsPlugin : KSpigot() {
 
         logger.info(
             translatable("console.enabled.enabled")
-                .color(Colors.SECONDARY)
                 .args(
-                    text(pluginDescription.name)
-                        .color(Colors.PRIMARY),
+                    text(pluginDescription.name),
                     text(pluginDescription.version)
-                        .color(Colors.PRIMARY)
                 )
-                .coloredString()
+                .render(Locale.US)
+                .plainText()
         )
         logger.info(
             translatable(
                 "console.enabled.authors"
             )
-                .color(Colors.SECONDARY)
                 .args(
                     text(
                         if (pluginDescription.authors.size <= 1) {
@@ -143,26 +140,25 @@ class StckUtilsPlugin : KSpigot() {
                             val authors = pluginDescription.authors.sorted().toMutableList()
                             authors.add(
                                 authors.size - 1,
-                                translatable("generic.and").coloredString()
+                                translatable("generic.and").render(Locale.US).plainText()
                             )
                             authors.joinToString(" ")
                         }
                     )
                 )
-                .color(Colors.PRIMARY)
-                .coloredString()
+                .render(Locale.US)
+                .plainText()
         )
         if (pluginDescription.apiVersion != null) {
             logger.info(
                 translatable(
                     "console.enabled.api_version"
                 )
-                    .color(Colors.SECONDARY)
                     .args(
                         text(pluginDescription.apiVersion ?: "n/a")
-                            .color(Colors.PRIMARY)
                     )
-                    .coloredString()
+                    .render(Locale.US)
+                    .plainText()
             )
         }
         if (pluginDescription.website != null) {
@@ -170,12 +166,11 @@ class StckUtilsPlugin : KSpigot() {
                 translatable(
                     "console.enabled.website"
                 )
-                    .color(Colors.SECONDARY)
                     .args(
                         text(pluginDescription.website ?: "n/a")
-                            .color(Colors.PRIMARY)
                     )
-                    .coloredString()
+                    .render(Locale.US)
+                    .plainText()
             )
         }
 
@@ -205,12 +200,9 @@ class StckUtilsPlugin : KSpigot() {
                 translatable(
                     "error.delete_worlds"
                 )
-                    .color(Colors.ERROR)
-                    .args(
-                        text(world)
-                            .color(Colors.ERROR_ARGS)
-                    )
-                    .coloredString()
+                    .args(text(world))
+                    .render(Locale.US)
+                    .plainText()
             )
             logger.warning(e.stackTraceToString())
         }

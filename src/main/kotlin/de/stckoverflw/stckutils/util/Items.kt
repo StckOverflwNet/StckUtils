@@ -6,8 +6,6 @@ import de.stckoverflw.stckutils.StckUtilsPlugin
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
 import de.stckoverflw.stckutils.extension.hidden
-import de.stckoverflw.stckutils.extension.plainText
-import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
 import de.stckoverflw.stckutils.minecraft.challenge.active
 import de.stckoverflw.stckutils.minecraft.challenge.descriptionKey
@@ -20,7 +18,9 @@ import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
-import net.axay.kspigot.extensions.bukkit.javaAwtColor
+import net.axay.kspigot.chat.literalText
+import net.axay.kspigot.extensions.bukkit.plainText
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.items.addLore
 import net.axay.kspigot.items.flags
 import net.axay.kspigot.items.itemStack
@@ -31,9 +31,9 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.space
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
 import org.bukkit.enchantments.Enchantment
@@ -442,48 +442,66 @@ fun generateTimerColorGuiItem(locale: Locale) =
         }
     }
 
-fun generateColorCompoundItem(chatColor: ChatColor, locale: Locale) =
+fun generateColorCompoundItem(textColor: NamedTextColor, locale: Locale) =
     itemStack(
-        when (chatColor) {
-            ChatColor.DARK_RED -> Material.RED_DYE
-            ChatColor.RED -> Material.RED_DYE
-            ChatColor.GOLD -> Material.ORANGE_DYE
-            ChatColor.YELLOW -> Material.YELLOW_DYE
-            ChatColor.DARK_GREEN -> Material.GREEN_DYE
-            ChatColor.GREEN -> Material.GREEN_DYE
-            ChatColor.AQUA -> Material.CYAN_DYE
-            ChatColor.DARK_AQUA -> Material.CYAN_DYE
-            ChatColor.DARK_BLUE -> Material.BLUE_DYE
-            ChatColor.BLUE -> Material.LIGHT_BLUE_DYE
-            ChatColor.LIGHT_PURPLE -> Material.PURPLE_DYE
-            ChatColor.DARK_PURPLE -> Material.PURPLE_DYE
-            ChatColor.WHITE -> Material.WHITE_DYE
-            ChatColor.GRAY -> Material.LIGHT_GRAY_DYE
-            ChatColor.DARK_GRAY -> Material.GRAY_DYE
+        when (textColor) {
+            NamedTextColor.DARK_RED -> Material.RED_DYE
+            NamedTextColor.RED -> Material.RED_DYE
+            NamedTextColor.GOLD -> Material.ORANGE_DYE
+            NamedTextColor.YELLOW -> Material.YELLOW_DYE
+            NamedTextColor.DARK_GREEN -> Material.GREEN_DYE
+            NamedTextColor.GREEN -> Material.GREEN_DYE
+            NamedTextColor.AQUA -> Material.CYAN_DYE
+            NamedTextColor.DARK_AQUA -> Material.CYAN_DYE
+            NamedTextColor.DARK_BLUE -> Material.BLUE_DYE
+            NamedTextColor.BLUE -> Material.LIGHT_BLUE_DYE
+            NamedTextColor.LIGHT_PURPLE -> Material.PURPLE_DYE
+            NamedTextColor.DARK_PURPLE -> Material.PURPLE_DYE
+            NamedTextColor.WHITE -> Material.WHITE_DYE
+            NamedTextColor.GRAY -> Material.LIGHT_GRAY_DYE
+            NamedTextColor.DARK_GRAY -> Material.GRAY_DYE
             else -> Material.BLACK_DYE
         }
     ) {
         meta {
-            name = text(chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })
-                .color(TextColor.color(chatColor.javaAwtColor.rgb))
+            name = text(
+                if (textColor.toString().contains("_")) {
+                    textColor.toString().substringBefore('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }.plus(" ")
+                        .plus(textColor.toString().substringAfter('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })
+                } else {
+                    textColor.toString().lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+                }
+            )
+                .color(textColor)
 
             addLore {
                 +space()
                 addComponent(
                     translatable("gui.color_compound.lore")
-                        .color(Colors.COLOR_COMPOUND_SECONDARY)
                         .args(
-                            text(chatColor.toString().plus(chatColor.name.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })),
+                            text(
+                                if (textColor.toString().contains("_")) {
+                                    textColor.toString().substringBefore('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+                                        .plus(" ").plus(
+                                            textColor.toString().substringAfter('_').lowercase()
+                                                .replaceFirstChar { it.titlecase(Locale.getDefault()) }
+                                        )
+                                } else {
+                                    textColor.toString().lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+                                }
+                            )
+                                .color(textColor),
                             text(Timer.formatTime(90061L, locale).plainText()) // 1d 1h 1m 1s
-                                .color(TextColor.color(chatColor.asBungee().color.rgb))
+                                .color(TextColor.color(textColor))
                         )
+                        .color(Colors.COLOR_COMPOUND_SECONDARY)
                         .render(locale)
                 )
             }
 
-            persistentDataContainer.set(Namespaces.COLOR_COMPOUND_VALUE, TextColor.color(chatColor.javaAwtColor.rgb).value())
+            persistentDataContainer.set(Namespaces.COLOR_COMPOUND_VALUE, TextColor.color(textColor).value())
 
-            if (Timer.color == TextColor.color(chatColor.javaAwtColor.rgb)) {
+            if (Timer.color == TextColor.color(textColor)) {
                 addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
             }
 
@@ -556,13 +574,17 @@ fun generateItemForChallenge(challenge: Challenge, locale: Locale) =
                     }
                     if (challenge.configurationGUI(Config.languageConfig.defaultLanguage) != null) {
                         addComponent(
-                            translatable("gui.challenge.lore.config_gui")
-                                .color(Colors.SECONDARY)
-                                .args(
-                                    translatable(challenge.nameKey)
-                                        .color(Colors.CONFIGURATION)
+                            literalText {
+                                component(
+                                    translatable("gui.challenge.lore.config_gui")
+                                        .args(
+                                            translatable(challenge.nameKey)
+                                                .color(Colors.CONFIGURATION)
+                                        )
+                                        .render(locale)
                                 )
-                                .render(locale)
+                                color = Colors.SECONDARY
+                            }
                         )
                     }
                 } else {
@@ -638,11 +660,11 @@ fun generateTimerItem(locale: Locale) =
                 +space()
                 addComponent(
                     translatable("gui.timer.lore")
-                        .color(Colors.TIMER_ITEM_SECONDARY)
                         .args(
                             text(Timer.toString())
                                 .color(Timer.color)
                         )
+                        .color(Colors.TIMER_ITEM_SECONDARY)
                         .render(locale)
                 )
             }
@@ -834,7 +856,6 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale) =
                 }
                 addComponent(
                     translatable("gui.join_while_running.lore")
-                        .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
                         .args(
                             if (Timer.joinWhileRunning.contains(accessLevel)) {
                                 translatable("generic.disable")
@@ -844,6 +865,7 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale) =
                                     .color(Colors.ACTIVE)
                             }
                         )
+                        .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
                         .render(locale)
                 )
             }
@@ -868,15 +890,15 @@ fun generateItemForHide(player: Player, locale: Locale): ItemStack {
         if (player.hidden) {
             addComponent(
                 translatable("gui.hide.hidden.lore")
-                    .color(Colors.INACTIVE)
                     .args(player.name())
+                    .color(Colors.INACTIVE)
                     .render(locale)
             )
         } else {
             addComponent(
                 translatable("gui.hide.revealed.lore")
-                    .color(Colors.ACTIVE)
                     .args(player.name())
+                    .color(Colors.ACTIVE)
                     .render(locale)
             )
         }

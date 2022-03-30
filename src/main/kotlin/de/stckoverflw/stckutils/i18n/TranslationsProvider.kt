@@ -44,6 +44,6 @@ class TranslationsProvider {
                 )
             }
         }
-        GlobalTranslator.get().addSource(translationRegistry)
+        GlobalTranslator.translator().addSource(translationRegistry)
     }
 }

@@ -2,8 +2,6 @@ package de.stckoverflw.stckutils.minecraft.timer
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.fromKey
-import de.stckoverflw.stckutils.extension.plainText
-import de.stckoverflw.stckutils.extension.render
 import de.stckoverflw.stckutils.extension.saveInventory
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.extension.setSavedInventory
@@ -16,6 +14,8 @@ import de.stckoverflw.stckutils.util.Permissions
 import de.stckoverflw.stckutils.util.getSettingsItem
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
+import net.axay.kspigot.extensions.bukkit.plainText
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.task
@@ -49,7 +49,7 @@ object Timer {
         }.distinct()
         set(value) = Config.timerConfig.setSetting("joinWhileRunning", value.map { it.key })
     var color: TextColor
-        get() = TextColor.color(Config.timerConfig.getSetting("color") as? Int ?: KColors.RED.color.rgb)
+        get() = TextColor.color(Config.timerConfig.getSetting("color") as? Int ?: KColors.RED.value())
         set(value) = Config.timerConfig.setSetting("color", value.value())
     var time: Long
         get() = (Config.timerDataConfig.getSetting("time") ?: 0).toString().toLong()
@@ -322,6 +322,13 @@ object Timer {
                                     .render(locale)
                             )
                         }
+                    } else if (days + hours + minutes == 0L) {
+                        text(seconds.toString())
+                        component(space())
+                        component(
+                            translatable("generic.long.seconds")
+                                .render(locale)
+                        )
                     }
                     color = this@Timer.color
                 }

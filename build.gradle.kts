@@ -2,41 +2,35 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-    id("io.papermc.paperweight.userdev") version "1.3.3"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    id("io.papermc.paperweight.userdev") version "1.3.5"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 group = "de.stckoverflw"
-version = "1.4.0"
+version = "1.4.1"
 
 repositories {
-    // remove when KSpigot 1.18.1 gets officially released
-    mavenLocal()
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
     // PaperMC Dependency
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.18.1")
+    implementation("net.axay", "kspigot", "1.18.2")
 
     // ProtocolLib
-    implementation("com.comphenix.protocol", "ProtocolLib", "4.7.0")
+    implementation("com.comphenix.protocol", "ProtocolLib", "4.8.0")
 
-    // Gson dependency
-    implementation("com.google.code.gson", "gson", "2.8.9")
-
-    // Brigadier dependency
-    implementation("com.mojang", "brigadier", "1.0.18")
-
-    // Kotlinx.Coroutines dependency
-    api("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.0")
-    api("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.0")
+//    // Brigadier dependency
+//    implementation("com.mojang", "brigadier", "1.0.18")
+//
+//    // Kotlinx.Coroutines dependency
+//    api("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.0")
+//    api("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.0")
 }
 
 kotlin {
@@ -46,14 +40,8 @@ kotlin {
 }
 
 tasks {
-    jar {
-        // Disabled, because we use the shadowJar task for building our jar
-        enabled = false
-    }
     build {
-        dependsOn(reobfJar, shadowJar)
-    }
-    shadowJar {
+        dependsOn(reobfJar)
     }
     withType<KotlinCompile> {
         kotlinOptions {
@@ -78,11 +66,7 @@ bukkit {
     website = "https://github.com/StckOverflwNet/StckUtils/"
     version = getVersion().toString()
     libraries = listOf(
-        "org.jetbrains.kotlin:kotlin-stdlib:1.6.10",
-        "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0",
-        "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0",
-        "com.mojang:brigadier:1.0.18",
-        "com.google.code.gson:gson:2.8.9",
+        "net.axay:kspigot:1.18.2",
     )
     softDepend = listOf(
         "ProtocolLib",

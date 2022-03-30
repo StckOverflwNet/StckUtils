@@ -2,7 +2,6 @@ package de.stckoverflw.stckutils.minecraft.goal.impl.teamgoal
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.addComponent
-import de.stckoverflw.stckutils.extension.coloredString
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.goal.TeamGoal
@@ -12,6 +11,7 @@ import de.stckoverflw.stckutils.util.placeHolderItemGray
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
@@ -93,7 +93,7 @@ object AllAdvancements : TeamGoal() {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun gui(locale: Locale) = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-        title = translatable(nameKey).coloredString(locale)
+        title = translatable(nameKey)
         defaultPage = 0
         page(0) {
             placeholder(Slots.Border, placeHolderItemGray)
@@ -101,14 +101,14 @@ object AllAdvancements : TeamGoal() {
             val compound = createRectCompound<Advancement>(
                 Slots.RowTwoSlotTwo, Slots.RowFourSlotEight,
                 iconGenerator = {
-                    generateAllAdvancementsItem(it)
+                    generateAllAdvancementsItem(it, locale)
                 },
                 onClick = { clickEvent, _ ->
                     clickEvent.bukkitEvent.isCancelled = true
                 }
             )
 
-            button(Slots.RowTwoSlotNine, resetItem(), onClick = {
+            button(Slots.RowTwoSlotNine, resetItem(locale), onClick = {
                 allAdvancements = listOf()
                 nextAdvancement = randomAdvancement()
                 formattedAdvancement = formatAdvancement(nextAdvancement)
@@ -121,7 +121,7 @@ object AllAdvancements : TeamGoal() {
                 }
             })
 
-            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING)), onClick = { clickEvent ->
+            button(Slots.RowFourSlotNine, filterItem(Pair(Filter.ALL, Filter.ASCENDING), locale), onClick = { clickEvent ->
                 clickEvent.bukkitEvent.isCancelled = true
                 val player = clickEvent.player
                 if (filter[player.uniqueId] == null) resetFilter(player)
@@ -162,10 +162,10 @@ object AllAdvancements : TeamGoal() {
                 compound.setContent(getContent(filter[player.uniqueId]!!))
                 clickEvent.guiInstance.reloadCurrentPage()
 
-                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!)
+                clickEvent.guiInstance[Slots.RowFourSlotNine] = filterItem(filter[player.uniqueId]!!, locale)
             })
             if (!isWon()) {
-                button(Slots.RowThreeSlotOne, skipItem(), onClick = { clickEvent ->
+                button(Slots.RowThreeSlotOne, skipItem(locale), onClick = { clickEvent ->
                     clickEvent.bukkitEvent.isCancelled = true
                     compound.sortContentBy(filter[clickEvent.player.uniqueId]!!.second == Filter.DESCENDING) { it.key.key }
                     if (clickEvent.bukkitEvent.isLeftClick) {
@@ -189,7 +189,7 @@ object AllAdvancements : TeamGoal() {
 //                        clickEvent.guiInstance.reloadCurrentPage()
                     }
                     if (!isWon()) {
-                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem()
+                        clickEvent.guiInstance[Slots.RowThreeSlotOne] = skipItem(locale)
                     } else {
                         clickEvent.guiInstance[Slots.RowThreeSlotOne] = placeHolderItemGray
                     }
@@ -229,15 +229,17 @@ object AllAdvancements : TeamGoal() {
         }
     }
 
-    private fun skipItem(): ItemStack {
+    private fun skipItem(locale: Locale): ItemStack {
         val item = itemStack(Material.BEDROCK) {
             meta {
                 name = translatable("$id.skip_item.name")
                     .args(text(formattedAdvancement))
+                    .render(locale)
                 addLore {
                     addComponent(
                         translatable("$id.skip_item.lore")
                             .args(text(formattedAdvancement))
+                            .render(locale)
                     )
                 }
             }
@@ -245,7 +247,7 @@ object AllAdvancements : TeamGoal() {
         return item
     }
 
-    private fun generateAllAdvancementsItem(advancement: Advancement): ItemStack {
+    private fun generateAllAdvancementsItem(advancement: Advancement, locale: Locale): ItemStack {
         val itemStack = itemStack(
             (advancement.display?.icon()?.type) ?: Material.WRITABLE_BOOK
         ) {
@@ -262,6 +264,7 @@ object AllAdvancements : TeamGoal() {
                                     translatable("$id.not_done")
                                 }
                             )
+                            .render(locale)
                     )
                 }
                 if (isDone(advancement)) {
@@ -288,9 +291,10 @@ object AllAdvancements : TeamGoal() {
         return itemStack
     }
 
-    private fun filterItem(filter: Pair<Filter, Filter>) = itemStack(Material.HOPPER) {
+    private fun filterItem(filter: Pair<Filter, Filter>, locale: Locale) = itemStack(Material.HOPPER) {
         meta {
             name = translatable("$id.filter_item.name")
+                .render(locale)
             addLore {
                 addComponent(
                     translatable("$id.filter_item.lore")
@@ -306,16 +310,21 @@ object AllAdvancements : TeamGoal() {
                                 TextColor.color((if (filter.second == Filter.ASCENDING) Color.GREEN else Color.RED).asRGB())
                             )
                         )
+                        .render(locale)
                 )
             }
         }
     }
 
-    private fun resetItem() = itemStack(Material.BARRIER) {
+    private fun resetItem(locale: Locale) = itemStack(Material.BARRIER) {
         meta {
             name = translatable("$id.reset_item.name")
+                .render(locale)
             addLore {
-                addComponent(translatable("$id.reset_item.lore"))
+                addComponent(
+                    translatable("$id.reset_item.lore")
+                        .render(locale)
+                )
             }
         }
     }
