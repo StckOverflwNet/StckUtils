@@ -30,6 +30,6 @@ Have a look [here](guide/ForDevelopers.md)
 
 ## License
 
-This template is licensed under the [AGPL-3.0 License](https://choosealicense.com/licenses/agpl-3.0/)
+This project is licensed under the [AGPL-3.0 License](https://choosealicense.com/licenses/agpl-3.0/)
 
 Copyright (c) 2021 StckOverflw
