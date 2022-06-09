@@ -3,13 +3,13 @@ package de.stckoverflw.stckutils.minecraft.challenge
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.extension.sendPrefixMessage
 import de.stckoverflw.stckutils.minecraft.timer.Timer
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.Listener
@@ -68,7 +68,7 @@ abstract class Challenge(val requiresProtocolLib: Boolean = false) : Listener {
      */
     fun lose(replacements: List<Component> = listOf()) {
         Timer.stop()
-        Bukkit.getOnlinePlayers().forEach {
+        onlinePlayers.forEach {
             it.playSound(it.location, Sound.ENTITY_WITHER_DEATH, 0.5F, 1F)
             it.sendPrefixMessage(
                 translatable("challenge.lose")

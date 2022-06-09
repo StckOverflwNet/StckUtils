@@ -8,6 +8,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
 import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.render
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -17,7 +18,6 @@ import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.ItemFlag
@@ -84,7 +84,7 @@ object MaxHealth : GameExtension() {
     }
 
     override fun run() {
-        Bukkit.getOnlinePlayers().forEach {
+        onlinePlayers.forEach {
             it.isHealthScaled = true
             it.healthScale = health.toDouble()
             it.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue = health.toDouble()

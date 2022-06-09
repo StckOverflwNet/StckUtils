@@ -18,6 +18,7 @@ import de.stckoverflw.stckutils.minecraft.goal.nameKey
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.bukkit.plainText
 import net.axay.kspigot.extensions.bukkit.render
@@ -32,8 +33,6 @@ import net.kyori.adventure.text.Component.space
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
 import org.bukkit.enchantments.Enchantment
@@ -77,48 +76,72 @@ val placeHolderItemWhite =
 fun getScrollRightItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_RIGHT_B64,
-        translatable("gui.scroll_right")
-            .color(Colors.ACCENT_AQUA)
-            .render(locale)
+        literalText {
+            component(
+                translatable("gui.scroll_right")
+                    .render(locale)
+            )
+            color = Colors.ACCENT_AQUA
+        }
     )
 
 fun getScrollLeftItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_LEFT_B64,
-        translatable("gui.scroll_left")
-            .color(Colors.ACCENT_AQUA)
-            .render(locale)
+        literalText {
+            component(
+                translatable("gui.scroll_left")
+                    .render(locale)
+            )
+            color = Colors.ACCENT_AQUA
+        }
     )
 
 fun getScrollUpItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_UP_B64,
-        translatable("gui.scroll_up")
-            .color(Colors.ACCENT_AQUA)
-            .render(locale)
+        literalText {
+            component(
+                translatable("gui.scroll_up")
+                    .render(locale)
+            )
+            color = Colors.ACCENT_AQUA
+        }
     )
 
 fun getScrollDownItem(locale: Locale) =
     getTextureHead(
         Textures.SCROLL_DOWN_B64,
-        translatable("gui.scroll_down")
-            .color(Colors.ACCENT_AQUA)
-            .render(locale)
+        literalText {
+            component(
+                translatable("gui.scroll_down")
+                    .render(locale)
+            )
+            color = Colors.ACCENT_AQUA
+        }
     )
 
 fun getGoBackItem(locale: Locale) =
     itemStack(Material.KNOWLEDGE_BOOK) {
         meta {
-            name = translatable("gui.back.name")
-                .color(Colors.GO_BACK)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.back.name")
+                        .render(locale)
+                )
+                color = Colors.GO_BACK
+            }
 
             addLore {
-                +""
                 addComponent(
-                    translatable("gui.back.lore")
-                        .color(Colors.GO_BACK_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.back.lore")
+                                .render(locale)
+                        )
+                        color = Colors.GO_BACK_SECONDARY
+                    }
                 )
             }
 
@@ -136,9 +159,13 @@ fun getGoBackItem(locale: Locale) =
 fun getSettingsItem(locale: Locale) =
     itemStack(Material.NETHER_STAR) {
         meta {
-            name = translatable("settings.name")
-                .color(Colors.SETTINGS)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("settings.name")
+                        .render(locale)
+                )
+                color = Colors.SETTINGS
+            }
 
             flags(
                 ItemFlag.HIDE_ATTRIBUTES,
@@ -154,15 +181,23 @@ fun getSettingsItem(locale: Locale) =
 fun generateChallengeGuiItem(locale: Locale) =
     itemStack(Material.DRAGON_HEAD) {
         meta {
-            name = translatable("gui.page_changer.challenges.name")
-                .color(Colors.CHALLENGE)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.challenges.name")
+                        .render(locale)
+                )
+                color = Colors.CHALLENGE
+            }
 
             addLore {
                 addComponent(
-                    translatable("gui.page_changer.challenges.lore")
-                        .color(Colors.CHALLENGE_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable("gui.page_changer.challenges.lore")
+                                .render(locale)
+                        )
+                        color = Colors.CHALLENGE_SECONDARY
+                    }
                 )
             }
 
@@ -180,15 +215,23 @@ fun generateChallengeGuiItem(locale: Locale) =
 fun generateGameChangeGuiItem(locale: Locale) =
     itemStack(Material.MAP) {
         meta {
-            name = translatable("gui.page_changer.game_change.name")
-                .color(Colors.GAME_CHANGE)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.game_change.name")
+                        .render(locale)
+                )
+                color = Colors.GAME_CHANGE
+            }
 
             addLore {
                 addComponent(
-                    translatable("gui.page_changer.game_change.lore")
-                        .color(Colors.GAME_CHANGE_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable("gui.page_changer.game_change.lore")
+                                .render(locale)
+                        )
+                        color = Colors.GAME_CHANGE_SECONDARY
+                    }
                 )
             }
 
@@ -206,15 +249,23 @@ fun generateGameChangeGuiItem(locale: Locale) =
 fun generateGoalGuiItem(locale: Locale) =
     itemStack(Material.DIAMOND) {
         meta {
-            name = translatable("gui.page_changer.goals.name")
-                .color(Colors.GOAL)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.goals.name")
+                        .render(locale)
+                )
+                color = Colors.GOAL
+            }
 
             addLore {
                 addComponent(
-                    translatable("gui.page_changer.goals.lore")
-                        .color(Colors.GOAL_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable("gui.page_changer.goals.lore")
+                                .render(locale)
+                        )
+                        color = Colors.GOAL_SECONDARY
+                    }
                 )
             }
 
@@ -232,15 +283,23 @@ fun generateGoalGuiItem(locale: Locale) =
 fun generateMoreSettingsGuiItem(locale: Locale) =
     itemStack(Material.COMPARATOR) {
         meta {
-            name = translatable("gui.page_changer.more_settings.name")
-                .color(Colors.MORE_SETTINGS)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.more_settings.name")
+                        .render(locale)
+                )
+                color = Colors.MORE_SETTINGS
+            }
 
             addLore {
                 addComponent(
-                    translatable("gui.page_changer.more_settings.lore")
-                        .color(Colors.MORE_SETTINGS_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable("gui.page_changer.more_settings.lore")
+                                .render(locale)
+                        )
+                        color = Colors.MORE_SETTINGS_SECONDARY
+                    }
                 )
             }
 
@@ -258,15 +317,23 @@ fun generateMoreSettingsGuiItem(locale: Locale) =
 fun generateWorldResetGuiItem(locale: Locale) =
     itemStack(Material.GRASS_BLOCK) {
         meta {
-            name = translatable("gui.page_changer.world_reset.name")
-                .color(Colors.WORLD_RESET_GUI)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.world_reset.name")
+                        .render(locale)
+                )
+                color = Colors.WORLD_RESET_GUI
+            }
 
             addLore {
                 addComponent(
-                    translatable("gui.page_changer.world_reset.lore")
-                        .color(Colors.WORLD_RESET_GUI_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable("gui.page_changer.world_reset.lore")
+                                .render(locale)
+                        )
+                        color = Colors.WORLD_RESET_GUI_SECONDARY
+                    }
                 )
             }
 
@@ -284,15 +351,23 @@ fun generateWorldResetGuiItem(locale: Locale) =
 fun generateTimerSettingsGuiItem(locale: Locale) =
     itemStack(Material.CLOCK) {
         meta {
-            name = translatable("gui.page_changer.timer.name")
-                .color(Colors.TIMER_SETTINGS)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.timer.name")
+                        .render(locale)
+                )
+                color = Colors.TIMER_SETTINGS
+            }
 
             addLore {
                 addComponent(
-                    translatable("gui.page_changer.timer.lore")
-                        .color(Colors.TIMER_SETTINGS_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable("gui.page_changer.timer.lore")
+                                .render(locale)
+                        )
+                        color = Colors.TIMER_SETTINGS_SECONDARY
+                    }
                 )
             }
 
@@ -310,16 +385,24 @@ fun generateTimerSettingsGuiItem(locale: Locale) =
 fun generateTeamGoalItem(locale: Locale) =
     itemStack(Material.AZALEA) {
         meta {
-            name = translatable("gui.team_goal.name")
-                .color(Colors.GOAL_TYPE)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.team_goal.name")
+                        .render(locale)
+                )
+                color = Colors.GOAL_TYPE
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.team_goal.lore")
-                        .color(Colors.GOAL_TYPE_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.team_goal.lore")
+                                .render(locale)
+                        )
+                        color = Colors.GOAL_TYPE_SECONDARY
+                    }
                 )
             }
 
@@ -337,16 +420,24 @@ fun generateTeamGoalItem(locale: Locale) =
 fun generateBattleGoalItem(locale: Locale) =
     itemStack(Material.NETHERITE_SWORD) {
         meta {
-            name = translatable("gui.battle.name")
-                .color(Colors.GOAL_TYPE)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.battle.name")
+                        .render(locale)
+                )
+                color = Colors.GOAL_TYPE
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.battle.lore")
-                        .color(Colors.GOAL_TYPE_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.battle.lore")
+                                .render(locale)
+                        )
+                        color = Colors.GOAL_TYPE_SECONDARY
+                    }
                 )
             }
 
@@ -364,16 +455,24 @@ fun generateBattleGoalItem(locale: Locale) =
 fun generateJoinWhileRunningGuiItem(locale: Locale) =
     itemStack(Material.ENCHANTED_GOLDEN_APPLE) {
         meta {
-            name = translatable("gui.page_changer.join_while_running.name")
-                .color(Colors.JOIN_WHILE_RUNNING)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.join_while_running.name")
+                        .render(locale)
+                )
+                color = Colors.JOIN_WHILE_RUNNING
+            }
 
             setLore {
-                +space()
                 addComponent(
-                    translatable("gui.page_changer.join_while_running.lore")
-                        .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.page_changer.join_while_running.lore")
+                                .render(locale)
+                        )
+                        color = Colors.JOIN_WHILE_RUNNING_SECONDARY
+                    }
                 )
             }
 
@@ -391,16 +490,24 @@ fun generateJoinWhileRunningGuiItem(locale: Locale) =
 fun generateResetTimerGuiItem(locale: Locale) =
     itemStack(Material.BARRIER) {
         meta {
-            name = translatable("gui.reset_timer.name")
-                .color(Colors.RESET)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.reset_timer.name")
+                        .render(locale)
+                )
+                color = Colors.RESET
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.reset_timer.lore")
-                        .color(Colors.RESET_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.reset_timer.lore")
+                                .render(locale)
+                        )
+                        color = Colors.RESET_SECONDARY
+                    }
                 )
             }
 
@@ -418,16 +525,24 @@ fun generateResetTimerGuiItem(locale: Locale) =
 fun generateTimerColorGuiItem(locale: Locale) =
     itemStack(Material.ORANGE_DYE) {
         meta {
-            name = translatable("gui.page_changer.color.name")
-                .color(Colors.TIMER_COLOR)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.page_changer.color.name")
+                        .render(locale)
+                )
+                color = Colors.TIMER_COLOR
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.page_changer.color.lore")
-                        .color(Colors.TIMER_COLOR_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.page_changer.color.lore")
+                                .render(locale)
+                        )
+                        color = Colors.TIMER_COLOR_SECONDARY
+                    }
                 )
             }
 
@@ -464,44 +579,37 @@ fun generateColorCompoundItem(textColor: NamedTextColor, locale: Locale) =
         }
     ) {
         meta {
-            name = text(
-                if (textColor.toString().contains("_")) {
-                    textColor.toString().substringBefore('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }.plus(" ")
-                        .plus(textColor.toString().substringAfter('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })
-                } else {
-                    textColor.toString().lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                }
-            )
-                .color(textColor)
+            name = literalText {
+                text(textColor.name())
+                color = textColor
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.color_compound.lore")
-                        .args(
-                            text(
-                                if (textColor.toString().contains("_")) {
-                                    textColor.toString().substringBefore('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                                        .plus(" ").plus(
-                                            textColor.toString().substringAfter('_').lowercase()
-                                                .replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                                        )
-                                } else {
-                                    textColor.toString().lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                                }
-                            )
-                                .color(textColor),
-                            text(Timer.formatTime(90061L, locale).plainText()) // 1d 1h 1m 1s
-                                .color(TextColor.color(textColor))
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.color_compound.lore")
+                                .args(
+                                    literalText {
+                                        text(textColor.name())
+                                        color = textColor
+                                    },
+                                    literalText {
+                                        text(Timer.formatTime(90061L, locale).plainText()) // 1d 1h 1m 1s
+                                        color = textColor
+                                    }
+                                )
+                                .render(locale)
                         )
-                        .color(Colors.COLOR_COMPOUND_SECONDARY)
-                        .render(locale)
+                        color = Colors.COLOR_COMPOUND_SECONDARY
+                    }
                 )
             }
 
-            persistentDataContainer.set(Namespaces.COLOR_COMPOUND_VALUE, TextColor.color(textColor).value())
+            persistentDataContainer.set(Namespaces.COLOR_COMPOUND_VALUE, textColor.value())
 
-            if (Timer.color == TextColor.color(textColor)) {
+            if (Timer.color == textColor) {
                 addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
             }
 
@@ -517,19 +625,34 @@ fun generateColorCompoundItem(textColor: NamedTextColor, locale: Locale) =
         }
     }
 
+private fun NamedTextColor.name() = if (toString().contains("_")) {
+    toString().substringBefore('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }.plus(" ")
+        .plus(toString().substringAfter('_').lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) })
+} else {
+    toString().lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+}
+
 fun generateWorldResetItem(locale: Locale) =
     itemStack(Material.BARRIER) {
         meta {
-            name = translatable("gui.world_reset.name")
-                .color(Colors.WORLD_RESET)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.world_reset.name")
+                        .render(locale)
+                )
+                color = Colors.WORLD_RESET
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.world_reset.lore")
-                        .color(Colors.WORLD_RESET_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.world_reset.lore")
+                                .render(locale)
+                        )
+                        color = Colors.WORLD_RESET_SECONDARY
+                    }
                 )
             }
 
@@ -547,29 +670,45 @@ fun generateWorldResetItem(locale: Locale) =
 fun generateItemForChallenge(challenge: Challenge, locale: Locale) =
     itemStack(challenge.material) {
         meta {
-            name = translatable(challenge.nameKey)
-                .color(Colors.CHALLENGE_COMPOUND)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable(challenge.nameKey)
+                        .render(locale)
+                )
+                color = Colors.CHALLENGE_COMPOUND
+            }
 
             addLore {
                 addComponent(
-                    translatable(challenge.descriptionKey)
-                        .color(Colors.CHALLENGE_COMPOUND_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable(challenge.descriptionKey)
+                                .render(locale)
+                        )
+                        color = Colors.CHALLENGE_COMPOUND_SECONDARY
+                        component(space())
+                    }
                 )
-                +space()
                 if (!(challenge.requiresProtocolLib && !StckUtilsPlugin.isProtocolLib)) {
                     if (challenge.active) {
                         addComponent(
-                            translatable("gui.challenge.lore.active")
-                                .color(Colors.ACTIVE)
-                                .render(locale)
+                            literalText {
+                                component(
+                                    translatable("gui.challenge.lore.active")
+                                        .render(locale)
+                                )
+                                color = Colors.ACTIVE
+                            }
                         )
                     } else {
                         addComponent(
-                            translatable("gui.challenge.lore.inactive")
-                                .color(Colors.INACTIVE)
-                                .render(locale)
+                            literalText {
+                                component(
+                                    translatable("gui.challenge.lore.inactive")
+                                        .render(locale)
+                                )
+                                color = Colors.INACTIVE
+                            }
                         )
                     }
                     if (challenge.configurationGUI(Config.languageConfig.defaultLanguage) != null) {
@@ -578,21 +717,29 @@ fun generateItemForChallenge(challenge: Challenge, locale: Locale) =
                                 component(
                                     translatable("gui.challenge.lore.config_gui")
                                         .args(
-                                            translatable(challenge.nameKey)
-                                                .color(Colors.CONFIGURATION)
+                                            literalText {
+                                                component(
+                                                    translatable(challenge.nameKey)
+                                                )
+                                                color = Colors.CONFIGURATION
+                                            }
                                         )
                                         .render(locale)
                                 )
-                                color = Colors.SECONDARY
+                                color = KColors.GRAY
                             }
                         )
                     }
                 } else {
                     addComponent(
-                        translatable("gui.challenge.lore.protocol_lib")
-                            .color(Colors.ERROR)
-                            .render(locale)
-                            .decorate(TextDecoration.BOLD)
+                        literalText {
+                            component(
+                                translatable("gui.challenge.lore.protocol_lib")
+                                    .render(locale)
+                            )
+                            color = Colors.ERROR
+                            bold = true
+                        }
                     )
                 }
             }
@@ -611,29 +758,45 @@ fun generateItemForChallenge(challenge: Challenge, locale: Locale) =
 fun generateItemForGoal(goal: Goal, locale: Locale) =
     itemStack(goal.material) {
         meta {
-            name = translatable(goal.nameKey)
-                .color(Colors.GOAL_COMPOUND)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable(goal.nameKey)
+                        .render(locale)
+                )
+                color = Colors.GOAL_COMPOUND
+            }
 
             addLore {
                 addComponent(
-                    translatable(goal.descriptionKey)
-                        .color(Colors.GOAL_COMPOUND_SECONDARY)
-                        .render(locale)
+                    literalText {
+                        component(
+                            translatable(goal.descriptionKey)
+                                .render(locale)
+                        )
+                        color = Colors.GOAL_COMPOUND_SECONDARY
+                    }
                 )
                 +space()
                 if (GoalManager.activeGoal == goal || goal.active) {
                     GoalManager.activeGoal = goal
                     addComponent(
-                        translatable("gui.goal.lore.active")
-                            .color(Colors.ACTIVE)
-                            .render(locale)
+                        literalText {
+                            component(
+                                translatable("gui.goal.lore.active")
+                                    .render(locale)
+                            )
+                            color = Colors.ACTIVE
+                        }
                     )
                 } else {
                     addComponent(
-                        translatable("gui.goal.lore.inactive")
-                            .color(Colors.INACTIVE)
-                            .render(locale)
+                        literalText {
+                            component(
+                                translatable("gui.goal.lore.inactive")
+                                    .render(locale)
+                            )
+                            color = Colors.INACTIVE
+                        }
                     )
                 }
             }
@@ -652,20 +815,30 @@ fun generateItemForGoal(goal: Goal, locale: Locale) =
 fun generateTimerItem(locale: Locale) =
     itemStack(Material.CLOCK) {
         meta {
-            name = translatable("gui.timer.name")
-                .color(Colors.TIMER_ITEM)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.timer.name")
+                        .render(locale)
+                )
+                color = Colors.TIMER_ITEM
+            }
 
             addLore {
-                +space()
                 addComponent(
-                    translatable("gui.timer.lore")
-                        .args(
-                            text(Timer.toString())
-                                .color(Timer.color)
+                    literalText {
+                        newLine()
+                        component(
+                            translatable("gui.timer.lore")
+                                .args(
+                                    literalText {
+                                        text(Timer.toString())
+                                        color = Timer.color
+                                    }
+                                )
+                                .render(locale)
                         )
-                        .color(Colors.TIMER_ITEM_SECONDARY)
-                        .render(locale)
+                        color = Colors.TIMER_ITEM_SECONDARY
+                    }
                 )
             }
 
@@ -683,25 +856,30 @@ fun generateTimerItem(locale: Locale) =
 fun generateVillageSpawnItem(locale: Locale) =
     itemStack(Material.VILLAGER_SPAWN_EGG) {
         meta {
-            name = translatable("gui.village_spawn.name")
-                .color(Colors.VILLAGE_SPAWN)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.village_spawn.name")
+                )
+                color = Colors.VILLAGE_SPAWN
+            }
 
             addLore {
-                +space()
-                if (Config.resetSettingsConfig.villageSpawn) {
-                    addComponent(
-                        translatable("gui.village_spawn.lore.activated")
-                            .color(Colors.VILLAGE_SPAWN_SECONDARY)
-                            .render(locale)
-                    )
-                } else {
-                    addComponent(
-                        translatable("gui.village_spawn.lore.deactivated")
-                            .color(Colors.VILLAGE_SPAWN_SECONDARY)
-                            .render(locale)
-                    )
-                }
+                addComponent(
+                    literalText {
+                        newLine()
+                        component(
+                            translatable(
+                                if (Config.resetSettingsConfig.villageSpawn) {
+                                    "gui.village_spawn.lore.activated"
+                                } else {
+                                    "gui.village_spawn.lore.deactivated"
+                                }
+                            )
+                                .render(locale)
+                        )
+                        color = Colors.VILLAGE_SPAWN_SECONDARY
+                    }
+                )
             }
 
             flags(
@@ -719,16 +897,24 @@ fun generateStartStopTimerItem(locale: Locale) =
     if (Timer.running) {
         itemStack(Material.REDSTONE) {
             meta {
-                name = translatable("gui.start_stop_timer.running.name")
-                    .color(Colors.INACTIVE)
-                    .render(locale)
+                name = literalText {
+                    component(
+                        translatable("gui.start_stop_timer.running.name")
+                            .render(locale)
+                    )
+                    color = Colors.INACTIVE
+                }
 
                 addLore {
-                    +space()
                     addComponent(
-                        translatable("gui.start_stop_timer.running.lore")
-                            .color(Colors.SECONDARY)
-                            .render(locale)
+                        literalText {
+                            newLine()
+                            component(
+                                translatable("gui.start_stop_timer.running.lore")
+                                    .render(locale)
+                            )
+                            color = KColors.GRAY
+                        }
                     )
                 }
 
@@ -745,16 +931,24 @@ fun generateStartStopTimerItem(locale: Locale) =
     } else {
         itemStack(Material.EMERALD) {
             meta {
-                name = translatable("gui.start_stop_timer.stopped.name")
-                    .color(Colors.ACTIVE)
-                    .render(locale)
+                name = literalText {
+                    component(
+                        translatable("gui.start_stop_timer.stopped.name")
+                            .render(locale)
+                    )
+                    color = Colors.ACTIVE
+                }
 
                 addLore {
-                    +space()
                     addComponent(
-                        translatable("gui.start_stop_timer.stopped.lore")
-                            .color(Colors.SECONDARY)
-                            .render(locale)
+                        literalText {
+                            newLine()
+                            component(
+                                translatable("gui.start_stop_timer.stopped.lore")
+                                    .render(locale)
+                            )
+                            color = KColors.GRAY
+                        }
                     )
                 }
 
@@ -773,28 +967,36 @@ fun generateStartStopTimerItem(locale: Locale) =
 fun generateTimerDirectionItem(locale: Locale) =
     itemStack(Material.REPEATER) {
         meta {
-            name = translatable("gui.timer_direction.name")
-                .color(Colors.TIMER_DIRECTION)
-                .render(locale)
+            name = literalText {
+                component(
+                    translatable("gui.timer_direction.name")
+                        .render(locale)
+                )
+                color = Colors.TIMER_DIRECTION
+            }
 
             setLore {
-                +space()
-                when (Timer.direction) {
-                    TimerDirection.FORWARDS -> {
-                        addComponent(
-                            translatable("gui.timer_direction.lore.forwards")
-                                .color(Colors.ACTIVE)
-                                .render(locale)
-                        )
+                addComponent(
+                    literalText {
+                        newLine()
+                        when (Timer.direction) {
+                            TimerDirection.FORWARDS -> {
+                                component(
+                                    translatable("gui.timer_direction.lore.forwards")
+                                        .render(locale)
+                                )
+                                color = Colors.ACTIVE
+                            }
+                            TimerDirection.BACKWARDS -> {
+                                component(
+                                    translatable("gui.timer_direction.lore.backwards")
+                                        .render(locale)
+                                )
+                                color = Colors.INACTIVE
+                            }
+                        }
                     }
-                    TimerDirection.BACKWARDS -> {
-                        addComponent(
-                            translatable("gui.timer_direction.lore.backwards")
-                                .color(Colors.INACTIVE)
-                                .render(locale)
-                        )
-                    }
-                }
+                )
             }
 
             flags(
@@ -817,56 +1019,47 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale) =
         }
     ) {
         meta {
-            name = text(
-                accessLevel.name.replace("_", " ")
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            )
-                .color(Colors.JOIN_WHILE_RUNNING)
+            name = literalText {
+                text(
+                    accessLevel.name.replace("_", " ")
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                )
+                color = Colors.JOIN_WHILE_RUNNING
+            }
 
             setLore {
-                when (accessLevel) {
-                    AccessLevel.OPERATOR -> {
-                        addComponent(
-                            translatable("gui.join_while_running.lore.operator")
-                                .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
-                                .render(locale)
-                        )
-                    }
-                    AccessLevel.HIDDEN -> {
-                        addComponent(
-                            translatable("gui.join_while_running.lore.hidden")
-                                .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
-                                .render(locale)
-                        )
-                    }
-                    AccessLevel.EVERYONE -> {
-                        addComponent(
-                            translatable("gui.join_while_running.lore.everyone")
-                                .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
-                                .render(locale)
-                        )
-                    }
-                    AccessLevel.NONE -> {
-                        addComponent(
-                            translatable("gui.join_while_running.lore.none")
-                                .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
-                                .render(locale)
-                        )
-                    }
-                }
                 addComponent(
-                    translatable("gui.join_while_running.lore")
-                        .args(
-                            if (Timer.joinWhileRunning.contains(accessLevel)) {
-                                translatable("generic.disable")
-                                    .color(Colors.INACTIVE)
-                            } else {
-                                translatable("generic.activate")
-                                    .color(Colors.ACTIVE)
-                            }
+                    literalText {
+                        newLine()
+                        component(
+                            translatable(
+                                when (accessLevel) {
+                                    AccessLevel.OPERATOR -> "gui.join_while_running.lore.operator"
+                                    AccessLevel.HIDDEN -> "gui.join_while_running.lore.hidden"
+                                    AccessLevel.EVERYONE -> "gui.join_while_running.lore.everyone"
+                                    AccessLevel.NONE -> "gui.join_while_running.lore.none"
+                                }
+                            )
+                                .render(locale)
                         )
-                        .color(Colors.JOIN_WHILE_RUNNING_SECONDARY)
-                        .render(locale)
+                        color = Colors.JOIN_WHILE_RUNNING_SECONDARY
+                        newLine()
+                        component(
+                            translatable("gui.join_while_running.lore")
+                                .args(
+                                    literalText {
+                                        if (Timer.joinWhileRunning.contains(accessLevel)) {
+                                            component(translatable("generic.disable"))
+                                            color = Colors.INACTIVE
+                                        } else {
+                                            component(translatable("generic.activate"))
+                                            color = Colors.ACTIVE
+                                        }
+                                    }
+                                )
+                                .render(locale)
+                        )
+                    }
                 )
             }
 
@@ -883,50 +1076,56 @@ fun generateItemForJoinWhileRunning(accessLevel: AccessLevel, locale: Locale) =
 
 fun generateItemForHide(player: Player, locale: Locale): ItemStack {
     val head = getPlayerHead(player)
-    val meta = head.itemMeta
-
-    meta.setLore {
-        +space()
-        if (player.hidden) {
+    head.meta {
+        setLore {
             addComponent(
-                translatable("gui.hide.hidden.lore")
-                    .args(player.name())
-                    .color(Colors.INACTIVE)
-                    .render(locale)
-            )
-        } else {
-            addComponent(
-                translatable("gui.hide.revealed.lore")
-                    .args(player.name())
-                    .color(Colors.ACTIVE)
-                    .render(locale)
+                literalText {
+                    newLine()
+                    if (player.hidden) {
+                        color = Colors.INACTIVE
+                        component(
+                            translatable("gui.hide.hidden.lore")
+                                .args(player.name())
+                                .render(locale)
+                        )
+                    } else {
+                        color = Colors.ACTIVE
+                        component(
+                            translatable("gui.hide.revealed.lore")
+                                .args(player.name())
+                                .render(locale)
+                        )
+                    }
+                }
             )
         }
-    }
 
-    meta.flags(
-        ItemFlag.HIDE_ATTRIBUTES,
-        ItemFlag.HIDE_DESTROYS,
-        ItemFlag.HIDE_DYE,
-        ItemFlag.HIDE_PLACED_ON,
-        ItemFlag.HIDE_POTION_EFFECTS,
-        ItemFlag.HIDE_UNBREAKABLE
-    )
+        flags(
+            ItemFlag.HIDE_ATTRIBUTES,
+            ItemFlag.HIDE_DESTROYS,
+            ItemFlag.HIDE_DYE,
+            ItemFlag.HIDE_PLACED_ON,
+            ItemFlag.HIDE_POTION_EFFECTS,
+            ItemFlag.HIDE_UNBREAKABLE
+        )
 
-    if (player.hidden) {
-        meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        if (player.hidden) {
+            addEnchant(Enchantment.ARROW_INFINITE, 1, true)
+            addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        }
     }
-    head.itemMeta = meta
     return head
 }
 
 /* Other Items */
 
-fun getPlayerHead(player: OfflinePlayer): ItemStack {
-    val head = itemStack(Material.PLAYER_HEAD) {
+fun getPlayerHead(player: OfflinePlayer): ItemStack =
+    itemStack(Material.PLAYER_HEAD) {
         meta {
-            name = text(player.name ?: " ")
+            name = literalText {
+                Component.text(player.name ?: " ")
+                color = Colors.PLAYER_HEAD
+            }
 
             flags(
                 ItemFlag.HIDE_ATTRIBUTES,
@@ -936,13 +1135,9 @@ fun getPlayerHead(player: OfflinePlayer): ItemStack {
                 ItemFlag.HIDE_POTION_EFFECTS,
                 ItemFlag.HIDE_UNBREAKABLE
             )
+            (this as SkullMeta).owningPlayer = player
         }
     }
-    val meta = head.itemMeta
-    (meta as SkullMeta).owningPlayer = player
-    head.itemMeta = meta
-    return head
-}
 
 fun getTextureHead(b64: String, name: String): ItemStack =
     getTextureHead(b64, text(name))

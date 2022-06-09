@@ -2,9 +2,9 @@ package de.stckoverflw.stckutils.minecraft.challenge.impl
 
 import de.stckoverflw.stckutils.extension.isPlaying
 import de.stckoverflw.stckutils.minecraft.challenge.Challenge
+import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -37,7 +37,7 @@ object RandomEffect : Challenge() {
         val potionTypes = PotionEffectType.values()
         val potionEffectType = potionTypes.random()
 
-        Bukkit.getOnlinePlayers().forEach {
+        onlinePlayers.forEach {
             it.addPotionEffect(
                 PotionEffect(
                     potionEffectType,

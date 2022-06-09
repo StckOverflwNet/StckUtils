@@ -7,10 +7,10 @@ import de.stckoverflw.stckutils.util.get
 import de.stckoverflw.stckutils.util.has
 import de.stckoverflw.stckutils.util.remove
 import de.stckoverflw.stckutils.util.set
+import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.KSpigotMainInstance
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -20,11 +20,10 @@ fun Player.resetWorlds() {
     Config.resetSettingsConfig.shouldReset = true
     onlinePlayers.forEach {
         it.kick(
-            successTranslatable("player.reset_worlds")
-                .args(name())
+            successTranslatable("player.reset_worlds", name())
         )
     }
-    Bukkit.getServer().spigot().restart()
+    server.spigot().restart()
 }
 
 fun Player.setSavedInventory() {
@@ -41,7 +40,7 @@ fun Player.setSavedInventory() {
 fun Player.saveInventory() {
     persistentDataContainer.set(
         Namespaces.CHALLENGE_INVENTORY_CONTENTS,
-        toBase64(inventory.contents?.filterNotNull()?.toTypedArray() ?: arrayOf())
+        toBase64(inventory.contents.filterNotNull().toTypedArray())
     )
 }
 
@@ -91,4 +90,9 @@ fun Player.isInArea(location1: Location, location2: Location): Boolean {
 
 fun Player.sendPrefixMessage(meessage: String) = sendPrefixMessage(Component.text(meessage))
 
-fun Player.sendPrefixMessage(message: Component) = sendMessage(StckUtilsPlugin.prefix.append(message))
+fun Player.sendPrefixMessage(message: Component) = sendMessage(
+    literalText {
+        component(StckUtilsPlugin.prefix)
+        component(message)
+    }
+)

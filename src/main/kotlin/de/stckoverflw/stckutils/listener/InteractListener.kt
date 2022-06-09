@@ -24,8 +24,7 @@ class InteractListener : Listener {
         ) {
             if (!player.hasPermission(Permissions.SETTINGS_GUI)) {
                 return player.sendPrefixMessage(
-                    errorTranslatable("generic.missing_permission")
-                        .args(text(Permissions.SETTINGS_GUI))
+                    errorTranslatable("generic.missing_permission", text(Permissions.SETTINGS_GUI))
                 )
             }
             player.openGUI(settingsGUI(player.locale()))

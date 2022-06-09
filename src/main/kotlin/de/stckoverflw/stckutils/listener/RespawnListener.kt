@@ -4,7 +4,7 @@ import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.util.Namespaces
 import de.stckoverflw.stckutils.util.get
 import de.stckoverflw.stckutils.util.set
-import org.bukkit.Bukkit
+import net.axay.kspigot.extensions.server
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -37,7 +37,7 @@ class RespawnListener : Listener {
             val deathLocationY = player.persistentDataContainer.get(Namespaces.DEATH_LOCATION_Y) ?: return
             val deathLocationZ = player.persistentDataContainer.get(Namespaces.DEATH_LOCATION_Z) ?: return
 
-            val location = Location(Bukkit.getWorld(deathWorld)!!, deathLocationX, deathLocationY, deathLocationZ)
+            val location = Location(server.getWorld(deathWorld)!!, deathLocationX, deathLocationY, deathLocationZ)
 
             player.gameMode = GameMode.SPECTATOR
             player.teleportAsync(location)

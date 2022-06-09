@@ -2,6 +2,7 @@ package de.stckoverflw.stckutils.extension
 
 import de.stckoverflw.stckutils.config.Config
 import de.stckoverflw.stckutils.util.Colors
+import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.bukkit.render
 import net.axay.kspigot.items.ItemMetaLoreBuilder
 import net.kyori.adventure.text.Component
@@ -23,12 +24,34 @@ fun ItemMetaLoreBuilder.addComponent(component: Component, locale: Locale = Conf
 fun Component.split(regex: Pattern) =
     ComponentSplitting.split(this, regex)
 
-fun errorTranslatable(key: String, vararg args: ComponentLike = arrayOf()): TranslatableComponent =
-    Component.translatable(key)
-        .args(args.map { it.asComponent().color(Colors.ERROR_ARGS) })
-        .color(Colors.ERROR)
+fun errorTranslatable(key: String, vararg args: ComponentLike = arrayOf()): Component =
+    literalText {
+        component(
+            Component.translatable(key)
+                .args(
+                    args.map {
+                        literalText {
+                            component(it.asComponent())
+                            color = Colors.ERROR_SECONDARY
+                        }
+                    }
+                )
+        )
+        color = Colors.ERROR
+    }
 
-fun successTranslatable(key: String, vararg args: ComponentLike = arrayOf()): TranslatableComponent =
-    Component.translatable(key)
-        .args(args.map { it.asComponent().color(Colors.SUCCESS_SECONDARY) })
-        .color(Colors.SUCCESS)
+fun successTranslatable(key: String, vararg args: ComponentLike = arrayOf()): Component =
+    literalText {
+        component(
+            Component.translatable(key)
+                .args(
+                    args.map {
+                        literalText {
+                            component(it.asComponent())
+                            color = Colors.SUCCESS_SECONDARY
+                        }
+                    }
+                )
+        )
+        color = Colors.SUCCESS
+    }

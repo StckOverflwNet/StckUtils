@@ -8,6 +8,7 @@ import de.stckoverflw.stckutils.minecraft.gamechange.nameKey
 import de.stckoverflw.stckutils.util.Colors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.render
+import net.axay.kspigot.extensions.server
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUIClickEvent
 import net.axay.kspigot.items.addLore
@@ -16,7 +17,6 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.kyori.adventure.text.Component.translatable
-import org.bukkit.Bukkit
 import org.bukkit.Difficulty
 import org.bukkit.Material
 import org.bukkit.inventory.ItemFlag
@@ -80,7 +80,7 @@ object Difficulty : GameRule() {
     }
 
     override fun run() {
-        Bukkit.getWorlds().forEach {
+        server.worlds.forEach {
             it.difficulty = difficulty
         }
     }

@@ -19,8 +19,9 @@ import de.stckoverflw.stckutils.minecraft.goal.active
 import de.stckoverflw.stckutils.minecraft.timer.AccessLevel
 import de.stckoverflw.stckutils.minecraft.timer.Timer
 import de.stckoverflw.stckutils.minecraft.timer.TimerDirection
+import net.axay.kspigot.chat.literalText
+import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.onlinePlayers
-import net.axay.kspigot.extensions.server
 import net.axay.kspigot.gui.ForInventoryFiveByNine
 import net.axay.kspigot.gui.GUI
 import net.axay.kspigot.gui.GUIType
@@ -32,7 +33,6 @@ import net.axay.kspigot.gui.rectTo
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.Locale
 
@@ -55,11 +55,13 @@ object GUIPage {
  * @param locale Locale to render the itemStacks in
  */
 fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUIType.FIVE_BY_NINE) {
-    title = translatable("settings.name")
-        .color(Colors.SETTINGS)
+    title = literalText {
+        component(translatable("settings.name"))
+        color = Colors.SETTINGS
+    }
     defaultPage = GUIPage.settingsPageNumber
 
-    page(GUIPage.settingsPageNumber) {
+    page(defaultPage) {
         placeholder(Slots.Border, placeHolderItemGray)
         placeholder(Slots.RowTwoSlotTwo rectTo Slots.RowFourSlotEight, placeHolderItemWhite)
 
@@ -401,12 +403,12 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
         ) {
             if (Timer.running) {
                 Timer.stop()
-                server.broadcast(
+                broadcast(
                     translatable("timer.stopped")
                 )
             } else {
                 Timer.start()
-                server.broadcast(
+                broadcast(
                     translatable("timer.started")
                 )
             }
@@ -447,7 +449,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 Timer.stop()
             }
             Timer.reset()
-            Bukkit.broadcast(
+            broadcast(
                 translatable("timer.reset")
             )
             it.bukkitEvent.clickedInventory!!.setItem(13, generateTimerItem(locale))
@@ -584,8 +586,7 @@ fun settingsGUI(locale: Locale): GUI<ForInventoryFiveByNine> = kSpigotGUI(GUITyp
                 }
                 if (!player.hasPermission(perm)) {
                     return@click player.sendPrefixMessage(
-                        errorTranslatable("generic.missing_permission")
-                            .args(text(perm))
+                        errorTranslatable("generic.missing_permission", text(perm))
                     )
                 }
                 HideCommand.sendResponse(player, target)

@@ -18,7 +18,6 @@ import net.axay.kspigot.commands.runs
 import net.axay.kspigot.commands.suggestListSuspending
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.gui.openGUI
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class HideCommand {
@@ -64,7 +63,7 @@ class HideCommand {
                     }.sorted()
                 }
                 runs runs@{
-                    val target = Bukkit.getPlayer(getArgument<String>("player"))
+                    val target = server.getPlayer(getArgument<String>("player"))
                         ?: return@runs player.sendPrefixMessage(
                             errorTranslatable("general.player_not_found")
                         )
