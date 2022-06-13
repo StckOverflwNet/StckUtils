@@ -37,7 +37,7 @@ object SingleUse : Challenge() {
     fun onInventoryClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
         val player = event.player as Player
-        player.inventory.contents?.forEach {
+        player.inventory.contents.forEach {
             if (it != null) {
                 setOneDurability(it)
             }

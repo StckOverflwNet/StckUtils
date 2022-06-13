@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
-    id("io.papermc.paperweight.userdev") version "1.3.5"
+    kotlin("jvm") version "1.7.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("io.papermc.paperweight.userdev") version "1.3.6"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
@@ -13,29 +11,24 @@ version = "1.4.1"
 repositories {
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://libraries.minecraft.net")
 }
 
 dependencies {
     // PaperMC Dependency
-    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
+    paperDevBundle("1.19-R0.1-SNAPSHOT")
 
     // KSpigot dependency
-    implementation("net.axay", "kspigot", "1.18.2")
+    implementation("net.axay", "kspigot", "1.19.0")
 
     // ProtocolLib
     implementation("com.comphenix.protocol", "ProtocolLib", "4.8.0")
-
-//    // Brigadier dependency
-//    implementation("com.mojang", "brigadier", "1.0.18")
-//
-//    // Kotlinx.Coroutines dependency
-//    api("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.0")
-//    api("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.0")
 }
 
 kotlin {
     jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
+        this.languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -43,13 +36,13 @@ tasks {
     build {
         dependsOn(reobfJar)
     }
-    withType<KotlinCompile> {
+    compileKotlin {
         kotlinOptions {
             jvmTarget = "17"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
         }
     }
-    withType<JavaCompile> {
+    compileJava {
         options.encoding = "UTF-8"
         options.release.set(17)
     }
@@ -57,7 +50,7 @@ tasks {
 
 bukkit {
     name = "StckUtils"
-    apiVersion = "1.18"
+    apiVersion = "1.19"
     authors = listOf(
         "StckOverflw",
         "l4zs",
@@ -66,7 +59,7 @@ bukkit {
     website = "https://github.com/StckOverflwNet/StckUtils/"
     version = getVersion().toString()
     libraries = listOf(
-        "net.axay:kspigot:1.18.2",
+        "net.axay:kspigot:1.19.0",
     )
     softDepend = listOf(
         "ProtocolLib",

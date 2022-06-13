@@ -221,7 +221,7 @@ object ChunkFlattener : Challenge() {
                             blocks.reverse()
                             blocks.forEach {
                                 player.world.playEffect(it.location, Effect.STEP_SOUND, it.type)
-                                player.world.playSound(it.location, it.soundGroup.breakSound, 0.5F, 1F)
+                                player.world.playSound(it.location, it.blockSoundGroup.breakSound, 0.5F, 1F)
                                 it.type = Material.AIR
                             }
                         }
