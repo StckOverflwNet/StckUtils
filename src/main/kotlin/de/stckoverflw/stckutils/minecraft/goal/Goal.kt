@@ -6,6 +6,7 @@ import de.stckoverflw.stckutils.minecraft.timer.Timer
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.bukkitColor
 import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.runnables.sync
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.Component.translatable
@@ -94,18 +95,21 @@ val Goal.winKey: String
     get() = "$id.win"
 
 private fun spawnFireworks() {
+
     onlinePlayers.forEach {
-        val loc = it.location
-        val firework = loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework
-        val fireworkMeta = firework.fireworkMeta
+        sync {
+            val loc = it.location
+            val firework = loc.world.spawnEntity(loc, EntityType.FIREWORK) as Firework
+            val fireworkMeta = firework.fireworkMeta
 
-        fireworkMeta.power = 1
-        fireworkMeta.addEffect(FireworkEffect.builder().withColor(KColors.BLUE.bukkitColor).flicker(true).build())
+            fireworkMeta.power = 1
+            fireworkMeta.addEffect(FireworkEffect.builder().withColor(KColors.BLUE.bukkitColor).flicker(true).build())
 
-        firework.fireworkMeta = fireworkMeta
-        firework.detonate()
+            firework.fireworkMeta = fireworkMeta
+            firework.detonate()
 
-        firework.fireworkMeta = fireworkMeta
-        it.gameMode = GameMode.SPECTATOR
+            firework.fireworkMeta = fireworkMeta
+            it.gameMode = GameMode.SPECTATOR
+        }
     }
 }
